@@ -1,5 +1,5 @@
 {
-  "name": "@4site/engrid",
+  "name": "@4site/engrid-ngs",
   "version": "2.0.0",
   "private": false,
   "description": "Page Template Framework for Engaging Networks",
@@ -24,7 +24,7 @@
   ],
   "author": "4Site Studios",
   "license": "Unlicense",
-  "url": "https://github.com/4site-interactive-studios/engrid",
+  "url": "https://github.com/4site-interactive-studios/engrid-ngs",
   "devDependencies": {
     "@4site/engrid-scripts": "*",
     "@4site/engrid-styles": "*",
@@ -65,10 +65,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/4site-interactive-studios/engrid.git"
+    "url": "git+https://github.com/4site-interactive-studios/engrid-ngs.git"
   },
   "bugs": {
-    "url": "https://github.com/4site-interactive-studios/engrid/issues"
+    "url": "https://github.com/4site-interactive-studios/engrid-ngs/issues"
   },
-  "homepage": "https://github.com/4site-interactive-studios/engrid#readme"
+  "homepage": "https://github.com/4site-interactive-studios/engrid-ngs#readme"
 }
