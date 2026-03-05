@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 4, 2026 @ 12:12:49 ET
+ *  Date: Wednesday, March 4, 2026 @ 14:26:07 ET
  *  By: nick
  *  ENGrid styles: v0.19.1
  *  ENGrid scripts: v0.19.1
@@ -11623,7 +11623,7 @@ class Country {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/app.js
 
 
-class app_App extends engrid_ENGrid {
+class App extends engrid_ENGrid {
     constructor(options) {
         super();
         // Events
@@ -11686,9 +11686,9 @@ class app_App extends engrid_ENGrid {
                 console.log("%c ⛔️ pageJson.pageType NOT FOUND - Go to the Account Settings and Expose the Transaction Details %s", "background-color: red; color: white; font-size: 22px; font-weight: bold;", "https://knowledge.engagingnetworks.net/datareports/expose-transaction-details-pagejson");
             }, 2000);
         }
-        if (this.options.Debug || app_App.getUrlParameter("debug") == "true")
+        if (this.options.Debug || App.getUrlParameter("debug") == "true")
             // Enable debug if available is the first thing
-            app_App.setBodyData("debug", "");
+            App.setBodyData("debug", "");
         new Advocacy();
         new InputPlaceholders();
         new InputHasValueAndFocus();
@@ -21047,11 +21047,10 @@ const AppVersion = "0.19.1";
 
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
-const customScript = function () {
+const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   // Add your client scripts here
-
-  App.setBodydata("client-js-loading", "finished");
+  App.setBodyData("client-js-loading", "finished");
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
@@ -21070,11 +21069,11 @@ const options = {
   SkipToMainContentLink: true,
   SrcDefer: true,
   ProgressBar: true,
-  Debug: app_App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(),
+  Debug: App.getUrlParameter("debug") == "true" ? true : false,
+  onLoad: () => customScript(App),
   onResize: () => console.log("Starter Theme Window Resized")
 };
-new app_App(options);
+new App(options);
 })();
 
 /******/ })()
