@@ -17,9 +17,9 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 4, 2026 @ 14:26:07 ET
+ *  Date: Thursday, March 5, 2026 @ 14:45:41 ET
  *  By: nick
- *  ENGrid styles: v0.19.1
+ *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.19.1
  *
  *  Created by 4Site Studios
@@ -21069,6 +21069,22 @@ const options = {
   SkipToMainContentLink: true,
   SrcDefer: true,
   ProgressBar: true,
+  WelcomeBack: {
+    welcomeBackMessage: {
+      display: true,
+      title: "Welcome back, {firstName}!",
+      editText: "Not you?",
+      anchor: ".fast-personal-details",
+      placement: "beforebegin"
+    },
+    personalDetailsSummary: {
+      display: true,
+      title: "Your Information",
+      editText: "Change my info",
+      anchor: ".fast-personal-details",
+      placement: "beforebegin"
+    }
+  },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),
   onResize: () => console.log("Starter Theme Window Resized")
