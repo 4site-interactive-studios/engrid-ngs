@@ -78,10 +78,7 @@
         as="style">
     <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/NG_Logo_W.svg" as="image">
     <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/TPLlogo.png" as="image">
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Regular.woff2" as="font"
-        type="font/woff2" crossorigin> <!-- Content Normal -->
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Bold.woff2" as="font"
-        type="font/woff2" crossorigin> <!-- Content Strong -->
+
 </head>
 
 <body data-engrid-layout="centerleft1col" data-engrid-theme="engrid-ngs" data-engrid-add-input-placeholders data-replace-banner-with-background="if-banner-empty-or-background-video">
@@ -117,7 +114,11 @@
     <!-- Load ENgrid's CSS here so that it always comes after Engaging Networks CSS which gets injected into <head> -->
     <link href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.css" rel="stylesheet"
         type="text/css">
-
+    <!-- Start preloading the Header Font, Body Font, and Label Fonts while the CSS files are still being downloaded -->
+    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Regular.woff2" as="font"
+        type="font/woff2" crossorigin> <!-- Content Normal -->
+    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Bold.woff2" as="font"
+        type="font/woff2" crossorigin> <!-- Content Strong -->
     <div id="engrid">
         <!-- Start EN Page Builder -->
 
