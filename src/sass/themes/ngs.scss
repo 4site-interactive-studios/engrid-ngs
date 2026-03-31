@@ -140,6 +140,19 @@
   //   }
   // }
 
+  .body-headerOutside {
+    padding: 40px 12px;
+  }
+
+  .content-footer {
+    margin-top: 20px;
+    padding: 20px;
+    color: #c6c6c6;
+    background-color: #262626;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
   .radio-to-buttons_donationAmt .en__field--donationAmt {
     .en__field__item--other {
       position: relative;
