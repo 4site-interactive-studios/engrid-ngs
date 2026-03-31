@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 30, 2026 @ 11:44:26 ET
+ *  Date: Tuesday, March 31, 2026 @ 17:18:20 ET
  *  By: nick
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.0
@@ -7853,8 +7853,117 @@ body[data-engrid-debug]:before{
   src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-BlackItalic.woff2) format("woff2");
 }
 [data-engrid-theme=engrid-ngs]{
+  --color_yellow:#ffdc0c;
+  --color_black:#000;
   --default_font-family:"GeographWeb", var(--native-fonts__sans-serif);
-  --a_color:#fc0;
+  --h1_font-size:2.25em;
+  --h1_font-weight:500;
+  --h1_line-height:1.25;
+  --h1_letter-spacing:0.13em;
+  --h1_word-spacing:0.05em;
+  --h2_font-size:1.65em;
+  --h2_font-weight:400;
+  --h2_line-height:1.5;
+  --p_font-weight:initial;
+  --p_line-height:25.6px;
+  --a_border-bottom:1px solid #fc0;
+  --label_line-height:1.6;
+  --label_padding:0 0 6px 0;
+  --input_line-height:normal;
+  --input_background-color:#fff;
+  --input_border-width:1px;
+  --input_border-color:#d5d5d5;
+  --input_border-radius:4px;
+  --input_padding:15px;
+  --button_color:var(--color_white);
+  --button_background-color:var(--color_black);
+  --button_border-radius:initial;
+  --button_color_hover:var(--color_black);
+  --button_background-color_hover:var(--color_yellow);
+  --button_color_checked:var(--button_color_hover);
+  --button_background-color_checked:var(--button_background-color_hover);
+  --give-monthly-donation-amount-appended-label:"/mo";
+  --recurring-frequency__button_count:2;
+  --donation-amount__button_count:3;
+  --give-by-select__button_count:2;
+}
+[data-engrid-theme=engrid-ngs] a{
+  border-bottom:var(--a_border-bottom);
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=engrid-ngs] h1{
+  letter-spacing:var(--h1_letter-spacing);
+  text-transform:uppercase;
+  word-spacing:var(--h1_word-spacing);
+}
+[data-engrid-theme=engrid-ngs] h2{
+  text-transform:uppercase;
+}
+[data-engrid-theme=engrid-ngs] label{
+  display:block;
+  padding:var(--label_padding);
+}
+[data-engrid-theme=engrid-ngs] .en__field__input:not(.en__field__input--vgs){
+  padding:var(--input_padding);
+}
+[data-engrid-theme=engrid-ngs] select.en__field__input:not(.en__field__input--vgs){
+  padding:15px 24px 15px var(--input_padding);
+}
+[data-engrid-theme=engrid-ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other{
+  position:relative;
+}
+[data-engrid-theme=engrid-ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other:before{
+  content:"$";
+  font-size:16px;
+  height:20px;
+  left:19px;
+  line-height:0;
+  position:absolute;
+  top:45%;
+  width:11px;
+}
+[data-engrid-theme=engrid-ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input{
+  background-color:var(--color_white);
+  box-shadow:none;
+  color:#000;
+  font-size:var(--input_font-size);
+  padding:8.7167px 28px 8.7167px 29px;
+}
+[data-engrid-theme=engrid-ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input:focus{
+  background-color:var(--color_white);
+  border-color:var(--button_background-color_checked);
+  color:var(--input_color);
+}
+[data-engrid-theme=engrid-ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__label--item:after{
+  align-self:center;
+  font-size:40% !important;
+  letter-spacing:-1px;
+  margin-left:0 !important;
+}
+[data-engrid-theme=engrid-ngs] .en__field--giveBySelect .en__field__label--item{
+  min-height:65px;
+}
+[data-engrid-theme=engrid-ngs] .en__field--giveBySelect .en__field__label--item img{
+  height:30px;
+  object-fit:contain;
+  width:100%;
+}
+[data-engrid-theme=engrid-ngs] .en__submit button{
+  background-color:var(--button_background-color_hover);
+  border:unset;
+  color:var(--button_color_hover);
+  font-size:18px;
+  font-weight:500;
+  line-height:1.15;
+  margin:30px 0;
+  min-height:60px;
+  text-transform:uppercase;
+  word-spacing:.22em;
+}
+[data-engrid-theme=engrid-ngs] .en__submit button:hover{
+  background-color:var(--button_background-color);
+  color:var(--button_color);
 }
 body{
   opacity:1;
