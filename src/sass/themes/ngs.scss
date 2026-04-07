@@ -97,126 +97,123 @@
   --donation-amount__button_count: 3;
   --give-by-select__button_count: 2;
 
-  a {
-    border-bottom: var(--a_border-bottom);
-    text-decoration: none;
-  }
-
-  h1 {
-    letter-spacing: var(--h1_letter-spacing);
-    word-spacing: var(--h1_word-spacing);
-    text-transform: uppercase;
-  }
-
-  h2 {
-    text-transform: uppercase;
-  }
-
-  label {
-    padding: var(--label_padding);
-    display: block;
-  }
-
-  .en__field__input:not(.en__field__input--vgs) {
-    padding: var(--input_padding);
-  }
-
-  select.en__field__input:not(.en__field__input--vgs) {
-    padding: 15px 24px 15px var(--input_padding);
-  }
-
-  // Mandatory Stars
-  // .en__component .en__field.en__mandatory {
-  //   .en__field__label:not(.en__field__label--item) {
-  //     justify-content: start;
-  //   }
-
-  //   .en__field__label:not(.en__field__label--item)::after {
-  //     content: '*';
-  //     color: red;
-  //     font-size: 22px;
-  //     line-height: 1;
-  //     vertical-align: middle;
-  //   }
-  // }
-
-  .body-headerOutside {
-    padding: 40px 12px;
-  }
-
-  .content-footer {
-    margin-top: 20px;
-    padding: 20px;
-    color: #c6c6c6;
-    background-color: #262626;
-    font-size: 12px;
-    line-height: 1.4;
-  }
-
-  .radio-to-buttons_donationAmt .en__field--donationAmt {
-    .en__field__item--other {
-      position: relative;
+  #engrid {
+    a {
+      border-bottom: var(--a_border-bottom);
+      text-decoration: none;
     }
 
-    .en__field__item--other:before {
-      content: "$";
-      font-size: 16px;
-      height: 20px;
-      left: 19px;
-      line-height: 0;
-      position: absolute;
-      top: 45%;
-      width: 11px;
+    h1 {
+      letter-spacing: var(--h1_letter-spacing);
+      word-spacing: var(--h1_word-spacing);
+      text-transform: uppercase;
     }
 
-    .en__field__item--other input {
-      padding: 8.7167px 28px 8.7167px 29px;
-      background-color: var(--color_white);
-      color: #000000;
-      box-shadow: none;
-      font-size: var(--input_font-size);
+    h2 {
+      text-transform: uppercase;
     }
 
-    .en__field__item--other input:focus {
-      background-color: var(--color_white);
-      color: var(--input_color);
-      border-color: var(--button_background-color_checked);
+    .en__field__input:not(.en__field__input--vgs) {
+      padding: var(--input_padding);
     }
 
-    .en__field__label--item:after {
-      font-size: 40% !important;
-      align-self: center;
-      margin-left: 0 !important;
-      letter-spacing: -1px;
+    select.en__field__input:not(.en__field__input--vgs) {
+      padding: 15px 24px 15px var(--input_padding);
     }
-  }
 
-  .en__field--giveBySelect .en__field__label--item {
-    min-height: 65px;
-  }
+    // Mandatory Stars
+    // .en__component .en__field.en__mandatory {
+    //   .en__field__label:not(.en__field__label--item) {
+    //     justify-content: start;
+    //   }
 
-  .en__field--giveBySelect .en__field__label--item img {
-    height: 30px;
-    width: 100%;
-    object-fit: contain;
-  }
+    //   .en__field__label:not(.en__field__label--item)::after {
+    //     content: '*';
+    //     color: red;
+    //     font-size: 22px;
+    //     line-height: 1;
+    //     vertical-align: middle;
+    //   }
+    // }
 
-  .en__submit button {
-    background-color: var(--button_background-color_hover);
-    color: var(--button_color_hover);
-    border: unset;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.15;
-    margin: 30px 0;
-    min-height: 60px;
-    word-spacing: .22em;
-    text-transform: uppercase;
-  }
+    .body-headerOutside {
+      padding: 40px 12px;
+    }
 
-  .en__submit button:hover {
-    background-color: var(--button_background-color);
-    color: var(--button_color);
+    .content-footer {
+      margin-top: 20px;
+      padding: 20px;
+      color: #c6c6c6;
+      background-color: #262626;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .radio-to-buttons_donationAmt .en__field--donationAmt {
+      .en__field__item--other {
+        position: relative;
+      }
+
+      .en__field__item--other:before {
+        content: "$";
+        font-size: 16px;
+        height: 20px;
+        left: 19px;
+        line-height: 0;
+        position: absolute;
+        top: 45%;
+        width: 11px;
+      }
+
+      .en__field__item--other input {
+        padding: 8.7167px 28px 8.7167px 29px;
+        background-color: var(--color_white);
+        color: #000000;
+        box-shadow: none;
+        font-size: var(--input_font-size);
+      }
+
+      .en__field__item--other input:focus {
+        background-color: var(--color_white);
+        color: var(--input_color);
+        border-color: var(--button_background-color_checked);
+      }
+
+      .en__field__label--item:after {
+        font-size: 40% !important;
+        align-self: center;
+        margin-left: 0 !important;
+        letter-spacing: -1px;
+      }
+    }
+
+    .en__field--giveBySelect .en__field__label--item {
+      min-height: 65px;
+    }
+
+    .en__field--giveBySelect .en__field__label--item img {
+      height: 30px;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .en__submit button {
+      background-color: var(--button_background-color_hover);
+      color: var(--button_color_hover);
+      border: unset;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.15;
+      margin: 30px 0;
+      min-height: 60px;
+      word-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .en__submit button:hover {
+      background-color: var(--button_background-color);
+      color: var(--button_color);
+    }
   }
 }
 
@@ -257,4 +254,5 @@
       @include simplified-header;
     }
   }
+
 }
