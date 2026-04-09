@@ -2,7 +2,7 @@
 // The most broadly used CSS Custom Properties for quick theming.
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
-[data-engrid-theme="engrid-ngs"] {
+[data-engrid-theme="ngs"] {
   --color_yellow: #ffdc0c;
   --color_black: #000000;
 
@@ -218,7 +218,7 @@
 }
 
 /* Add your custom theme styles here */
-[data-engrid-theme="engrid-ngs"] {
+[data-engrid-theme="ngs"] {
   @mixin until-mobile-l {
     // STYLES
   }

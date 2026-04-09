@@ -10,12 +10,17 @@
 
     <!-- Start Google Optimize Script (With anti-flicker snippet) -->
     <!-- IMPORTANT: You must initialize the dataLayer above the anti-flicker snippet or the performance of your site will be negatively impacted. Don't override the data layer later in the page. -->
-    <style>.async-hide { opacity: 0 !important} </style>
-    <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
-    h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
-    (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
-    })(window,document.documentElement,'async-hide','dataLayer',4000,
-    {'GTM-5GDQ9F':true});</script>
+    <style>
+        .async-hide {
+            opacity: 0 !important
+        }
+    </style>
+    <script>(function (a, s, y, n, c, h, i, d, e) {
+            s.className += ' ' + y; h.start = 1 * new Date;
+            h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') };
+            (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;
+        })(window, document.documentElement, 'async-hide', 'dataLayer', 4000,
+            { 'GTM-5GDQ9F': true });</script>
     <script src="https://www.googleoptimize.com/optimize.js?id=GTM-5GDQ9F"></script>
     <!-- End Google Optimize Script (With anti-flicker snippet) -->
 
@@ -25,7 +30,8 @@
     <!-- <link rel="icon" type="image/png" href="https://www.website.org/favicon-32x32.png" sizes="32x32"> -->
     <!-- <link rel="icon" type="image/png" href="https://www.website.org/favicon-16x16.png" sizes="16x16"> -->
     <!-- <link rel="mask-icon" href="https://www.website.org/safari-pinned-tab.svg" color="#000000"> -->
-	<link href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/favicon.ico" rel="shortcut icon">
+    <link href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/favicon.ico"
+        rel="shortcut icon">
     <meta name="msapplication-TileImage" content="https://www.website.org/mstile-144x144.png">
     <meta name="msapplication-config" content="https://www.website.org/browserconfig.xml">
     <title>${page~title} | National Geographic Society</title>
@@ -45,7 +51,8 @@
     <meta name="twitter:site" content="@InsideNatGeo">
     <meta name="twitter:creator" content="@InsideNatGeo">
     <meta name="twitter:title" content="${page~title} | National Geographic Society">
-    <meta name="twitter:image" content="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/Hero+image+with+graphic+frame+1024x512.png">
+    <meta name="twitter:image"
+        content="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/Hero+image+with+graphic+frame+1024x512.png">
     <meta name="twitter:description"
         content="I donated to the National Geographic Society to support science, exploration, and conservation. Will you consider a gift too? Every dollar makes a difference.">
     <meta property="og:type" content="website">
@@ -74,18 +81,26 @@
     <link rel="preconnect" href="//www.googletagmanager.com">
     <link rel="preconnect" href="//www.google-analytics.com">
     <link rel="preconnect" href="//fonts.gstatic.com">
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.css"
+    <link rel="preload"
+        href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.css"
         as="style">
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/NG_Logo_W.svg" as="image">
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/TPLlogo.png" as="image">
+    <link rel="preload"
+        href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/NG_Logo_W.svg"
+        as="image">
+    <link rel="preload"
+        href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/TPLlogo.png"
+        as="image">
     <!-- Start preloading the Header Font, Body Font, and Label Fonts while the CSS files are still being downloaded -->
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Regular.woff2" as="font"
-        type="font/woff2" crossorigin> <!-- Content Normal -->
-    <link rel="preload" href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Bold.woff2" as="font"
-        type="font/woff2" crossorigin> <!-- Content Strong -->
+    <link rel="preload"
+        href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Regular.woff2"
+        as="font" type="font/woff2" crossorigin> <!-- Content Normal -->
+    <link rel="preload"
+        href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-Bold.woff2"
+        as="font" type="font/woff2" crossorigin> <!-- Content Strong -->
 </head>
 
-<body data-engrid-layout="centerleft1col" data-engrid-theme="engrid-ngs" data-engrid-add-input-placeholders data-replace-banner-with-background="if-banner-empty-or-background-video">
+<body data-engrid-layout="centerleft1col" data-engrid-theme="ngs" data-engrid-add-input-placeholders
+    data-replace-banner-with-background="if-banner-empty-or-background-video">
     <noscript>With Javascript disabled this page may not function as expected.</noscript>
 
     <!-- Quickly check to see if the page is in an iFrame and if so set the corresponding Custom Attribute so it can also set the background-color. Must be after <body> otherwise there will be a flash of color -->
@@ -116,8 +131,8 @@
     </script>
 
     <!-- Load ENgrid's CSS here so that it always comes after Engaging Networks CSS which gets injected into <head> -->
-    <link href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.css" rel="stylesheet"
-        type="text/css">
+    <link href="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.css"
+        rel="stylesheet" type="text/css">
 
     <div id="engrid">
         <!-- Start EN Page Builder -->
@@ -126,50 +141,51 @@
 
 
         <!-- End EN Page Builder -->
-</div>
+    </div>
 
-<!-- Additional Default meta tags: Placed at the bottom so any previously defined meta tags in the page take precedence -->
-<meta property="og:title" content="${page~title} | National Geographic Society">
-<meta property="og:site_name" content="National Geographic Society">
-<meta property="og:description"
-    content="I just donated to the National Geographic Society because I want to support science, exploration, and conservation. Will you consider making a gift too? Every dollar donated supports the National Geographic Society's on-the-ground efforts.">
-<meta property="description"
-    content="I just donated to the National Geographic Society because I want to support science, exploration, and conservation. Will you consider making a gift too? Every dollar donated supports the National Geographic Society's on-the-ground efforts.">
+    <!-- Additional Default meta tags: Placed at the bottom so any previously defined meta tags in the page take precedence -->
+    <meta property="og:title" content="${page~title} | National Geographic Society">
+    <meta property="og:site_name" content="National Geographic Society">
+    <meta property="og:description"
+        content="I just donated to the National Geographic Society because I want to support science, exploration, and conservation. Will you consider making a gift too? Every dollar donated supports the National Geographic Society's on-the-ground efforts.">
+    <meta property="description"
+        content="I just donated to the National Geographic Society because I want to support science, exploration, and conservation. Will you consider making a gift too? Every dollar donated supports the National Geographic Society's on-the-ground efforts.">
 
-<!-- If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout -->
-<script>
-    const checkForTwoColumnLayout = document.querySelector('body[data-engrid-layout="centercenter2col"]');
-    const checkForBodyTopContent = document.querySelector('.body-top > *');
-    const checkForBodyMainContent = document.querySelector('.body-main > *');
-    if (checkForTwoColumnLayout && (!checkForBodyTopContent || !checkForBodyMainContent)) {
-        document.querySelector("body").setAttribute("data-engrid-layout", "centercenter1col");
-    }
-</script>
-
-<!-- Placed here so it does not render block the page. loader.min.js conditially loads engrid.js and if necessary replaces engrid.css-->
-<script src="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.js" data-repo-name="engrid-ngs"></script>
-
-<!-- Start Render Critical Javascript -->
-<script>
-    window.addEventListener('DOMContentLoaded', (event) => {
-        // 4Site's simplified image lazy loader
-        var srcDefer = document.querySelectorAll("img[data-src]");
-        for (var i = 0; i < srcDefer.length; i++) {
-            let dataSrc = srcDefer[i].getAttribute("data-src");
-            if (dataSrc) {
-                srcDefer[i].setAttribute("decoding", "async"); // Gets image processing off the main working thread
-                srcDefer[i].setAttribute("loading", "lazy"); // Lets the browser determine when the asset should be downloaded
-                srcDefer[i].setAttribute("src", dataSrc); // Sets the src which will cause the browser to retrieve the asset
-                srcDefer[i].setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENgrid
-                srcDefer[i].removeAttribute("data-src"); // Removes the data-source
-            }
+    <!-- If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout -->
+    <script>
+        const checkForTwoColumnLayout = document.querySelector('body[data-engrid-layout="centercenter2col"]');
+        const checkForBodyTopContent = document.querySelector('.body-top > *');
+        const checkForBodyMainContent = document.querySelector('.body-main > *');
+        if (checkForTwoColumnLayout && (!checkForBodyTopContent || !checkForBodyMainContent)) {
+            document.querySelector("body").setAttribute("data-engrid-layout", "centercenter1col");
         }
-    });
-</script>
-<!-- End Render Critical Javascript -->
+    </script>
 
-<!-- Start Google Tag Manager Script -->
-<script>(function (w, d, s, l, i) {
+    <!-- Placed here so it does not render block the page. loader.min.js conditially loads engrid.js and if necessary replaces engrid.css-->
+    <script src="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/engrid.min.js"
+        data-repo-name="engrid-ngs"></script>
+
+    <!-- Start Render Critical Javascript -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // 4Site's simplified image lazy loader
+            var srcDefer = document.querySelectorAll("img[data-src]");
+            for (var i = 0; i < srcDefer.length; i++) {
+                let dataSrc = srcDefer[i].getAttribute("data-src");
+                if (dataSrc) {
+                    srcDefer[i].setAttribute("decoding", "async"); // Gets image processing off the main working thread
+                    srcDefer[i].setAttribute("loading", "lazy"); // Lets the browser determine when the asset should be downloaded
+                    srcDefer[i].setAttribute("src", dataSrc); // Sets the src which will cause the browser to retrieve the asset
+                    srcDefer[i].setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENgrid
+                    srcDefer[i].removeAttribute("data-src"); // Removes the data-source
+                }
+            }
+        });
+    </script>
+    <!-- End Render Critical Javascript -->
+
+    <!-- Start Google Tag Manager Script -->
+    <script>(function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
                     new Date().getTime(), event: 'gtm.js'
@@ -177,13 +193,13 @@
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-5GDQ9F');</script>
-<!-- End Start Google Tag Manager Script -->
-<!-- Start ThreatMetrix Profiling Tag -->
-<!-- The default ThreatMetrix installation murders page load performance -->
-<!-- To optimize it we have removed the <script> tag and rely on the <iframe> for profiling 100% of site traffic -->
-<!-- <iframe style="width: 100px; height: 100px; border: 0; position: absolute; top: -5000px;"
+    <!-- End Start Google Tag Manager Script -->
+    <!-- Start ThreatMetrix Profiling Tag -->
+    <!-- The default ThreatMetrix installation murders page load performance -->
+    <!-- To optimize it we have removed the <script> tag and rely on the <iframe> for profiling 100% of site traffic -->
+    <!-- <iframe style="width: 100px; height: 100px; border: 0; position: absolute; top: -5000px;"
         src="https://h.online-metrix.net/fp/tags.js?org_id=e0j3u9ji&session_id=e1839-${page~sessionId}&page_id=1"></iframe> -->
-<!-- End ThreatMetrix Profiling Tag -->
+    <!-- End ThreatMetrix Profiling Tag -->
 </body>
 
 </html>

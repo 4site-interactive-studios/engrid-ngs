@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 7, 2026 @ 15:28:00 ET
+ *  Date: Thursday, April 9, 2026 @ 16:44:33 ET
  *  By: nick
- *  ENGrid styles: v0.24.0
- *  ENGrid scripts: v0.24.5
+ *  ENGrid styles: v0.25.0
+ *  ENGrid scripts: v0.25.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -7854,7 +7854,7 @@ body[data-engrid-debug]:before{
   font-weight:700;
   src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-BlackItalic.woff2) format("woff2");
 }
-[data-engrid-theme=engrid-ngs]{
+[data-engrid-theme=ngs]{
   --color_yellow:#ffdc0c;
   --color_black:#000;
   --default_font-family:"GeographWeb", var(--native-fonts__sans-serif);
@@ -7889,29 +7889,29 @@ body[data-engrid-debug]:before{
   --donation-amount__button_count:3;
   --give-by-select__button_count:2;
 }
-[data-engrid-theme=engrid-ngs] #engrid a{
+[data-engrid-theme=ngs] #engrid a{
   border-bottom:var(--a_border-bottom);
   -webkit-text-decoration:none;
   text-decoration:none;
 }
-[data-engrid-theme=engrid-ngs] #engrid h1{
+[data-engrid-theme=ngs] #engrid h1{
   letter-spacing:var(--h1_letter-spacing);
   text-transform:uppercase;
   word-spacing:var(--h1_word-spacing);
 }
-[data-engrid-theme=engrid-ngs] #engrid h2{
+[data-engrid-theme=ngs] #engrid h2{
   text-transform:uppercase;
 }
-[data-engrid-theme=engrid-ngs] #engrid .en__field__input:not(.en__field__input--vgs){
+[data-engrid-theme=ngs] #engrid .en__field__input:not(.en__field__input--vgs){
   padding:var(--input_padding);
 }
-[data-engrid-theme=engrid-ngs] #engrid select.en__field__input:not(.en__field__input--vgs){
+[data-engrid-theme=ngs] #engrid select.en__field__input:not(.en__field__input--vgs){
   padding:15px 24px 15px var(--input_padding);
 }
-[data-engrid-theme=engrid-ngs] #engrid .body-headerOutside{
+[data-engrid-theme=ngs] #engrid .body-headerOutside{
   padding:40px 12px;
 }
-[data-engrid-theme=engrid-ngs] #engrid .content-footer{
+[data-engrid-theme=ngs] #engrid .content-footer{
   background-color:#262626;
   color:#c6c6c6;
   font-size:12px;
@@ -7919,10 +7919,10 @@ body[data-engrid-debug]:before{
   margin-top:20px;
   padding:20px;
 }
-[data-engrid-theme=engrid-ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other{
+[data-engrid-theme=ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other{
   position:relative;
 }
-[data-engrid-theme=engrid-ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other:before{
+[data-engrid-theme=ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other:before{
   content:"$";
   font-size:16px;
   height:20px;
@@ -7932,33 +7932,33 @@ body[data-engrid-debug]:before{
   top:45%;
   width:11px;
 }
-[data-engrid-theme=engrid-ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input{
+[data-engrid-theme=ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input{
   background-color:var(--color_white);
   box-shadow:none;
   color:#000;
   font-size:var(--input_font-size);
   padding:8.7167px 28px 8.7167px 29px;
 }
-[data-engrid-theme=engrid-ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input:focus{
+[data-engrid-theme=ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other input:focus{
   background-color:var(--color_white);
   border-color:var(--button_background-color_checked);
   color:var(--input_color);
 }
-[data-engrid-theme=engrid-ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__label--item:after{
+[data-engrid-theme=ngs] #engrid .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__label--item:after{
   align-self:center;
   font-size:40% !important;
   letter-spacing:-1px;
   margin-left:0 !important;
 }
-[data-engrid-theme=engrid-ngs] #engrid .en__field--giveBySelect .en__field__label--item{
+[data-engrid-theme=ngs] #engrid .en__field--giveBySelect .en__field__label--item{
   min-height:65px;
 }
-[data-engrid-theme=engrid-ngs] #engrid .en__field--giveBySelect .en__field__label--item img{
+[data-engrid-theme=ngs] #engrid .en__field--giveBySelect .en__field__label--item img{
   height:30px;
   object-fit:contain;
   width:100%;
 }
-[data-engrid-theme=engrid-ngs] #engrid .en__submit button{
+[data-engrid-theme=ngs] #engrid .en__submit button{
   background-color:var(--button_background-color_hover);
   border:unset;
   color:var(--button_color_hover);
@@ -7970,7 +7970,7 @@ body[data-engrid-debug]:before{
   text-transform:uppercase;
   word-spacing:.22em;
 }
-[data-engrid-theme=engrid-ngs] #engrid .en__submit button:hover{
+[data-engrid-theme=ngs] #engrid .en__submit button:hover{
   background-color:var(--button_background-color);
   color:var(--button_color);
 }
@@ -8115,7 +8115,7 @@ body[data-engrid-debug]:before{
   font-weight:400;
 }
 [data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous{
-  color:var(--ran__green);
+  color:#fff;
 }
 [data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous:before{
   background-color:#eff6fe;
@@ -8134,6 +8134,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next,[data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit{
   background-color:var(--color_primary);
+  color:#000;
   opacity:1;
   width:190px;
 }

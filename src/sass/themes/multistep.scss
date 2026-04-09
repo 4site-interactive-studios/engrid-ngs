@@ -402,7 +402,7 @@
           }
 
           &.section-navigation__previous {
-            color: var(--ran__green);
+            color: white;
 
             &::before {
               content: "";
@@ -426,6 +426,7 @@
 
           &.section-navigation__submit,
           &.section-navigation__next {
+            color: black;
             background-color: var(--color_primary);
             opacity: 1;
             width: 190px;
