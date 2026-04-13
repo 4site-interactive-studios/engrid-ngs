@@ -8,6 +8,7 @@
  * to the selected designation.
  */
 import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
+import * as cookie from "@4site/engrid-scripts/dist/cookie";
 
 export interface GiftDesignationOptInsConfig {
   designations?: {
@@ -28,16 +29,27 @@ export default class GiftDesignationOptIns {
   private config: GiftDesignationOptInsConfig;
   private selectField: HTMLSelectElement | null = null;
   private optInField: HTMLInputElement | null = null;
+  private other1Field: HTMLInputElement | null = null;
 
   constructor(private incomingConfig: GiftDesignationOptInsConfig) {
     this.config = { ...DEFAULT_CONFIG, ...incomingConfig }
-    if (this.shouldRun()) {
+    if (ENGrid.isThankYouPage()) {
+      // Check what gift designation the supporter selected on the donation form
+      const selectedValue = cookie.get('designation') ?? false
+      if (selectedValue && selectedValue !== "") {
+        ENGrid.setBodyData('designation', 'y')
+      } else {
+        ENGrid.setBodyData('designation', 'n')
+      }
+    } if (this.shouldRun()) {
+      this.other1Field = ENGrid.createHiddenInput("transaction.othamt1")
       this.populateDesignations()
       this.addListeners()
     } else {
       this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.config.fieldName}" does not exist or no designations are configured.`)
       this.hideField()
     }
+    cookie.remove('designation')
   }
 
   private shouldRun() {
@@ -63,11 +75,15 @@ export default class GiftDesignationOptIns {
   private addListeners() {
     this.selectField?.addEventListener("change", (event) => {
       const selectedValue = (event.target as HTMLSelectElement).value
+      this.other1Field!.value = (event.target as HTMLSelectElement).selectedOptions[0].textContent || ""
+      cookie.set('designation', selectedValue)
       if (!selectedValue) {
         this.optInField?.remove()
         this.optInField = null
         this.logger.log(`Removed hidden input for gift designation opt-in because no designation was selected.`)
+        ENGrid.setBodyData('designation', 'n')
       } else {
+        ENGrid.setBodyData('designation', 'y')
         const fieldName = `supporter.questions.${selectedValue}`
         if (!this.optInField) {
           this.optInField = ENGrid.createHiddenInput(fieldName, "Y")

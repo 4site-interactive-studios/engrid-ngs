@@ -26,7 +26,7 @@ const options: Options = {
         "Big Cats Initiative": "476017",
         "Last Wild Places": "476084",
         "Plastics Initiative": "476085",
-        "Pristine Seas": "476097",
+        "Pristine Seas": "476087",
         "Sumatran Rhino": "476088",
         "Elephants": "476089",
         "Photo Ark": "476090",

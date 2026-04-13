@@ -255,4 +255,25 @@
     }
   }
 
+  &:not(#en__pagebuilder):not([data-engrid-debug]) {
+
+    &[data-engrid-designation="n"] .designation-n-hide,
+    &[data-engrid-designation="y"] .designation-y-hide,
+    &[data-engrid-designation="n"] .designation-y-show,
+    &[data-engrid-designation="y"] .designation-n-show {
+      display: none;
+    }
+  }
+
+  &[data-engrid-debug] .designation-n-hide,
+  &[data-engrid-debug] .designation-y-hide,
+  &[data-engrid-debug] .designation-y-show,
+  &[data-engrid-debug] .designation-n-show,
+  #en__pagebuilder .designation-n-hide,
+  #en__pagebuilder .designation-y-hide,
+  #en__pagebuilder .designation-y-show,
+  #en__pagebuilder .designation-n-show {
+    background-color: rgba(0, 0, 255, 0.1019607843) !important;
+  }
+
 }

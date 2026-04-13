@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 13, 2026 @ 15:12:09 ET
+ *  Date: Monday, April 13, 2026 @ 16:13:37 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.0
@@ -7974,6 +7974,13 @@ body[data-engrid-debug]:before{
   background-color:var(--button_background-color);
   color:var(--button_color);
 }
+[data-engrid-theme=ngs]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-designation=n] .designation-n-hide,[data-engrid-theme=ngs]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-designation=n] .designation-y-show,[data-engrid-theme=ngs]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-designation=y] .designation-n-show,[data-engrid-theme=ngs]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-designation=y] .designation-y-hide{
+  display:none;
+}
+[data-engrid-theme=ngs] #en__pagebuilder .designation-n-hide,[data-engrid-theme=ngs] #en__pagebuilder .designation-n-show,[data-engrid-theme=ngs] #en__pagebuilder .designation-y-hide,[data-engrid-theme=ngs] #en__pagebuilder .designation-y-show,[data-engrid-theme=ngs][data-engrid-debug] .designation-n-hide,[data-engrid-theme=ngs][data-engrid-debug] .designation-n-show,[data-engrid-theme=ngs][data-engrid-debug] .designation-y-hide,[data-engrid-theme=ngs][data-engrid-debug] .designation-y-show{
+  background-color:rgba(0,0,255,.102) !important;
+}
+
 [data-engrid-subtheme=multistep]{
   --fields_spacing-inline:.25rem;
   --button_font-size:16px;

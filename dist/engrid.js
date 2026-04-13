@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 13, 2026 @ 15:12:09 ET
+ *  Date: Monday, April 13, 2026 @ 16:13:37 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.0
@@ -25800,6 +25800,7 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
  * to the selected designation.
  */
 
+
 const DEFAULT_CONFIG = {
   designations: {},
   fieldName: "giftDesignation",
@@ -25812,14 +25813,26 @@ class GiftDesignationOptIns {
     _defineProperty(this, "config", void 0);
     _defineProperty(this, "selectField", null);
     _defineProperty(this, "optInField", null);
+    _defineProperty(this, "other1Field", null);
     this.config = _objectSpread(_objectSpread({}, DEFAULT_CONFIG), incomingConfig);
+    if (engrid_ENGrid.isThankYouPage()) {
+      // Check what gift designation the supporter selected on the donation form
+      const selectedValue = get('designation') ?? false;
+      if (selectedValue && selectedValue !== "") {
+        engrid_ENGrid.setBodyData('designation', 'y');
+      } else {
+        engrid_ENGrid.setBodyData('designation', 'n');
+      }
+    }
     if (this.shouldRun()) {
+      this.other1Field = engrid_ENGrid.createHiddenInput("transaction.othamt1");
       this.populateDesignations();
       this.addListeners();
     } else {
       this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.config.fieldName}" does not exist or no designations are configured.`);
       this.hideField();
     }
+    remove('designation');
   }
   shouldRun() {
     this.selectField = engrid_ENGrid.getField(this.config.fieldName);
@@ -25842,11 +25855,15 @@ class GiftDesignationOptIns {
   addListeners() {
     this.selectField?.addEventListener("change", event => {
       const selectedValue = event.target.value;
+      this.other1Field.value = event.target.selectedOptions[0].textContent || "";
+      set('designation', selectedValue);
       if (!selectedValue) {
         this.optInField?.remove();
         this.optInField = null;
         this.logger.log(`Removed hidden input for gift designation opt-in because no designation was selected.`);
+        engrid_ENGrid.setBodyData('designation', 'n');
       } else {
+        engrid_ENGrid.setBodyData('designation', 'y');
         const fieldName = `supporter.questions.${selectedValue}`;
         if (!this.optInField) {
           this.optInField = engrid_ENGrid.createHiddenInput(fieldName, "Y");
@@ -25894,7 +25911,7 @@ const options = {
         "Big Cats Initiative": "476017",
         "Last Wild Places": "476084",
         "Plastics Initiative": "476085",
-        "Pristine Seas": "476097",
+        "Pristine Seas": "476087",
         "Sumatran Rhino": "476088",
         "Elephants": "476089",
         "Photo Ark": "476090",
