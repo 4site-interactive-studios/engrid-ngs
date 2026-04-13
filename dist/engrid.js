@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 9, 2026 @ 16:44:33 ET
+ *  Date: Monday, April 13, 2026 @ 15:12:09 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.0
@@ -25743,9 +25743,133 @@ class DonationLightboxForm {
     }
   }
 }
+;// ./node_modules/@babel/runtime/helpers/esm/typeof.js
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+;// ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js
+
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+;// ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
+
+
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : i + "";
+}
+
+;// ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+
+function _defineProperty(e, r, t) {
+  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+
+;// ./src/scripts/gift-designation-opt-ins.ts
+
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+/**
+ * Gift Designation Opt-Ins
+ * @author npgiano
+ * @date 13-04-2026
+ * Works in tandem with "Donation: Form: Designation Selection" code block
+ * It dynamically populates the gift designation select field with options
+ * from the configuration object and creates a hidden input to opt-in the supporter
+ * to the selected designation.
+ */
+
+const DEFAULT_CONFIG = {
+  designations: {},
+  fieldName: "giftDesignation",
+  parentFieldSelector: "#giftDesignationParent"
+};
+class GiftDesignationOptIns {
+  constructor(incomingConfig) {
+    this.incomingConfig = incomingConfig;
+    _defineProperty(this, "logger", new EngridLogger("NGS GiftDesignationOptIns", "#FCAB23", "dodgerblue", "🧧"));
+    _defineProperty(this, "config", void 0);
+    _defineProperty(this, "selectField", null);
+    _defineProperty(this, "optInField", null);
+    this.config = _objectSpread(_objectSpread({}, DEFAULT_CONFIG), incomingConfig);
+    if (this.shouldRun()) {
+      this.populateDesignations();
+      this.addListeners();
+    } else {
+      this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.config.fieldName}" does not exist or no designations are configured.`);
+      this.hideField();
+    }
+  }
+  shouldRun() {
+    this.selectField = engrid_ENGrid.getField(this.config.fieldName);
+    return !!this.selectField && Object.keys(this.config.designations).length > 0;
+  }
+  populateDesignations() {
+    if (!this.selectField) return;
+    const selectOption = document.createElement("option");
+    selectOption.value = "";
+    selectOption.textContent = "Select a designation";
+    this.selectField.appendChild(selectOption);
+    Object.keys(this.config.designations).forEach(value => {
+      const option = document.createElement("option");
+      option.value = this.config.designations[value];
+      option.textContent = value;
+      this.selectField.appendChild(option);
+    });
+    this.logger.log(`Populated gift designation field: ${this.config.fieldName} with ${Object.keys(this.config.designations).length} options.`);
+  }
+  addListeners() {
+    this.selectField?.addEventListener("change", event => {
+      const selectedValue = event.target.value;
+      if (!selectedValue) {
+        this.optInField?.remove();
+        this.optInField = null;
+        this.logger.log(`Removed hidden input for gift designation opt-in because no designation was selected.`);
+      } else {
+        const fieldName = `supporter.questions.${selectedValue}`;
+        if (!this.optInField) {
+          this.optInField = engrid_ENGrid.createHiddenInput(fieldName, "Y");
+          this.logger.log(`Created hidden input for gift designation opt-in: ${fieldName}`);
+        } else if (this.optInField.name !== fieldName) {
+          this.optInField.name = fieldName;
+          this.logger.log(`Updated hidden input name for gift designation opt-in: ${fieldName}`);
+        }
+      }
+    });
+  }
+  hideField() {
+    const field = document.querySelector(this.config.parentFieldSelector);
+    if (field) {
+      field.classList.add("i1-hide");
+    }
+    this.logger.log(`Hiding gift designation field: ${this.config.parentFieldSelector}`);
+  }
+}
 ;// ./src/index.ts
  // Uses ENGrid via NPM
 // import { Options, App, DonationAmount, DonationFrequency } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -25765,6 +25889,32 @@ const options = {
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     new DonationLightboxForm(DonationAmount, DonationFrequency, App);
+    new GiftDesignationOptIns({
+      designations: {
+        "Big Cats Initiative": "476017",
+        "Last Wild Places": "476084",
+        "Plastics Initiative": "476085",
+        "Pristine Seas": "476097",
+        "Sumatran Rhino": "476088",
+        "Elephants": "476089",
+        "Photo Ark": "476090",
+        "Okavango Delta": "476092",
+        "Conservation": "476093",
+        "Ocean": "1211164",
+        "Land": "1211165",
+        "Human History and Culture": "1211166",
+        "Human Ingenuity": "1211187",
+        "Planetary Health": "1908405",
+        "Space": "1908407",
+        "Science & Research": "2245319",
+        "Exploration & Adventure": "2245322",
+        "Travel": "2245323",
+        "Photography & Storytelling": "2245324",
+        "Education": "2245325"
+      },
+      fieldName: "giftDesignation",
+      parentFieldSelector: "#giftDesignationParent"
+    });
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized")
