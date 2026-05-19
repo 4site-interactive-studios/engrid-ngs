@@ -1,4 +1,4 @@
-import { Options, App, DonationAmount, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationAmount, DonationFrequency, IframeQueue } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import { Options, App, DonationAmount, DonationFrequency } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
@@ -47,6 +47,7 @@ const options: Options = {
       fieldName: "giftDesignation",
       parentFieldSelector: "#giftDesignationParent"
     })
+    new IframeQueue();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized"),

@@ -7,8 +7,9 @@
  * from the configuration object and creates a hidden input to opt-in the supporter
  * to the selected designation.
  */
-import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
+import { ENGrid, EngridLogger, IframeQueue } from "@4site/engrid-scripts";
 import * as cookie from "@4site/engrid-scripts/dist/cookie";
+import { resolveSupporterEmail } from "./helpers/resolve-supporter-email";
 
 export interface GiftDesignationOptInsConfig {
   designations?: {
@@ -28,7 +29,6 @@ export default class GiftDesignationOptIns {
   private logger = new EngridLogger("NGS GiftDesignationOptIns", "#FCAB23", "dodgerblue", "🧧")
   private config: GiftDesignationOptInsConfig;
   private selectField: HTMLSelectElement | null = null;
-  private optInField: HTMLInputElement | null = null;
   private other1Field: HTMLInputElement | null = null;
 
   constructor(private incomingConfig: GiftDesignationOptInsConfig) {
@@ -37,11 +37,27 @@ export default class GiftDesignationOptIns {
       // Check what gift designation the supporter selected on the donation form
       const selectedValue = cookie.get('designation') ?? false
       if (selectedValue && selectedValue !== "") {
+        const queue = IframeQueue.getInstance();
+        resolveSupporterEmail(this.logger).then((email) => {
+          if (email) {
+            queue.enqueue({
+              url: 'https://give.nationalgeographic.org/page/192242/data/1',
+              fields: { [`supporter.questions.${selectedValue}`]: 'Y', 'supporter.emailAddress': email },
+              onComplete: () => {
+                this.logger.log(`Successfully sent gift designation opt-in for designation ID ${selectedValue}.`)
+              }
+            });
+            queue.process();
+          } else {
+            this.logger.error(`Could not resolve supporter email address, so gift designation opt-in for designation ID ${selectedValue} was not sent.`)
+          }
+        });
         ENGrid.setBodyData('designation', 'y')
       } else {
         ENGrid.setBodyData('designation', 'n')
       }
-    } if (this.shouldRun()) {
+    } else if (this.shouldRun()) {
+      ENGrid.createHiddenInput('supporter.questions.476085', 'Y')
       this.other1Field = ENGrid.createHiddenInput("transaction.othamt1")
       this.populateDesignations()
       this.addListeners()
@@ -77,22 +93,7 @@ export default class GiftDesignationOptIns {
       const selectedValue = (event.target as HTMLSelectElement).value
       this.other1Field!.value = (event.target as HTMLSelectElement).selectedOptions[0].textContent || ""
       cookie.set('designation', selectedValue)
-      if (!selectedValue) {
-        this.optInField?.remove()
-        this.optInField = null
-        this.logger.log(`Removed hidden input for gift designation opt-in because no designation was selected.`)
-        ENGrid.setBodyData('designation', 'n')
-      } else {
-        ENGrid.setBodyData('designation', 'y')
-        const fieldName = `supporter.questions.${selectedValue}`
-        if (!this.optInField) {
-          this.optInField = ENGrid.createHiddenInput(fieldName, "Y")
-          this.logger.log(`Created hidden input for gift designation opt-in: ${fieldName}`)
-        } else if (this.optInField.name !== fieldName) {
-          this.optInField.name = fieldName
-          this.logger.log(`Updated hidden input name for gift designation opt-in: ${fieldName}`)
-        }
-      }
+      this.logger.log(`Supporter selected gift designation with ID ${selectedValue} and name "${this.other1Field!.value}".`)
     })
   }
 
