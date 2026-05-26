@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 26, 2026 @ 11:45:38 ET
+ *  Date: Tuesday, May 26, 2026 @ 11:57:22 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -7918,6 +7918,122 @@ body[data-engrid-debug]:before{
   font-style:italic;
   font-weight:700;
   src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographWeb-BlackItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:200;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Thin.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:200;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-ThinItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:300;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Light.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:300;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-LightItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:400;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Regular.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:400;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-RegularItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:500;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Medium.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:500;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-MediumItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:600;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Bold.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:600;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-BoldItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-weight:700;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-Black.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Geograph Edit;
+  font-style:italic;
+  font-weight:700;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GeographEditWeb-BlackItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-weight:600;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-Bold.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-weight:500;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-Medium.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-style:italic;
+  font-weight:500;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-MediumItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-weight:400;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-Regular.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-style:italic;
+  font-weight:400;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-RegularItalic.woff2) format("woff2");
+}
+@font-face{
+  font-display:swap;
+  font-family:Grosvenor Book;
+  font-weight:600;
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/GrosvenorBook-SemiBold.woff2) format("woff2");
 }
 [data-engrid-theme=ngs]{
   --color_yellow:#ffdc0c;
