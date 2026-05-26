@@ -6,6 +6,9 @@
   --color_yellow: #ffdc0c;
   --color_black: #000000;
 
+  // LAYOUT DEFAULT
+  --engrid__body_padding: 0px 32px;
+
   // TYPOGRAPHY DEFAULT
   --default_font-family: "GeographWeb", var(--native-fonts__sans-serif);
   // --default_color: initial;
@@ -221,6 +224,8 @@
 [data-engrid-theme="ngs"] {
   @mixin until-mobile-l {
     // STYLES
+    --engrid__body_padding: 0px 16px;
+    --engrid__body-main_padding: 0px 8px;
   }
 
   @mixin from-mobile-l {
