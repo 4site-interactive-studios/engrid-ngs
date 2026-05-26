@@ -3,10 +3,24 @@
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 [data-engrid-theme="ngs"] {
-  --color_yellow: #ffdc0c;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-xs: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+
+  --color_yellow: #FFCC00;
   --color_black: #000000;
+  --color_sand: #F1EEE9;
+  --color_sand_50: #FDFBF7;
+  --color_gray_900: #111B2B;
+  --color_gray_700: #333333;
 
   // LAYOUT DEFAULT
+  --engrid__body_background-color: var(--color_sand);
   --engrid__body_padding: 0px 32px;
 
   // TYPOGRAPHY DEFAULT
@@ -31,14 +45,14 @@
   --h2_line-height: 1.5;
 
   // TYPOGRAPHY P
-  // --p_font-family: var(--default_font-family);
+  --p_font-family: "Geograph Edit", var(--default_font-family);
   // --p_color: initial;
   // --p_font-size: var(--root_font-size);
   --p_font-weight: initial;
   --p_line-height: 25.6px;
 
   // TYPOGRAPHY A
-  // --a_font-family: var(--default_font-family);
+  --a_font-family: var(--p_font-family);
   // --a_color: #FFCC00;
   --a_border-bottom: 1px solid rgb(255, 204, 0);
 
@@ -48,22 +62,32 @@
   // --a_text-decoration_hover: initial;
 
   // TYPOGRAPHY LABEL
-  --label_line-height: 1.6;
-  --label_padding: 0 0 6px 0;
+  --label_font-family: var(--p_font-family);
+  --label_font-weight: 500;
+  --label_line-height: 22px;
+  --label_color: var(--color_gray_900);
   // TYPOGRAPHY INPUT
-  // --input_font-family: var(--default_font-family);
+  --input_font-family: var(--p_font-family);
   // --input_color: #000000;
   // --input_font-size: var(--root_font-size);
   // --input_font-weight: initial;
   --input_line-height: normal;
-  --input_background-color: #fff;
+  --input_background-color: var(--color_white, #fff);
   --input_border-width: 1px;
-  --input_border-color: #d5d5d5;
-  --input_border-radius: 4px;
-  // --input_placeholder-color: var(--color_light-gray);
-  // --input_box-shadow: inset 0 2px 2px -1px rgba(74, 74, 104, 0.1);
-  --input_padding: 15px;
+  --input_border-color: var(--color_black, #000);
+  --input_border-radius: 0px;
+  --input_padding: 18px var(--spacing-4, 16px);
+  --input_placeholder-color: var(--color_gray_700);
+  --input_color: var(--color_black);
+  --input_box-shadow: 0 2px 2px -1px rgba(231, 235, 238, 0.20) inset;
 
+  --checkbox_width: 24px;
+  --checkbox_height: 24px;
+  --checkbox_top: 2px;
+  --checkbox_border-width: 2px;
+  --checkbox_color_checked: var(--color_white);
+  --checkbox_background-color_checked: var(--color_black);
+  --checkbox_content_checked: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Crect%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M6.5%2011.5L10.1429%2016L17%207%22%20stroke%3D%22white%22%20stroke-width%3D%222.5%22%2F%3E%3C%2Fsvg%3E");
   // TYPOGRAPHY INPUT:FOCUS
   // TYPOGRAPHY INPUT:HOVER
   // --input_color_hover: var(--input_color);
@@ -79,6 +103,7 @@
   // --button_font-weight: initial;
   // --button_line-height: initial;
   --button_background-color: var(--color_black);
+  --button_padding: 14px 22px;
   // --button_border-width: 1px;
   // --button_border-color: var(--color_black);
   --button_border-radius: initial;
@@ -98,7 +123,11 @@
   // --give-annual-donation-amount-appended-label: "/yr";
   --recurring-frequency__button_count: 2;
   --donation-amount__button_count: 3;
-  --give-by-select__button_count: 2;
+  --give-by-select__button_count: 1;
+
+  // FIELDS
+  // --fields_spacing-inline: var(--spacing-4, 16px);
+  // --fields_spacing-block: calc(var(--spacing-3, 12px)*.5);
 
   #engrid {
     a {
@@ -120,8 +149,35 @@
       padding: var(--input_padding);
     }
 
+    .en__component--formblock .en__field.en__field--withOther .en__field__element,
+    .en__component--svblock .en__field.en__field--withOther .en__field__element,
+    .en__registrants__registrantDetails .en__field.en__field--withOther .en__field__element {
+      margin-left: unset;
+      margin-right: unset;
+    }
+
     select.en__field__input:not(.en__field__input--vgs) {
-      padding: 15px 24px 15px var(--input_padding);
+      appearance: none;
+      padding: var(--input_padding);
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M13.354%206.35354L8.35403%2011.3535C8.30759%2011.4%208.25245%2011.4369%208.19175%2011.4621C8.13105%2011.4872%208.06599%2011.5002%208.00028%2011.5002C7.93457%2011.5002%207.86951%2011.4872%207.80881%2011.4621C7.74811%2011.4369%207.69296%2011.4%207.64653%2011.3535L2.64653%206.35354C2.55271%206.25972%202.5%206.13247%202.5%205.99979C2.5%205.86711%202.55271%205.73986%202.64653%205.64604C2.74035%205.55222%202.8676%205.49951%203.00028%205.49951C3.13296%205.49951%203.26021%205.55222%203.35403%205.64604L8.00028%2010.2929L12.6465%205.64604C12.693%205.59958%2012.7481%205.56273%2012.8088%205.53759C12.8695%205.51245%2012.9346%205.49951%2013.0003%205.49951C13.066%205.49951%2013.131%205.51245%2013.1917%205.53759C13.2524%205.56273%2013.3076%205.59958%2013.354%205.64604C13.4005%205.69249%2013.4373%205.74764%2013.4625%205.80834C13.4876%205.86904%2013.5006%205.93409%2013.5006%205.99979C13.5006%206.06549%2013.4876%206.13054%2013.4625%206.19124C13.4373%206.25193%2013.4005%206.30708%2013.354%206.35354Z%22%20fill%3D%22%23333333%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right center;
+      background-size: 16px;
+    }
+
+    .en__field__label {
+      font-feature-settings: 'ss05' on;
+    }
+
+    input[type="checkbox"]+label {
+      align-items: flex-start;
+      padding: 0px var(--spacing-4, 16px);
+    }
+
+    .en__component--formblock .en__field,
+    .en__component--svblock .en__field,
+    .en__registrants__registrantDetails .en__field {
+      margin-bottom: 4px;
     }
 
     // Mandatory Stars
@@ -150,6 +206,26 @@
       background-color: #262626;
       font-size: 12px;
       line-height: 1.4;
+    }
+
+    .form-heading h2 {
+      text-transform: capitalize;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 36px;
+      display: flex;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    .form-heading h2::before {
+      width: 4px;
+      height: 34px;
+      content: "";
+      display: inline-block;
+      background-color: var(--color_black);
+      margin-right: 30px;
     }
 
     .radio-to-buttons_donationAmt .en__field--donationAmt {
@@ -216,6 +292,20 @@
     .en__submit button:hover {
       background-color: var(--button_background-color);
       color: var(--button_color);
+    }
+  }
+
+  .gift-summary {
+    background-color: var(--color_sand_50);
+    padding: var(--spacing-6, 24px) var(--spacing-8, 32px);
+    margin: var(--spacing-3, 12px) 0;
+    border: 1px solid var(--color_black);
+    display: grid;
+    grid-template-columns: 124px auto;
+    gap: var(--spacing-10, 40px);
+
+    p {
+      margin: 0;
     }
   }
 }
