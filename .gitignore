@@ -1,6 +1,8 @@
 .DS_Store
 engrid.code-workspace
 .idea/
+.vscode
+
 # Logs
 logs
 *.log
