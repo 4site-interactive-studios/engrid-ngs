@@ -139,6 +139,10 @@
   // --fields_spacing-inline: var(--spacing-4, 16px);
   // --fields_spacing-block: calc(var(--spacing-3, 12px)*.5);
 
+  .page-backgroundImage:before:hover {
+    border: 10px solid red;
+  }
+
   a {
     font-size: var(--default_font-size);
     text-decoration: none;

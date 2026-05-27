@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 27, 2026 @ 17:37:40 ET
+ *  Date: Wednesday, May 27, 2026 @ 17:55:19 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -26805,9 +26805,107 @@ class GiftDesignationOptIns {
     this.logger.log(`Hiding gift designation field: ${this.config.parentFieldSelector}`);
   }
 }
+;// ./src/scripts/image-credits.ts
+
+function image_credits_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function image_credits_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? image_credits_ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : image_credits_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+/**
+ * Image Credits
+ * @author npgiano
+ * @date 27-05-2026
+ * Extracts background image credits from the page and makes them available
+ * to the application. Expects a DOM structure like:
+ * <div class="hide background-image-credits">
+ *   <div class="background-image-credits-author">Author Name</div>
+ *   <div class="background-image-credits-description">Description</div>
+ * </div>
+ */
+
+const image_credits_DEFAULT_CONFIG = {
+  creditsContainerSelector: ".background-image-credits",
+  authorSelector: ".background-image-credits-author",
+  descriptionSelector: ".background-image-credits-description"
+};
+class ImageCredits {
+  constructor(incomingConfig = {}) {
+    this.incomingConfig = incomingConfig;
+    _defineProperty(this, "logger", new EngridLogger("NGS ImageCredits", "#FCAB23", "dodgerblue", "📷"));
+    _defineProperty(this, "config", void 0);
+    _defineProperty(this, "author", null);
+    _defineProperty(this, "description", null);
+    this.config = image_credits_objectSpread(image_credits_objectSpread({}, image_credits_DEFAULT_CONFIG), incomingConfig);
+    if (!this.shouldRun()) {
+      this.logger.log(`ImageCredits will not run because the container "${this.config.creditsContainerSelector}" does not exist.`);
+      return;
+    }
+    this.extractCredits();
+    this.displayCredits();
+  }
+  shouldRun() {
+    const container = document.querySelector(this.config.creditsContainerSelector);
+    return !!container;
+  }
+  extractCredits() {
+    const container = document.querySelector(this.config.creditsContainerSelector);
+    if (!container) return;
+    const authorEl = container.querySelector(this.config.authorSelector);
+    const descriptionEl = container.querySelector(this.config.descriptionSelector);
+    if (authorEl) {
+      this.author = authorEl.textContent?.trim() ?? null;
+    }
+    if (descriptionEl) {
+      this.description = descriptionEl.textContent?.trim() ?? null;
+    }
+    this.logger.log(`Extracted image credits - Author: "${this.author ?? "N/A"}", Description: "${this.description ?? "N/A"}"`);
+  }
+  displayCredits() {
+    const fab = document.createElement("div");
+    fab.className = "image-credits-fab";
+    const hoverCard = document.createElement("div");
+    hoverCard.className = "image-credits-hover-card";
+    hoverCard.innerHTML = `
+    <div class="image-credits-hover-card-content">
+      <h5 class="image-credits-author">${this.author ? `&copy; ${this.author}` : ""}</h5>
+      <p class="image-credits-description">${this.description ? `${this.description}` : ""}</p>
+    </div>
+    `;
+    const pageBackground = document.querySelector(".page-backgroundImage");
+    if (!pageBackground) return;
+    pageBackground.appendChild(fab);
+    pageBackground.appendChild(hoverCard);
+    const MIN_VIEWPORT = 800;
+    const HOVER_BOUNDARY = 640;
+    let isHovering = false;
+    const setHover = state => {
+      if (state === isHovering) return;
+      isHovering = state;
+      hoverCard.classList.toggle("visible", state);
+    };
+    const onMouseMove = e => {
+      setHover(e.clientX >= HOVER_BOUNDARY);
+    };
+    const onMouseOut = e => {
+      if (e.relatedTarget === null) setHover(false);
+    };
+    const mq = window.matchMedia(`(min-width: ${MIN_VIEWPORT}px)`);
+    const applyViewportState = () => {
+      if (mq.matches) {
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseout", onMouseOut);
+      } else {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseout", onMouseOut);
+        setHover(false);
+      }
+    };
+    applyViewportState();
+    mq.addEventListener("change", applyViewportState);
+  }
+}
 ;// ./src/index.ts
  // Uses ENGrid via NPM
 // import { Options, App, DonationAmount, DonationFrequency } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -26855,6 +26953,7 @@ const options = {
       parentFieldSelector: "#giftDesignationParent"
     });
     new IframeQueue();
+    new ImageCredits();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized")

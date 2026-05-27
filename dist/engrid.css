@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 27, 2026 @ 17:37:40 ET
+ *  Date: Wednesday, May 27, 2026 @ 17:55:19 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -8109,6 +8109,9 @@ body[data-engrid-debug]:before{
   --donation-amount__button_count:3;
   --give-by-select__button_count:1;
 }
+[data-engrid-theme=ngs] .page-backgroundImage:before:hover{
+  border:10px solid red;
+}
 [data-engrid-theme=ngs] a{
   font-size:var(--default_font-size);
   line-height:22px;
@@ -8932,6 +8935,66 @@ body[data-engrid-debug]:before{
 [data-engrid-subtheme=multistep]:not([data-engrid-embedded]) #engrid{
   margin:0 auto;
   max-width:270px;
+}
+
+@media (max-width:799px){
+  [data-engrid-page-background=image] .image-credits-fab,[data-engrid-page-background=image] .image-credits-hover-card{
+    display:none;
+  }
+}
+[data-engrid-page-background=image] .image-credits-fab{
+  align-items:center;
+  background-color:#0009;
+  border-radius:50%;
+  bottom:16px;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  height:32px;
+  justify-content:center;
+  position:fixed;
+  right:16px;
+  width:32px;
+  z-index:1000;
+}
+[data-engrid-page-background=image] .image-credits-fab:before{
+  content:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none'%3E%3Cpath d='M6 0c3.32 0 6 2.69 6 6s-2.68 6-6 6-6-2.69-6-6 2.68-6 6-6Zm0 11.236c2.893 0 5.211-2.355 5.211-5.236C11.211 3.12 8.893.764 6 .764 3.107.764.789 3.119.789 6c0 2.88 2.318 5.236 5.211 5.236Zm.395-3.087c.723 0 1.364-.271 1.775-.685v1.799c-.559.334-1.233.493-1.923.493-2.137 0-3.863-1.671-3.863-3.74 0-2.053 1.726-3.756 3.863-3.756.69 0 1.364.16 1.923.493v1.799c-.411-.398-1.052-.669-1.775-.669-1.283 0-2.285.907-2.285 2.133 0 1.225 1.002 2.133 2.285 2.133Z' fill='%23fff'/%3E%3C/svg%3E");
+  height:12px;
+  transform:translateY(-50%);
+  width:12px;
+}
+[data-engrid-page-background=image] .image-credits-hover-card{
+  align-items:center;
+  background:linear-gradient(180deg, #0000, #000);
+  bottom:0;
+  color:var(--color_white);
+  display:flex;
+  flex-direction:column;
+  height:613px;
+  justify-content:flex-end;
+  left:640px;
+  opacity:0;
+  padding-bottom:52px;
+  pointer-events:none;
+  position:fixed;
+  text-align:center;
+  transition:opacity .3s ease;
+  width:calc(100vw - 640px);
+}
+[data-engrid-page-background=image] .image-credits-hover-card.visible{
+  opacity:1;
+}
+[data-engrid-page-background=image] .image-credits-hover-card.visible .image-credits-hover-card-content{
+  opacity:1;
+  transform:translateY(0);
+}
+[data-engrid-page-background=image] .image-credits-hover-card .image-credits-hover-card-content{
+  max-width:384px;
+  opacity:0;
+  padding:0 16px;
+  transform:translateY(10px);
+  transition:opacity .3s ease,transform .3s ease;
+  z-index:1000;
 }
 body{
   opacity:1;

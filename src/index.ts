@@ -5,6 +5,7 @@ import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
 import GiftDesignationOptIns from "./scripts/gift-designation-opt-ins";
+import ImageCredits from "./scripts/image-credits";
 
 const options: Options = {
   applePay: false,
@@ -48,6 +49,7 @@ const options: Options = {
       parentFieldSelector: "#giftDesignationParent"
     })
     new IframeQueue();
+    new ImageCredits();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized"),

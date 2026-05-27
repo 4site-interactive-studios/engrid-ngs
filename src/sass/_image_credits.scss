@@ -1,0 +1,70 @@
+[data-engrid-page-background="image"] {
+
+  .image-credits-fab,
+  .image-credits-hover-card {
+    @media (max-width: 799px) {
+      display: none;
+    }
+  }
+
+  .image-credits-fab {
+    position: fixed;
+    z-index: 1000;
+    bottom: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .image-credits-fab::before {
+    content: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M6%200C9.32055%200%2012%202.68966%2012%206C12%209.31035%209.32055%2012%206%2012C2.67945%2012%200%209.31035%200%206C0%202.68966%202.67945%200%206%200ZM6%2011.2361C8.89315%2011.2361%2011.211%208.88064%2011.211%206C11.211%203.11936%208.89315%200.763926%206%200.763926C3.10685%200.763926%200.789041%203.11936%200.789041%206C0.789041%208.88064%203.10685%2011.2361%206%2011.2361ZM6.39452%208.14854C7.11781%208.14854%207.7589%207.87799%208.16986%207.46419V9.2626C7.61096%209.59682%206.93699%209.75597%206.24657%209.75597C4.10959%209.75597%202.38356%208.08488%202.38356%206.01592C2.38356%203.96287%204.10959%202.25995%206.24657%202.25995C6.93699%202.25995%207.61096%202.4191%208.16986%202.75332V4.55172C7.7589%204.15385%207.11781%203.88329%206.39452%203.88329C5.11233%203.88329%204.10959%204.79045%204.10959%206.01592C4.10959%207.24138%205.11233%208.14854%206.39452%208.14854Z%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E");
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+  }
+
+  .image-credits-hover-card {
+    position: fixed;
+    width: calc(100vw - 640px);
+    bottom: 0;
+    left: 640px;
+    text-align: center;
+    color: var(--color_white);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #000 100%);
+    height: 613px;
+    padding-bottom: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    &.visible .image-credits-hover-card-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .image-credits-hover-card-content {
+      z-index: 1000;
+      max-width: 384px;
+      padding: 0 16px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+  }
+
+}
