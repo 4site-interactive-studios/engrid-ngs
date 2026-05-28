@@ -80,6 +80,15 @@ export default class ImageCredits {
   }
 
   private displayCredits() {
+    if (!this.author && !this.description) return;
+
+    if (this.author) {
+      const footerCredits = document.createElement("p");
+      footerCredits.className = "footer-image-credits";
+      footerCredits.textContent = `Photo © ${this.author}`;
+      const insertPoint = document.querySelector(".footer-main-copy");
+      insertPoint?.appendChild(footerCredits);
+    }
     const fab = document.createElement("div");
     fab.className = "image-credits-fab";
 
@@ -97,7 +106,7 @@ export default class ImageCredits {
     pageBackground.appendChild(fab);
     pageBackground.appendChild(hoverCard);
 
-    const MIN_VIEWPORT = 800;
+    const MIN_VIEWPORT = 821;
     const HOVER_BOUNDARY = 640;
     let isHovering = false;
 

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 27, 2026 @ 17:55:19 ET
+ *  Date: Thursday, May 28, 2026 @ 11:36:13 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -26859,6 +26859,14 @@ class ImageCredits {
     this.logger.log(`Extracted image credits - Author: "${this.author ?? "N/A"}", Description: "${this.description ?? "N/A"}"`);
   }
   displayCredits() {
+    if (!this.author && !this.description) return;
+    if (this.author) {
+      const footerCredits = document.createElement("p");
+      footerCredits.className = "footer-image-credits";
+      footerCredits.textContent = `Photo © ${this.author}`;
+      const insertPoint = document.querySelector(".footer-main-copy");
+      insertPoint?.appendChild(footerCredits);
+    }
     const fab = document.createElement("div");
     fab.className = "image-credits-fab";
     const hoverCard = document.createElement("div");
@@ -26873,7 +26881,7 @@ class ImageCredits {
     if (!pageBackground) return;
     pageBackground.appendChild(fab);
     pageBackground.appendChild(hoverCard);
-    const MIN_VIEWPORT = 800;
+    const MIN_VIEWPORT = 821;
     const HOVER_BOUNDARY = 640;
     let isHovering = false;
     const setHover = state => {

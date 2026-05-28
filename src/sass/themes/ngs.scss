@@ -428,7 +428,6 @@
       margin-top: var(--spacing-16, 64px);
       width: calc(100% + 64px);
       height: 515px;
-      max-width: 640px;
     }
 
     .footer-image-container::after {
@@ -454,26 +453,12 @@
 
 /* Add your custom theme styles here */
 [data-engrid-theme="ngs"] {
-  @mixin stacked-header {
-
-    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] .page-backgroundImage:before,
-    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] figure.media-with-attribution {
-      background-position: center;
-      left: $one_col_body-column_max-width;
-      right: 0;
-      height: 470px;
-    }
+  @mixin mobile-and-tablet {
 
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
       .page-backgroundImage {
         grid-row: content-header;
         grid-column: pc;
-      }
-    }
-
-    &:not(#en__pagebuilder) {
-      .page-backgroundImage img {
-        display: block;
       }
     }
 
@@ -483,6 +468,81 @@
       left: 0;
       right: $one_col_body-column_max-width;
       width: calc(100% - $one_col_body-column_max-width);
+    }
+
+
+    &:not(#en__pagebuilder) {
+      .page-backgroundImage img {
+        display: unset;
+      }
+
+      .page-backgroundImage img.background-desktop {
+        display: none;
+      }
+
+      .hideif-mobile {
+        display: none;
+      }
+    }
+
+  }
+
+  @mixin tablet {
+    @include mobile-and-tablet;
+
+    form>.en__component--advrow {
+      grid-template-columns: unset;
+    }
+
+    .body-headerOutside .en__component,
+    .body-header .en__component,
+    .body-title .en__component,
+    .body-banner .en__component,
+    .body-bannerOverlay .en__component,
+    .body-top .en__component,
+    .body-main .en__component,
+    .body-bottom .en__component,
+    .body-footer .en__component,
+    .body-footerOutside .en__component {
+      max-width: 576px;
+      width: 100vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+
+    &:not(#en__pagebuilder) {
+      .hideif-tablet {
+        display: none;
+      }
+    }
+
+
+  }
+
+  @mixin mobile {
+    @include mobile-and-tablet;
+
+    // STYLES
+    --engrid__body_padding: 0px 16px;
+    --engrid__body-main_padding: 0px 8px;
+
+    --engrid__body-headerOutside_padding: var(--spacing-6, 24px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
+    --engrid__content-footer_padding: var(--spacing-20, 80px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
+
+    --h1_font-size: 24px;
+    --h1_line-height: 32px;
+
+    --p_font-size: 14px;
+    --p_line-height: 22px;
+
+
+    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] .page-backgroundImage:before,
+    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] figure.media-with-attribution {
+      background-position: center;
+      left: $one_col_body-column_max-width;
+      right: 0;
+      height: 470px;
     }
 
 
@@ -523,23 +583,6 @@
       }
     }
 
-
-  }
-
-  @mixin until-mobile-l {
-    // STYLES
-    --engrid__body_padding: 0px 16px;
-    --engrid__body-main_padding: 0px 8px;
-
-    --engrid__body-headerOutside_padding: var(--spacing-6, 24px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
-    --engrid__content-footer_padding: var(--spacing-20, 80px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
-
-    --h1_font-size: 24px;
-    --h1_line-height: 32px;
-
-    --p_font-size: 14px;
-    --p_line-height: 22px;
-
     .gift-summary {
       display: flex;
       flex-direction: column;
@@ -558,10 +601,24 @@
       margin-right: -16px;
       width: calc(100% + 32px);
     }
+
+    &:not(#en__pagebuilder) {
+      .hideif-mobile {
+        display: none;
+      }
+    }
   }
 
-  @mixin from-mobile-l {
+  @mixin desktop {
+
     // STYLES
+    .background-mobile {
+      display: none;
+    }
+
+    .hideif-desktop {
+      display: none;
+    }
   }
 
   @mixin simplified-header {
@@ -571,15 +628,15 @@
   // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
   &[data-engrid-layout] {
     @media (max-width: 640px) {
-      @include stacked-header;
+      @include mobile;
     }
 
-    @media (max-width: 425px) {
-      @include until-mobile-l;
+    @media (min-width: 641px) and (max-width: 799px) {
+      @include tablet;
     }
 
-    @media (min-width: 426px) {
-      @include from-mobile-l;
+    @media (min-width: 800px) {
+      @include desktop;
     }
   }
 

@@ -2,8 +2,8 @@
 
   .image-credits-fab,
   .image-credits-hover-card {
-    @media (max-width: 799px) {
-      display: none;
+    @media (max-width: 820px) {
+      display: none !important;
     }
   }
 
@@ -67,4 +67,9 @@
     }
   }
 
+  @media (min-width: 821px) {
+    .footer-image-credits {
+      display: none;
+    }
+  }
 }
