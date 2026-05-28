@@ -27,6 +27,7 @@
   --engrid__body_padding: 0px 32px;
   --engrid__body-headerOutside_padding: 30px 30px 10px 30px;
   --engrid__body-headerOutside_background-color: var(--color_sand);
+  --engrid__body-top_padding: 0px 16px 40px 16px;
   --engrid__body-bottom_padding: 0px 32px 40px 32px;
   --engrid__content-footer_padding: var(--spacing-10) var(--spacing-8) 0px var(--spacing-8);
 
@@ -48,6 +49,10 @@
   --h2_font-size: 1.65em;
   --h2_font-weight: 400;
   --h2_line-height: 1.5;
+
+  --h5_font-size: 18px;
+  --h5_font-weight: 500;
+  --h5_line-height: normal;
 
   --h6_font-size: 12px;
   --h6_font-weight: 500;
@@ -215,6 +220,7 @@
   //   }
   // }
 
+  // Header
   .body-headerOutside {
     .en__component {
       display: flex;
@@ -239,7 +245,49 @@
     }
   }
 
+  // Body Header
+  // -- Progress Bars
+  .enWidget--progressBar {
+    padding: 0;
+    color: var(--color_black);
+    font-family: var(--default_font-family);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 40px;
 
+    .enWidget__copy--above {
+      margin-bottom: var(--spacing-3, 12px);
+    }
+
+    .enWidget__copy--below {
+      margin-top: var(--spacing-3, 12px);
+    }
+
+    .enWidget__fill__count {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+      transform: translateY(-50%);
+      font-weight: 500;
+    }
+
+    .enWidget__fill__count--hidden,
+    .enWidget__fill__count--squeezed {
+      visibility: visible;
+    }
+
+    .enWidget__progress {
+      position: relative;
+      border-radius: 0;
+    }
+
+    h5 {
+      max-width: 420px;
+    }
+  }
+
+  // Form
   .form-heading h2 {
     text-transform: capitalize;
     font-size: 30px;
@@ -340,12 +388,7 @@
     }
   }
 
-  .content-footerSpacer {
-    height: var(--spacing-10, 40px);
-    background-color: var(--engrid__body_background-color);
-  }
-
-
+  // Body Footer
   .badges-footer {
     --p_font-size: 14px;
     max-width: 400px;
@@ -358,6 +401,12 @@
     img {
       max-width: unset;
     }
+  }
+
+  // Content Footer
+  .content-footerSpacer {
+    height: var(--spacing-10, 40px);
+    background-color: var(--engrid__body_background-color);
   }
 
   .content-footer {

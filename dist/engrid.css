@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 28, 2026 @ 11:36:13 ET
+ *  Date: Thursday, May 28, 2026 @ 14:37:29 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -8057,6 +8057,7 @@ body[data-engrid-debug]:before{
   --engrid__body_padding:0px 32px;
   --engrid__body-headerOutside_padding:30px 30px 10px 30px;
   --engrid__body-headerOutside_background-color:var(--color_sand);
+  --engrid__body-top_padding:0px 16px 40px 16px;
   --engrid__body-bottom_padding:0px 32px 40px 32px;
   --engrid__content-footer_padding:var(--spacing-10) var(--spacing-8) 0px var(--spacing-8);
   --default_font-family:"GeographWeb", var(--native-fonts__sans-serif);
@@ -8066,6 +8067,9 @@ body[data-engrid-debug]:before{
   --h2_font-size:1.65em;
   --h2_font-weight:400;
   --h2_line-height:1.5;
+  --h5_font-size:18px;
+  --h5_font-weight:500;
+  --h5_line-height:normal;
   --h6_font-size:12px;
   --h6_font-weight:500;
   --h6_line-height:18px;
@@ -8172,6 +8176,38 @@ body[data-engrid-debug]:before{
   max-width:214px;
   text-transform:uppercase;
 }
+[data-engrid-theme=ngs] .enWidget--progressBar{
+  color:var(--color_black);
+  font-family:var(--default_font-family);
+  font-size:32px;
+  font-weight:500;
+  line-height:40px;
+  padding:0;
+}
+[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__copy--above{
+  margin-bottom:var(--spacing-3, 12px);
+}
+[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__copy--below{
+  margin-top:var(--spacing-3, 12px);
+}
+[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__fill__count{
+  font-weight:500;
+  position:absolute;
+  text-align:center;
+  top:50%;
+  transform:translateY(-50%);
+  width:100%;
+}
+[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__fill__count--hidden,[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__fill__count--squeezed{
+  visibility:visible;
+}
+[data-engrid-theme=ngs] .enWidget--progressBar .enWidget__progress{
+  border-radius:0;
+  position:relative;
+}
+[data-engrid-theme=ngs] .enWidget--progressBar h5{
+  max-width:420px;
+}
 [data-engrid-theme=ngs] .form-heading h2{
   display:flex;
   font-size:30px;
@@ -8257,10 +8293,6 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=ngs] .gift-summary p{
   margin:0;
 }
-[data-engrid-theme=ngs] .content-footerSpacer{
-  background-color:var(--engrid__body_background-color);
-  height:var(--spacing-10, 40px);
-}
 [data-engrid-theme=ngs] .badges-footer{
   --p_font-size:14px;
   align-items:center;
@@ -8272,6 +8304,10 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=ngs] .badges-footer img{
   max-width:unset;
+}
+[data-engrid-theme=ngs] .content-footerSpacer{
+  background-color:var(--engrid__body_background-color);
+  height:var(--spacing-10, 40px);
 }
 [data-engrid-theme=ngs] .content-footer{
   --p_font-size:14px;
