@@ -2,6 +2,7 @@
 engrid.code-workspace
 .idea/
 .vscode
+.worktrees
 
 # Logs
 logs
