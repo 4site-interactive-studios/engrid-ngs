@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 28, 2026 @ 14:37:29 ET
+ *  Date: Thursday, May 28, 2026 @ 17:34:03 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -8057,7 +8057,7 @@ body[data-engrid-debug]:before{
   --engrid__body_padding:0px 32px;
   --engrid__body-headerOutside_padding:30px 30px 10px 30px;
   --engrid__body-headerOutside_background-color:var(--color_sand);
-  --engrid__body-top_padding:0px 16px 40px 16px;
+  --engrid__body-top_padding:0px 32px 40px 32px;
   --engrid__body-bottom_padding:0px 32px 40px 32px;
   --engrid__content-footer_padding:var(--spacing-10) var(--spacing-8) 0px var(--spacing-8);
   --default_font-family:"GeographWeb", var(--native-fonts__sans-serif);
@@ -8067,6 +8067,9 @@ body[data-engrid-debug]:before{
   --h2_font-size:1.65em;
   --h2_font-weight:400;
   --h2_line-height:1.5;
+  --h3_font-size:32px;
+  --h3_font-weight:500;
+  --h3_line-height:40px;
   --h5_font-size:18px;
   --h5_font-weight:500;
   --h5_line-height:normal;
@@ -8129,6 +8132,13 @@ body[data-engrid-debug]:before{
   letter-spacing:var(--h6_letter-spacing);
   margin:var(--h6_margin);
 }
+[data-engrid-theme=ngs] ul{
+  padding-inline-start:22px;
+}
+[data-engrid-theme=ngs] li{
+  font-size:14px;
+  line-height:22px;
+}
 [data-engrid-theme=ngs] .body-title h1{
   max-width:499px;
 }
@@ -8157,6 +8167,16 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=ngs] .en__component--formblock .en__field,[data-engrid-theme=ngs] .en__component--svblock .en__field,[data-engrid-theme=ngs] .en__registrants__registrantDetails .en__field{
   margin-bottom:4px;
 }
+[data-engrid-theme=ngs] .divider-line{
+  align-self:stretch;
+  background-color:var(--color_white);
+  opacity:.3;
+  width:1px;
+}
+[data-engrid-theme=ngs] .divider-line.black{
+  background-color:var(--color_black);
+  opacity:1;
+}
 [data-engrid-theme=ngs] .body-headerOutside .en__component{
   align-items:center;
   display:flex;
@@ -8175,6 +8195,41 @@ body[data-engrid-debug]:before{
   line-height:var(--line-height-d6, 16px);
   max-width:214px;
   text-transform:uppercase;
+}
+[data-engrid-theme=ngs] .card-sand_50{
+  background-color:var(--color_sand_50);
+  border:1px solid var(--color_black);
+  margin:var(--spacing-4, 16px) 0;
+  padding:var(--spacing-5, 20px) var(--spacing-4, 16px) var(--spacing-10, 40px) var(--spacing-6, 24px);
+}
+[data-engrid-theme=ngs] .museum-benefits-block{
+  align-items:flex-start;
+  display:flex;
+  flex-direction:row;
+  gap:var(--spacing-6, 24px);
+}
+[data-engrid-theme=ngs] .museum-benefits-block .museum-benefits-bignumbers{
+  min-width:199px;
+  padding:var(--spacing-1, 4px);
+  text-align:center;
+}
+[data-engrid-theme=ngs] .museum-benefits-block .museum-benefits-bignumbers h1{
+  border-bottom:4px solid var(--color-brand-secondary, #000);
+  display:inline-block;
+  margin:0;
+  margin-bottom:var(--spacing-4, 16px);
+}
+[data-engrid-theme=ngs] .museum-benefits-block .museum-benefits-bignumbers h1 sup{
+  font-size:18px;
+  position:relative;
+  top:-.8em;
+}
+[data-engrid-theme=ngs] .museum-benefits-block .museum-benefits-bignumbers p{
+  margin:0;
+  max-width:240px;
+}
+[data-engrid-theme=ngs] .museum-benefits-block .museum-benefits-bignumbers p:not(:last-child){
+  margin-bottom:var(--spacing-2, 8px);
 }
 [data-engrid-theme=ngs] .enWidget--progressBar{
   color:var(--color_black);
@@ -8340,12 +8395,6 @@ body[data-engrid-debug]:before{
   margin:0;
   width:16px;
 }
-[data-engrid-theme=ngs] .ngs-footer .footer-columns .divider-line{
-  align-self:stretch;
-  background-color:var(--color_white);
-  opacity:.3;
-  width:1px;
-}
 [data-engrid-theme=ngs] .ngs-footer .footer-columns .link-tree{
   display:flex;
   flex-direction:column;
@@ -8404,6 +8453,7 @@ body[data-engrid-debug]:before{
   }
   [data-engrid-theme=ngs][data-engrid-layout]{
     --engrid__body_padding:0px 16px;
+    --engrid__body-top_padding:0px 16px 40px 16px;
     --engrid__body-main_padding:0px 8px;
     --engrid__body-headerOutside_padding:var(--spacing-6, 24px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
     --engrid__content-footer_padding:var(--spacing-20, 80px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
@@ -8418,9 +8468,19 @@ body[data-engrid-debug]:before{
     left:640px;
     right:0;
   }
+  [data-engrid-theme=ngs][data-engrid-layout] .divider-line{
+    height:1px;
+    width:100%;
+  }
   [data-engrid-theme=ngs][data-engrid-layout] .body-headerOutside .header-logo{
     height:40px;
     margin-right:27px;
+  }
+  [data-engrid-theme=ngs][data-engrid-layout] .museum-benefits-block{
+    --h1_font-size:65px;
+    --h1_line-height:72px;
+    align-items:center;
+    flex-direction:column;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .logo-copy{
     flex-direction:column;
@@ -8429,10 +8489,6 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns{
     flex-direction:column;
     gap:var(--spacing-3, 12px);
-  }
-  [data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns .divider-line{
-    height:1px;
-    width:100%;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns .give-mail,[data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns .give-phone,[data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns .link-tree{
     align-items:center;

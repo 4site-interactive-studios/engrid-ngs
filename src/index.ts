@@ -6,6 +6,7 @@ import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
 import GiftDesignationOptIns from "./scripts/gift-designation-opt-ins";
 import ImageCredits from "./scripts/image-credits";
+import PremiumGifts from "./scripts/premium-gifts";
 
 const options: Options = {
   applePay: false,
@@ -50,6 +51,7 @@ const options: Options = {
     })
     new IframeQueue();
     new ImageCredits();
+    new PremiumGifts();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized"),
