@@ -18,10 +18,13 @@
   --color_yellow: #FFCC00;
   --color_white: #FFFFFF;
   --color_black: #000000;
+  --color_blue: #0D6EFD;
   --color_sand: #F1EEE9;
   --color_sand_50: #FDFBF7;
   --color_gray_900: #111B2B;
   --color_gray_700: #333333;
+
+  --error__color: #CE2746;
 
   // LAYOUT DEFAULT
   --engrid__body_background-color: var(--color_sand);
@@ -96,10 +99,14 @@
   --input_border-width: 1px;
   --input_border-color: var(--color_black, #000);
   --input_border-radius: 0px;
-  --input_padding: 18px var(--spacing-4, 16px);
+  --input_padding_vertical: 18px;
+  --input_padding_horizontal: var(--spacing-4, 16px);
+  --input_padding: var(--input_padding_vertical) var(--input_padding_horizontal);
   --input_placeholder-color: var(--color_gray_700);
   --input_color: var(--color_black);
   --input_box-shadow: 0 2px 2px -1px rgba(231, 235, 238, 0.20) inset;
+
+  --fields_spacing-inline: var(--spacing-1, 4px);
 
   --checkbox_width: 24px;
   --checkbox_height: 24px;
@@ -205,10 +212,34 @@
     line-height: 22px;
   }
 
+  address {
+    font-style: normal;
+  }
+
   .body-title {
     h1 {
       max-width: 499px;
     }
+  }
+
+  .en__component--formblock .en__field .en__field__element>input,
+  .en__component--formblock .en__field .en__field__element>select,
+  .en__component--formblock .en__field .en__field__element>.en__field__input--vgs {
+    margin-top: var(--spacing-2, 8px);
+
+    &::placeholder {
+      opacity: 0.75;
+    }
+  }
+
+  .en__component--formblock .en__field .en__field__element>input:focus,
+  .en__component--formblock .en__field .en__field__element>select:focus,
+  .en__component--formblock .en__field .en__field__element>.en__field__input--vgs:focus {
+    border: 2px solid var(--color_blue);
+    padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
+    border-radius: var(--input_border-radius);
+    outline: none;
+    box-shadow: 0 2px 0 0 rgba(231, 235, 238, 0.20) inset;
   }
 
   .en__field__input:not(.en__field__input--vgs) {
@@ -220,6 +251,16 @@
   .en__registrants__registrantDetails .en__field.en__field--withOther .en__field__element {
     margin-left: unset;
     margin-right: unset;
+  }
+
+  [class*=validationFail]:not(.has-value):not(.has-focus) [type],
+  [class*=validationFail]:not(.has-value):not(.has-focus) select,
+  [class*=validationFail]:not(.has-value):not(.has-focus) textarea,
+  .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__empty,
+  .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__invalid {
+    background-color: var(--color_white);
+    border-color: var(--error__color);
+    border: 2px solid var(--error__color);
   }
 
   select.en__field__input:not(.en__field__input--vgs) {
@@ -239,6 +280,8 @@
     align-items: flex-start;
     padding: 0px var(--spacing-4, 16px);
   }
+
+
 
   .en__component--formblock .en__field,
   .en__component--svblock .en__field,
@@ -426,7 +469,7 @@
       gap: var(--spacing-2, 8px);
 
       .en__field__item {
-        flex-basis: calc((100% / var(--recurring-frequency__button_count)) - (6px * (var(--recurring-frequency__button_count))));
+        flex-basis: calc((100% / var(--recurring-frequency__button_count)) - (4px * (var(--recurring-frequency__button_count))));
         padding: 0 !important;
 
         label {
@@ -519,7 +562,11 @@
   }
 
   .recurring-callout-left,
-  .recurring-callout-right {
+  .recurring-callout-center,
+  .recurring-callout-right,
+  .grosvenor-callout-center,
+  .grosvenor-callout-left,
+  .grosvenor-callout-right {
     background-color: var(--color_sand_50);
     border: 2px solid var(--color_black);
     box-sizing: border-box;
@@ -580,7 +627,14 @@
     }
   }
 
-  .recurring-callout-left {
+  .grosvenor-callout-center,
+  .grosvenor-callout-left,
+  .grosvenor-callout-right {
+    top: -8px;
+  }
+
+  .recurring-callout-left,
+  .grosvenor-callout-left {
 
     &::before,
     &::after {
@@ -588,7 +642,17 @@
     }
   }
 
-  .recurring-callout-right {
+  .recurring-callout-center,
+  .grosvenor-callout-center {
+
+    &::before,
+    &::after {
+      left: 50%;
+    }
+  }
+
+  .recurring-callout-right,
+  .grosvenor-callout-right {
 
     &::before,
     &::after {
@@ -599,7 +663,11 @@
   &:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-transaction-recurring="y"][data-engrid-transaction-recurring-frequency="monthly"]:not([data-ngs-recurring-callout-preview="onetime"]) {
 
     .recurring-callout-left,
-    .recurring-callout-right {
+    .recurring-callout-center,
+    .recurring-callout-right,
+    .grosvenor-callout-center,
+    .grosvenor-callout-left,
+    .grosvenor-callout-right {
       border-bottom-width: 0;
       border-top-width: 0;
       grid-template-rows: 0fr;
@@ -720,21 +788,75 @@
   }
 
   .en__submit button {
+    --submit__button_padding-top: 19px;
+    --submit__button_padding-bottom: 19px;
+    --submit__button_background-color_hover: var(--button_background-color_hover);
     background-color: var(--button_background-color_hover);
     color: var(--button_color_hover);
     border: unset;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.15;
-    margin: 30px 0;
-    min-height: 60px;
-    word-spacing: .22em;
+    font-family: var(--default_font-family, inherit);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 3px;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    isolation: isolate;
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 0px;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background-color: var(--color_black);
+      transition: width .35s ease;
+      z-index: -1;
+    }
+
+    .live-variable-currency {
+      font-family: var(--p_font-family, inherit);
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 12px;
+      letter-spacing: unset;
+      margin-left: 11px;
+      margin-top: -12px;
+    }
+
+    .live-variable-amount {
+      font-family: var(--p_font-family, inherit);
+      font-size: 40px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 32px;
+      letter-spacing: initial;
+    }
+
+    .live-variable-frequency {
+      font-family: "Grosvenor Book";
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: initial;
+      margin-left: 11px;
+    }
   }
 
   .en__submit button:hover {
-    background-color: var(--button_background-color);
     color: var(--button_color);
+
+    &:before {
+      width: 100%;
+      transition: width .35s ease;
+    }
   }
 
   .gift-summary {
@@ -937,10 +1059,14 @@
       margin-right: auto;
     }
 
-    .recurring-callout-left,
-    .recurring-callout-right {
-      margin-left: var(--fields_spacing-inline);
-      margin-right: var(--fields_spacing-inline);
+    .en__component--formblock>* {
+      padding-left: unset;
+      padding-right: unset;
+    }
+
+    #giftDesignationParent {
+      width: 100%;
+      margin: 0 auto;
     }
 
     &:not(#en__pagebuilder) {
@@ -963,11 +1089,17 @@
     --engrid__body-headerOutside_padding: var(--spacing-6, 24px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
     --engrid__content-footer_padding: var(--spacing-20, 80px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
 
+    --default_font-size: 14px;
+
     --h1_font-size: 24px;
     --h1_line-height: 32px;
 
+    --h3_font-size: 18px;
+    --h3_line-height: initial;
+
     --p_font-size: 14px;
     --p_line-height: 22px;
+
 
     --donation-amount__button_count: 2;
 
@@ -984,50 +1116,39 @@
       height: 1px;
     }
 
+    .form-heading h2 {
+      font-size: 18px;
+
+      &::before {
+        margin-right: var(--spacing-2, 8px);
+      }
+    }
+
     .body-headerOutside {
 
       .header-logo {
         height: 40px;
         margin-right: 27px;
       }
+
+      .tagline {
+        max-width: 151px;
+      }
     }
 
     .museum-benefits-block {
+      h3 {
+        margin: 0;
+      }
+
       --h1_font-size: 65px;
       --h1_line-height: 72px;
       flex-direction: column;
       align-items: center;
     }
 
-
-    .ngs-footer {
-      .logo-copy {
-        flex-direction: column;
-        gap: var(--spacing-4, 16px);
-      }
-
-      .footer-columns {
-        flex-direction: column;
-        gap: var(--spacing-3, 12px);
-
-        .give-mail,
-        .give-phone,
-        .link-tree {
-          align-items: center;
-          text-align: center;
-
-          img {
-            margin: 0 auto;
-          }
-        }
-      }
-    }
-
-    .gift-summary {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-4, 16px);
-      text-align: center;
+    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
+      flex-basis: calc((100% / var(--donation-amount__button_count)) - 4px);
     }
 
     .body-headerOutside {
@@ -1036,11 +1157,6 @@
       }
     }
 
-    .footer-image-container {
-      margin-left: -16px;
-      margin-right: -16px;
-      width: calc(100% + 32px);
-    }
 
     .radio-to-buttons_recurrfreq .en__field--recurrfreq .en__field__element--radio {
       --recurrfreq-selected-indicator_offset: 4px;
@@ -1114,6 +1230,91 @@
 
     .monthly-heart-float {
       display: none;
+    }
+
+    .recurring-callout-center,
+    .grosvenor-callout-center {
+
+      &::before,
+      &::after {
+        left: 25%;
+      }
+    }
+
+
+
+    .gift-summary {
+      --p_font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4, 16px);
+      text-align: center;
+    }
+
+    .en__submit button {
+      font-size: 12px;
+      line-height: 20px;
+      letter-spacing: 1.5px;
+
+      .live-variable-currency {
+        margin-left: 7px;
+      }
+
+      .live-variable-frequency {
+        margin-left: 7px;
+        font-size: 16px;
+        line-height: 18px;
+      }
+
+    }
+
+    .badges-footer {
+      p {
+        margin: 0;
+        max-width: 300px;
+      }
+
+      flex-direction: column-reverse;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .footer-image-container {
+      margin-left: -16px;
+      margin-right: -16px;
+      width: calc(100% + 32px);
+    }
+
+    .ngs-footer {
+      .logo-copy {
+        flex-direction: column;
+        gap: var(--spacing-4, 16px);
+      }
+
+      .footer-main-copy {
+        padding-left: var(--spacing-4, 16px);
+        padding-right: var(--spacing-4, 16px);
+      }
+
+      .footer-columns {
+        flex-direction: column;
+        gap: var(--spacing-3, 12px);
+
+        .give-mail,
+        .give-phone,
+        .link-tree {
+          align-items: center;
+          text-align: center;
+
+          img {
+            margin: 0 auto;
+          }
+        }
+
+        .give-phone p {
+          margin: 0;
+        }
+      }
     }
 
     &:not(#en__pagebuilder) {
