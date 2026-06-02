@@ -4,6 +4,7 @@ import { Options, App, DonationAmount, DonationFrequency, IframeQueue } from "@4
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
+import GiftAmounts from "./scripts/gift-amounts";
 import GiftDesignationOptIns from "./scripts/gift-designation-opt-ins";
 import ImageCredits from "./scripts/image-credits";
 import PremiumGifts from "./scripts/premium-gifts";
@@ -52,6 +53,7 @@ const options: Options = {
     new IframeQueue();
     new ImageCredits();
     new PremiumGifts();
+    new GiftAmounts();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized"),
