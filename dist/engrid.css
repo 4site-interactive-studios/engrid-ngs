@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 2, 2026 @ 11:49:53 ET
+ *  Date: Tuesday, June 2, 2026 @ 15:24:45 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -8514,13 +8514,43 @@ body[data-engrid-debug]:before{
   line-height:18px;
   opacity:1;
 }
-[data-engrid-theme=ngs] .en__field--giveBySelect .en__field__label--item{
-  min-height:65px;
+[data-engrid-theme=ngs] .give-by-select-wrapper{
+  margin-bottom:var(--spacing-5, 20px);
 }
-[data-engrid-theme=ngs] .en__field--giveBySelect .en__field__label--item img{
-  height:30px;
-  object-fit:contain;
-  width:100%;
+[data-engrid-theme=ngs] .en__field--giveBySelect{
+  --button_background-color:var(--color_white);
+  --button_color:var(--color_black);
+  --button_border-color:var(--color_black);
+  --button_border-width:2px;
+  --button_background-color_hover:var(--color_sand);
+  --button_color_hover:var(--color_black);
+  --button_border-color_hover:var(--color_black);
+  --button_background-color_checked:var(--color_black);
+  --button_color_checked:var(--color_white);
+  --button_border-color_checked:var(--color_black);
+  --button_font-weight:500;
+  --button_font-size:19px;
+  --button_line-height:32px;
+  margin-top:-2px;
+  padding-bottom:0 !important;
+  padding-top:0 !important;
+}
+[data-engrid-theme=ngs] .en__field--giveBySelect input:checked+label .apple-pay,[data-engrid-theme=ngs] .en__field--giveBySelect input:checked+label .bank,[data-engrid-theme=ngs] .en__field--giveBySelect input:checked+label .daf,[data-engrid-theme=ngs] .en__field--giveBySelect input:checked+label .google-pay,[data-engrid-theme=ngs] .en__field--giveBySelect input:checked+label .venmo{
+  filter:invert(100%);
+}
+[data-engrid-theme=ngs] .en__field--giveBySelect label{
+  align-items:center;
+  color:#000;
+  display:flex;
+  gap:var(--spacing-4, 16px);
+  height:60px;
+  justify-content:center;
+  transition:background-color .35s ease;
+}
+[data-engrid-theme=ngs] .en__field--giveBySelect label img{
+  margin:unset;
+  max-height:28px;
+  width:auto;
 }
 [data-engrid-theme=ngs] .en__submit button{
   background-color:var(--button_background-color_hover);
@@ -8635,6 +8665,20 @@ body[data-engrid-debug]:before{
   position:absolute;
   top:0;
   width:100%;
+}
+[data-engrid-theme=ngs] .showif-apple{
+  display:none;
+}
+[data-engrid-theme=ngs] .hideif-apple{
+  display:unset;
+}
+@supports (font:-apple-system-body) and (hanging-punctuation:first){
+  [data-engrid-theme=ngs]:not(#en__pagebuilder) .showif-apple{
+    display:unset;
+  }
+  [data-engrid-theme=ngs]:not(#en__pagebuilder) .hideif-apple{
+    display:none;
+  }
 }
 @media (max-width:640px){
   [data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
@@ -8836,6 +8880,15 @@ body[data-engrid-debug]:before{
     opacity:0;
     transform:translate(-50%, -120%) translateY(20px);
   }
+}
+[data-engrid-theme=ngs][data-engrid-payment-type=paypal] .showif-paypal-selected,[data-engrid-theme=ngs][data-engrid-payment-type=paypaltouch] .showif-paypal-selected{
+  display:block;
+}
+[data-engrid-theme=ngs]:not([data-engrid-payment-type=paypal]):not([data-engrid-payment-type=paypaltouch]) .showif-paypal-selected,[data-engrid-theme=ngs][data-engrid-payment-type=paypal] .hideif-paypal-selected,[data-engrid-theme=ngs][data-engrid-payment-type=paypaltouch] .hideif-paypal-selected{
+  display:none;
+}
+[data-engrid-theme=ngs]:not([data-engrid-payment-type=paypal]):not([data-engrid-payment-type=paypaltouch]) .hideif-paypal-selected{
+  display:block;
 }
 
 [data-engrid-subtheme=multistep]{
