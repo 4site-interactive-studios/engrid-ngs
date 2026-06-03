@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 3, 2026 @ 12:05:34 ET
+ *  Date: Wednesday, June 3, 2026 @ 16:06:03 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -27586,6 +27586,7 @@ const options = {
     new ImageCredits();
     new PremiumGifts();
     new GiftAmounts();
+    new Ecard();
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized")
