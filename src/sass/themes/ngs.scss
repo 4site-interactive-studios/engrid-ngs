@@ -35,6 +35,8 @@
   --engrid__body-bottom_padding: 0px 32px 40px 32px;
   --engrid__content-footer_padding: var(--spacing-10) var(--spacing-8) 0px var(--spacing-8);
 
+  --click-to-expand__copy-area_height: 100px;
+  --click-to-expand__cta-image_height: 20px;
   // TYPOGRAPHY DEFAULT
   --default_font-family: "GeographWeb", var(--native-fonts__sans-serif);
   // --default_color: initial;
@@ -114,7 +116,7 @@
   --checkbox_border-width: 2px;
   --checkbox_color_checked: var(--color_white);
   --checkbox_background-color_checked: var(--color_black);
-  --checkbox_content_checked: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Crect%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M6.5%2011.5L10.1429%2016L17%207%22%20stroke%3D%22white%22%20stroke-width%3D%222.5%22%2F%3E%3C%2Fsvg%3E");
+  --checkbox_content_checked: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2213%22%20height%3D%2212%22%20viewBox%3D%220%200%2013%2012%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22m.97%205.258%203.644%204.5%206.857-9%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.5%22%2F%3E%3C%2Fsvg%3E");
   // TYPOGRAPHY INPUT:FOCUS
   // TYPOGRAPHY INPUT:HOVER
   // --input_color_hover: var(--input_color);
@@ -182,10 +184,6 @@
   // FIELDS
   // --fields_spacing-inline: var(--spacing-4, 16px);
   // --fields_spacing-block: calc(var(--spacing-3, 12px)*.5);
-
-  .page-backgroundImage:before:hover {
-    border: 10px solid red;
-  }
 
   a {
     font-size: var(--default_font-size);
@@ -256,11 +254,26 @@
   [class*=validationFail]:not(.has-value):not(.has-focus) [type],
   [class*=validationFail]:not(.has-value):not(.has-focus) select,
   [class*=validationFail]:not(.has-value):not(.has-focus) textarea,
+  .en__field--validationFailed .en__field__element select,
   .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__empty,
   .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__invalid {
     background-color: var(--color_white);
     border-color: var(--error__color);
     border: 2px solid var(--error__color);
+  }
+
+  [class*=validationFail]:not(.has-value):not(.has-focus) [type]:not(.en__field__input--other),
+  [class*=validationFail]:not(.has-value):not(.has-focus) select:not(.en__field__input--other),
+  [class*=validationFail]:not(.has-value):not(.has-focus) textarea:not(.en__field__input--other),
+  .en__field--validationFailed .en__field__element select.en__field__input--select {
+    padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
+  }
+
+  .en__contactDetails__select:focus+.en__contactDetails__rows,
+  .en__field__input--checkbox:focus+.en__field__label,
+  .en__field__input--radio:focus+.en__field__label {
+    outline: 2px solid var(--color_blue);
+    outline-offset: 0px;
   }
 
   select.en__field__input:not(.en__field__input--vgs) {
@@ -426,6 +439,53 @@
     }
   }
 
+  @at-root body#{&}:not(#en__pagebuilder) .click-to-expand:not(.expanded) {
+    isolation: isolate;
+    position: relative;
+    z-index: 1;
+
+    .click-to-expand-text-wrapper {
+      max-height: var(--click-to-expand__copy-area_height);
+      z-index: 2;
+      mask-image: linear-gradient(to bottom, #000 50%, #fff0 calc(100% - 2px));
+    }
+
+    .click-to-expand-cta {
+      z-index: 3;
+      background-image: none;
+      width: unset;
+
+      &::after {
+        z-index: 5;
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: "Learn More";
+        display: inline-block;
+        font-family: var(--default_font-family);
+        font-size: 10px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--color_black);
+        background: var(--color_sand);
+      }
+
+      &::before {
+        z-index: 4;
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 45%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, var(--color_sand));
+      }
+    }
+  }
+
   // Form
   // General
   .form-heading h2 {
@@ -474,6 +534,11 @@
 
         label {
           transition: background-color .5s ease, border-color .5s ease;
+        }
+
+        label+.en__field__input--radio:active {
+          outline: 2px solid var(--color_blue);
+          outline-offset: 2px;
         }
       }
 
@@ -710,7 +775,7 @@
     }
 
     .en__field__item--other input {
-      padding: 18px 28px 20px 35px;
+      padding: 16.5px 28px 19px 35px;
       background-color: var(--color_white);
       color: #000000;
       box-shadow: none;
@@ -723,9 +788,7 @@
     }
 
     .en__field__item--other input:focus {
-      background-color: var(--color_white);
-      color: var(--input_color);
-      border-color: var(--button_background-color_checked);
+      border-color: var(--color_blue);
     }
 
     .en__field__label--item:after {
@@ -927,7 +990,7 @@
 
       img {
         width: 16px;
-        margin: 0;
+        margin: 16px 0 auto;
         justify-self: start;
       }
 
@@ -979,6 +1042,11 @@
     }
   }
 
+  &[data-engrid-page-background="image"] .page-backgroundImage::before {
+    left: 640px;
+    width: calc(100% - 640px);
+  }
+
   .showif-apple {
     display: none;
   }
@@ -1003,6 +1071,10 @@
 /* Add your custom theme styles here */
 [data-engrid-theme="ngs"] {
   @mixin mobile-and-tablet {
+
+    .page-backgroundImage::before {
+      display: none;
+    }
 
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
       .page-backgroundImage {
@@ -1059,14 +1131,22 @@
       margin-right: auto;
     }
 
+    #giftDesignationParent *,
+    .body-main .en__component--copyblock p,
+    .body-main .en__component--copyblock div,
+    .form-heading h2,
+    .gift-summary {
+      margin-left: var(--fields_spacing-inline);
+      margin-right: var(--fields_spacing-inline);
+    }
+
     .en__component--formblock>* {
-      padding-left: unset;
-      padding-right: unset;
+      // padding-left: unset;
+      // padding-right: unset;
     }
 
     #giftDesignationParent {
       width: 100%;
-      margin: 0 auto;
     }
 
     &:not(#en__pagebuilder) {
@@ -1083,7 +1163,7 @@
 
     // STYLES
     --engrid__body_padding: 0px 16px;
-    --engrid__body-top_padding: 0px 16px 40px 16px;
+    --engrid__body-top_padding: 0px 16px 10px 16px;
     --engrid__body-main_padding: 0px 8px;
 
     --engrid__body-headerOutside_padding: var(--spacing-6, 24px) var(--spacing-4, 16px) 0px var(--spacing-4, 16px);
@@ -1315,6 +1395,12 @@
           margin: 0;
         }
       }
+    }
+
+    .background-mobile-cover {
+      height: 470px;
+      width: 100%;
+      object-fit: cover;
     }
 
     &:not(#en__pagebuilder) {
