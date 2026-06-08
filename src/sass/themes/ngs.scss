@@ -488,7 +488,8 @@
 
   // Form
   // General
-  .form-heading h2 {
+  .form-heading h2,
+  h3.engrid--embedded-ecard-heading {
     text-transform: capitalize;
     font-size: 30px;
     font-style: normal;
@@ -499,7 +500,8 @@
     margin-top: 20px;
   }
 
-  .form-heading h2::before {
+  .form-heading h2::before,
+  h3.engrid--embedded-ecard-heading::before {
     width: 4px;
     height: 34px;
     content: "";
@@ -1196,7 +1198,8 @@
       height: 1px;
     }
 
-    .form-heading h2 {
+    .form-heading h2,
+    h3.engrid--embedded-ecard-heading {
       font-size: 18px;
 
       &::before {

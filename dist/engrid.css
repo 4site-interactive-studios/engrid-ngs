@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 3, 2026 @ 16:06:03 ET
+ *  Date: Monday, June 8, 2026 @ 14:36:59 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -5120,6 +5120,11 @@ div[id^=nb-field-].nb-success input{
   padding:0;
   width:var(--radio_width);
 }
+[data-engrid-theme] .en__pg__select:has(input:focus){
+  border-radius:30px;
+  outline:3px solid var(--focus_outline_color, #086ce7);
+  outline-offset:var(--focus_outline_offset, 2px);
+}
 [data-engrid-theme] .en__pg__display{
   grid-area:en__pg__display;
   padding:0;
@@ -8395,7 +8400,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   z-index:4;
 }
 
-[data-engrid-theme=ngs] .form-heading h2{
+[data-engrid-theme=ngs] .form-heading h2,[data-engrid-theme=ngs] h3.engrid--embedded-ecard-heading{
   display:flex;
   font-size:30px;
   font-style:normal;
@@ -8405,7 +8410,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   margin-top:20px;
   text-transform:capitalize;
 }
-[data-engrid-theme=ngs] .form-heading h2:before{
+[data-engrid-theme=ngs] .form-heading h2:before,[data-engrid-theme=ngs] h3.engrid--embedded-ecard-heading:before{
   background-color:var(--color_black);
   content:"";
   display:inline-block;
@@ -8890,10 +8895,10 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
     height:1px;
     width:100%;
   }
-  [data-engrid-theme=ngs][data-engrid-layout] .form-heading h2{
+  [data-engrid-theme=ngs][data-engrid-layout] .form-heading h2,[data-engrid-theme=ngs][data-engrid-layout] h3.engrid--embedded-ecard-heading{
     font-size:18px;
   }
-  [data-engrid-theme=ngs][data-engrid-layout] .form-heading h2:before{
+  [data-engrid-theme=ngs][data-engrid-layout] .form-heading h2:before,[data-engrid-theme=ngs][data-engrid-layout] h3.engrid--embedded-ecard-heading:before{
     margin-right:var(--spacing-2, 8px);
   }
   [data-engrid-theme=ngs][data-engrid-layout] .body-headerOutside .header-logo{

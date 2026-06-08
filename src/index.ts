@@ -1,5 +1,5 @@
-import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App, DonationAmount, DonationFrequency } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+// import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
