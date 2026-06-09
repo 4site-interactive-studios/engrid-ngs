@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, June 8, 2026 @ 14:36:59 ET
+ *  Date: Tuesday, June 9, 2026 @ 10:02:52 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -9245,6 +9245,9 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
     right:15px;
     top:calc(50% - 15px);
   }
+}
+[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecarditems__showprev{
+  display:none;
 }
 
 [data-engrid-subtheme=multistep]{
