@@ -21,6 +21,28 @@ const options: Options = {
   SrcDefer: true,
   ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
+  RememberMe: {
+    checked: true,
+    fieldOptInSelectorTarget:
+      "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+    fieldOptInSelectorTargetLocation: "after",
+    fieldClearSelectorTarget:
+      "div.en__field--firstName div, div.en__field--email div",
+    fieldClearSelectorTargetLocation: "after",
+    fieldNames: [
+      "supporter.firstName",
+      "supporter.lastName",
+      "supporter.address1",
+      "supporter.address2",
+      "supporter.city",
+      "supporter.country",
+      "supporter.region",
+      "supporter.postcode",
+      "supporter.emailAddress",
+      "supporter.phoneNumber",
+    ],
+    cookieName: 'ngs-remember',
+  },
   onLoad: () => {
     (<any>window).DonationLightboxForm = DonationLightboxForm;
     new DonationLightboxForm(DonationAmount, DonationFrequency, App);

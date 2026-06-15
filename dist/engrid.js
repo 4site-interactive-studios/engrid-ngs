@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 9, 2026 @ 10:02:52 ET
+ *  Date: Monday, June 15, 2026 @ 12:35:26 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -49409,6 +49409,15 @@ const options = {
   SrcDefer: true,
   ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
+  RememberMe: {
+    checked: true,
+    fieldOptInSelectorTarget: "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+    fieldOptInSelectorTargetLocation: "after",
+    fieldClearSelectorTarget: "div.en__field--firstName div, div.en__field--email div",
+    fieldClearSelectorTargetLocation: "after",
+    fieldNames: ["supporter.firstName", "supporter.lastName", "supporter.address1", "supporter.address2", "supporter.city", "supporter.country", "supporter.region", "supporter.postcode", "supporter.emailAddress", "supporter.phoneNumber"],
+    cookieName: 'ngs-remember'
+  },
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     new DonationLightboxForm(DonationAmount, DonationFrequency, App);
