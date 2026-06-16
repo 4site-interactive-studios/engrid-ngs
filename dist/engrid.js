@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, June 15, 2026 @ 12:35:26 ET
+ *  Date: Tuesday, June 16, 2026 @ 16:24:36 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -25213,10 +25213,8 @@ class RememberMe {
       let hasFieldData = Object.keys(this.fieldData).length > 0;
       if (!hasFieldData) {
         this.insertRememberMeOptin();
-        this.rememberMeOptIn = false;
       } else {
         this.insertClearRememberMeLink();
-        this.rememberMeOptIn = true;
       }
       this.writeFields();
       this._form.onSubmit.subscribe(() => {
@@ -28529,7 +28527,6 @@ class PremiumGift {
               if (newPremiumGift) {
                 newPremiumGift.checked = true;
                 newPremiumGift.dispatchEvent(new Event("change"));
-                this.altsAndArias();
               }
             }, 100);
           }
@@ -28556,9 +28553,7 @@ class PremiumGift {
         }
       });
       observer.observe(premiumGiftsBlock, {
-        attributes: true,
-        childList: true,
-        subtree: true
+        attributes: true
       });
     }
     this._frequency.onFrequencyChange.subscribe(() => {
@@ -28622,65 +28617,35 @@ class PremiumGift {
   }
   // Sets alt tags for premium gift images and aria tags for premium gift radio inputs
   altsAndArias() {
-    const premiumHeader = document.querySelector(".en__pgHeader");
-    const radioGroup = document.querySelector(".en__pgList");
-    if (premiumHeader && radioGroup) {
-      const premiumHeaderId = `premium-gift-header-${Math.random().toString(36).slice(2, 7)}`;
-      premiumHeader.setAttribute("id", premiumHeaderId);
-      radioGroup.setAttribute("aria-labelledby", premiumHeaderId);
-      radioGroup.setAttribute("role", "radiogroup");
-    }
+    const premiumTitle = document.querySelectorAll(".en__pg__detail h2.en__pg__name");
     const multistepBackButton = document.querySelectorAll(".multistep-button-container button.btn-back");
-    multistepBackButton.forEach(item => {
-      item.setAttribute("aria-label", "Back");
-    });
-    const premiumRow = document.querySelectorAll(".en__pg");
-    premiumRow.forEach(item => {
-      const premiumTitle = item.querySelector(".en__pg__detail h2.en__pg__name");
-      premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.setAttribute("id", `premium-gift-option-${Math.random().toString(36).slice(2, 7)}`);
-      const titleText = (premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.innerHTML) || "";
-      const details = item.querySelector(".en__pg__detail");
-      const display = item.querySelector(".en__pg__display");
-      const select = item.querySelector(".en__pg__select");
-      let checked = null;
-      if (select) {
-        const radioInput = select.querySelector('input[type="radio"]');
-        checked = (radioInput === null || radioInput === void 0 ? void 0 : radioInput.checked) || null;
-        if (radioInput) {
-          radioInput.setAttribute("aria-labelledby", (premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.id) || "");
-        }
-      }
-      if (details) {
-        const optionTypesParent = details.querySelector(".en__pg__optionTypes");
-        if (optionTypesParent) {
-          optionTypesParent.setAttribute("aria-label", `Options for ${titleText}`);
-          const optionTypes = details.querySelectorAll(".en__pg__optionType");
-          optionTypes.forEach(option => {
-            const label = option.querySelector("label");
-            const select = option.querySelector('select');
-            if (label && select) {
-              select.setAttribute("disabled", "true");
-              select.setAttribute("id", `premium-gift-option-type-${Math.random().toString(36).slice(2, 7)}`);
-              label.setAttribute("for", select.id);
-              label.setAttribute("aria-label", `${label.innerText} for ${titleText}`);
-              if (!checked) {
-                select.setAttribute("disabled", "true");
-              }
+    premiumTitle.forEach(item => {
+      if (item) {
+        const titleText = item.innerHTML;
+        const parent = item.parentElement;
+        const prevSibling = parent === null || parent === void 0 ? void 0 : parent.previousElementSibling;
+        const radioInputSibling = prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.previousElementSibling;
+        if (prevSibling) {
+          const imageDiv = prevSibling.querySelector(".en__pg__images");
+          if (imageDiv) {
+            const img = imageDiv.querySelector("img");
+            if (img) {
+              img.setAttribute("alt", titleText);
+              img.style.width = "125px";
+              img.style.height = "100px";
             }
-          });
+          }
         }
-      }
-      if (display) {
-        const imageDiv = display.querySelector(".en__pg__images");
-        if (imageDiv) {
-          const img = imageDiv.querySelector("img");
-          if (img) {
-            img.setAttribute("alt", titleText);
-            img.style.width = "125px";
-            img.style.height = "100px";
+        if (radioInputSibling) {
+          const radioInput = radioInputSibling.querySelector('input[type="radio"]');
+          if (radioInput) {
+            radioInput.setAttribute("aria-label", titleText);
           }
         }
       }
+      multistepBackButton.forEach(item => {
+        item.setAttribute("aria-label", "Back");
+      });
     });
   }
   // This is for the Maximize My Donation aria-label - the tree structure for it is slightly different.

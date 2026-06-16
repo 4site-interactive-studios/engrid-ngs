@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, June 15, 2026 @ 12:35:26 ET
+ *  Date: Tuesday, June 16, 2026 @ 16:24:36 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.6
@@ -5119,11 +5119,6 @@ div[id^=nb-field-].nb-success input{
   grid-area:en__pg__select;
   padding:0;
   width:var(--radio_width);
-}
-[data-engrid-theme] .en__pg__select:has(input:focus){
-  border-radius:30px;
-  outline:3px solid var(--focus_outline_color, #086ce7);
-  outline-offset:var(--focus_outline_offset, 2px);
 }
 [data-engrid-theme] .en__pg__display{
   grid-area:en__pg__display;
