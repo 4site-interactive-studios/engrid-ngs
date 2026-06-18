@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 18, 2026 @ 10:54:43 ET
+ *  Date: Thursday, June 18, 2026 @ 12:17:22 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.7
@@ -28627,6 +28627,8 @@ class PremiumGift {
     if (premiumHeader && radioGroup) {
       const premiumHeaderId = premiumHeader.id || "premium-gift-header";
       premiumHeader.setAttribute("id", premiumHeaderId);
+      premiumHeader.setAttribute("role", "heading");
+      premiumHeader.setAttribute("aria-level", "2");
       radioGroup.setAttribute("aria-labelledby", premiumHeaderId);
       radioGroup.setAttribute("role", "radiogroup");
     }
