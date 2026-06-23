@@ -67,6 +67,15 @@
     }
   }
 
+  .image-credits-description {
+    color: var(--color-white, #FFF);
+    text-align: center;
+    font-family: var(--default-font-family);
+    font-size: 11px;
+    letter-spacing: 0.33px;
+    line-height: normal;
+  }
+
   @media (min-width: 821px) {
     .footer-image-credits {
       display: none;
