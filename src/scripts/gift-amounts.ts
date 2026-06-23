@@ -4,19 +4,23 @@
  * @date 02-06-2026
  */
 
+import { DonationFrequency } from "../../../engrid/packages/scripts";
+
 export default class GiftAmounts {
   private monthlyHeartRadioSelector =
     '.radio-to-buttons_recurrfreq input[type="radio"][value="MONTHLY"]';
-  private monthlyHeartAnimationDuration = 1500;
+  private monthlyHeartAnimationDuration = 500;
   private monthlyMobileHeartMediaQuery = "(max-width: 619px)";
   private monthlyMobileHeartFloatInClass = "monthly-heart-float-in";
   private monthlyMobileHeartFloatOutClass = "monthly-heart-float-out";
+  private donationFrequency = DonationFrequency.getInstance();
 
   constructor() {
-    this.addMonthlyHeart();
+    this.addFrequencyChangeListener();
     this.addRecurringGiftCallout();
     this.wrapFrequencyLabelGiveText();
     this.positionProgressBarCount();
+    this.handleFrequencyChange();
   }
 
   private getMonthlyHeartFirstTextNode(node: Node): Text | null {
@@ -81,10 +85,10 @@ export default class GiftAmounts {
     const floatingHeart = document.createElement("span");
     const left = textRect
       ? textRect.left -
-        labelRect.left -
-        staticHeartMarginRight -
-        staticHeartWidth +
-        (staticHeartWidth - floatingHeartSize) / 2
+      labelRect.left -
+      staticHeartMarginRight -
+      staticHeartWidth +
+      (staticHeartWidth - floatingHeartSize) / 2
       : (staticHeartWidth - floatingHeartSize) / 2;
     const top = (labelRect.height - floatingHeartSize) / 2;
 
@@ -105,35 +109,26 @@ export default class GiftAmounts {
     );
   }
 
-  private addMonthlyHeart(): void {
-    document.addEventListener("change", (event) => {
-      const target = event.target;
-
-      if (!(target instanceof HTMLInputElement) || !target.checked) return;
-
-      if (target.matches(this.monthlyHeartRadioSelector)) {
-        const label = target.nextElementSibling;
-        if (!label || !label.classList.contains("en__field__label--item")) return;
-
-        this.spawnMonthlyHeart(label);
-        return;
-      }
-
-      if (target.name !== "transaction.recurrfreq") return;
-
-      const monthlyFrequencyInput = document.querySelector<HTMLInputElement>(
-        this.monthlyHeartRadioSelector
-      );
-      const label = monthlyFrequencyInput?.nextElementSibling;
-      if (
-        monthlyFrequencyInput?.checked ||
-        !label ||
-        !label.classList.contains("en__field__label--item")
-      )
-        return;
-
-      this.spawnMonthlyHeart(label, false);
+  private addFrequencyChangeListener(): void {
+    this.donationFrequency.onFrequencyChange.subscribe(() => {
+      this.handleFrequencyChange();
     });
+  }
+
+  private handleFrequencyChange(): void {
+    const currentFrequency = this.donationFrequency.frequency.toUpperCase();
+    const otherInput = document.querySelector<HTMLInputElement>("input[name='transaction.donationAmt.other']");
+    if (otherInput) {
+      otherInput.setAttribute("placeholder", currentFrequency === "MONTHLY" ? "Other/mo" : "Other");
+    }
+
+    const monthlyFrequencyInput = document.querySelector<HTMLInputElement>(
+      this.monthlyHeartRadioSelector
+    );
+    const label = monthlyFrequencyInput?.nextElementSibling;
+    if (!label || !label.classList.contains("en__field__label--item")) return;
+
+    this.spawnMonthlyHeart(label, currentFrequency === "MONTHLY");
   }
 
   private addRecurringGiftCallout(): void {
