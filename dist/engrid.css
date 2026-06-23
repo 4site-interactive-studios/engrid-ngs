@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 23, 2026 @ 16:37:01 ET
+ *  Date: Tuesday, June 23, 2026 @ 17:19:19 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.7
@@ -8914,7 +8914,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   [data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder) .page-backgroundImage img{
     display:unset;
   }
-  [data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder) .page-backgroundImage img.background-desktop{
+  [data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder) .hideif-mobile,[data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder) .page-backgroundImage img.background-desktop{
     display:none;
   }
   [data-engrid-theme=ngs][data-engrid-layout]{
@@ -9087,10 +9087,22 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
     margin:0;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .background-mobile-cover{
-    height:470px;
+    height:25vh;
     object-fit:cover;
+    object-position:center;
     width:100%;
   }
+}
+@media (max-width:640px) and (prefers-reduced-motion:no-preference){
+  [data-engrid-theme=ngs][data-engrid-layout]:not([data-engrid-animation-loaded]){
+    overflow-anchor:none;
+  }
+  [data-engrid-theme=ngs][data-engrid-layout]:not([data-engrid-animation-loaded]) .background-mobile-cover{
+    animation:ngs-bg-image-reveal 2.3s ease-in-out forwards;
+    height:75vh;
+  }
+}
+@media (max-width:640px){
   [data-engrid-theme=ngs][data-engrid-layout]:not(#en__pagebuilder) .hideif-mobile{
     display:none;
   }
@@ -9164,6 +9176,14 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   to{
     opacity:0;
     transform:translate(-50%, -120%) translateY(20px);
+  }
+}
+@keyframes ngs-bg-image-reveal{
+  0%{
+    height:75vh;
+  }
+  to{
+    height:25vh;
   }
 }
 [data-engrid-theme=ngs][data-engrid-payment-type=paypal] .showif-paypal-selected,[data-engrid-theme=ngs][data-engrid-payment-type=paypaltouch] .showif-paypal-selected{

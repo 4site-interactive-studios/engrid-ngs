@@ -1438,9 +1438,31 @@
     }
 
     .background-mobile-cover {
-      height: 470px;
+      height: 25vh; // resting / reduced-motion size (smallest frame)
       width: 100%;
       object-fit: cover;
+      object-position: center;
+    }
+
+    // Plays once on load: image shrinks 75vh -> 25vh. As it passes ~33vh the
+    // object-fit:cover crop reaches the image aspect ratio (the "inflection"),
+    // after which width stops changing and it just crops top/bottom.
+    // The static height starts at 75vh (matching the first frame) so the page
+    // doesn't grow on load and trigger scroll anchoring / a viewport jump.
+    // Gated on [data-engrid-animation-loaded] (set by main.js ~3s after load)
+    // so the animation does not replay when the viewport crosses a breakpoint.
+    @media (prefers-reduced-motion: no-preference) {
+      &:not([data-engrid-animation-loaded]) {
+        // The shrinking image at the top of the document would otherwise make
+        // the browser scroll-anchor and push the viewport down. Suppress
+        // anchoring for the whole page subtree while this intro animation runs.
+        overflow-anchor: none;
+
+        .background-mobile-cover {
+          height: 75vh;
+          animation: ngs-bg-image-reveal 2.3s ease-in-out forwards;
+        }
+      }
     }
 
     &:not(#en__pagebuilder) {
@@ -1537,6 +1559,16 @@
     100% {
       opacity: 0;
       transform: translate(-50%, -120%) translateY(20px);
+    }
+  }
+
+  @keyframes ngs-bg-image-reveal {
+    0% {
+      height: 75vh;
+    }
+
+    100% {
+      height: 25vh;
     }
   }
 

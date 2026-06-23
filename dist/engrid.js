@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 23, 2026 @ 16:37:01 ET
+ *  Date: Tuesday, June 23, 2026 @ 17:19:19 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.7
@@ -32736,6 +32736,14 @@ const customScript = function (App) {
   // Find the select element within the wrapper
   // Add your client scripts here
   App.setBodyData("client-js-loading", "finished");
+
+  // Mark the page as "animation-loaded" after the mobile background-image intro
+  // animation (2.3s) has had time to play out. The animation CSS is gated on the
+  // absence of [data-engrid-animation-loaded], so this prevents it from replaying
+  // when the viewport crosses the mobile breakpoint (e.g. 641px -> 640px).
+  window.setTimeout(() => {
+    App.setBodyData("animation-loaded", "true");
+  }, 3000);
 };
 // EXTERNAL MODULE: ./node_modules/smoothscroll-polyfill/dist/smoothscroll.js
 var smoothscroll = __webpack_require__(1196);

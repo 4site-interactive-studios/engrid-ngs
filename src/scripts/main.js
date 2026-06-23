@@ -68,4 +68,12 @@ export const customScript = function (App) {
   // Find the select element within the wrapper
   // Add your client scripts here
   App.setBodyData("client-js-loading", "finished");
+
+  // Mark the page as "animation-loaded" after the mobile background-image intro
+  // animation (2.3s) has had time to play out. The animation CSS is gated on the
+  // absence of [data-engrid-animation-loaded], so this prevents it from replaying
+  // when the viewport crosses the mobile breakpoint (e.g. 641px -> 640px).
+  window.setTimeout(() => {
+    App.setBodyData("animation-loaded", "true");
+  }, 3000);
 };
