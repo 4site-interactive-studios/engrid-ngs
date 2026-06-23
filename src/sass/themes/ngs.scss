@@ -150,7 +150,7 @@
   // DONATION PAGE
   --recurring-frequency__button_font-family: var(--default_font-family);
   --recurring-frequency__button_background-color: var(--color_sand);
-  --recurring-frequency__button_background-color_checked: #FFC530;
+  --recurring-frequency__button_background-color_checked: var(--color_yellow);
   --recurring-frequency__button_background-color_hover: #e4e1db;
   --recurring-frequency__button_border-color_hover: var(--color_black);
   --recurring-frequency__button_border-color: var(--color_black);
@@ -184,6 +184,10 @@
   // FIELDS
   // --fields_spacing-inline: var(--spacing-4, 16px);
   // --fields_spacing-block: calc(var(--spacing-3, 12px)*.5);
+
+  * {
+    -webkit-font-smoothing: antialiased;
+  }
 
   a {
     font-size: var(--default_font-size);
@@ -346,7 +350,7 @@
       font-family: var(--default_font-family);
       font-size: var(--font-size-d6, 13px);
       font-style: normal;
-      font-weight: 700;
+      font-weight: 600;
       line-height: var(--line-height-d6, 16px);
       letter-spacing: 2.6px;
       text-transform: uppercase;
@@ -368,6 +372,17 @@
     flex-direction: row;
     align-items: flex-start;
     gap: var(--spacing-6, 24px);
+
+    button.btn-dark {
+      color: #FFF;
+      font-family: var(--default_font-family);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
 
     .museum-benefits-bignumbers {
       padding: var(--spacing-1, 4px);
@@ -479,17 +494,16 @@
         position: absolute;
         top: 0;
         right: 0;
-        width: 45%;
+        width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, var(--color_sand));
+        background: linear-gradient(90deg, #0000 60%, var(--color_sand) 82%);
       }
     }
   }
 
   // Form
   // General
-  .form-heading h2,
-  h3.engrid--embedded-ecard-heading {
+  .form-heading h2 {
     text-transform: capitalize;
     font-size: 30px;
     font-style: normal;
@@ -500,8 +514,7 @@
     margin-top: 20px;
   }
 
-  .form-heading h2::before,
-  h3.engrid--embedded-ecard-heading::before {
+  .form-heading h2::before {
     width: 4px;
     height: 34px;
     content: "";
@@ -547,7 +560,7 @@
       .en__field__item input[value="MONTHLY"]+.en__field__label--item {
         position: relative;
 
-        @media (min-width: 620px) {
+        @media (min-width: 641px) {
           &::before {
             content: "";
             display: inline-block;
@@ -600,7 +613,7 @@
       }
 
       // Checked state: switch to white
-      @media (min-width: 620px) {
+      @media (min-width: 641px) {
         .en__field__item {
           input[type="radio"]:checked {
 
@@ -793,13 +806,32 @@
       border-color: var(--color_blue);
     }
 
+    .en__field__label--item {
+      transition: 0.2s all ease;
+    }
+
     .en__field__label--item:after {
       font-family: "Grosvenor Book";
       font-size: 18px !important;
       font-style: italic;
       font-weight: 500;
       line-height: 18px;
-      opacity: 1;
+      opacity: 1 !important;
+    }
+  }
+
+  #giftDesignationParent {
+    margin: 0;
+    padding: 0;
+
+    .en__field--select {
+      margin: 0 !important;
+      padding: 0 !important;
+
+      .en__field__input--select {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
     }
   }
 
@@ -853,18 +885,17 @@
   }
 
   .en__submit button {
-    --submit__button_padding-top: 19px;
-    --submit__button_padding-bottom: 19px;
+    --submit__button_padding-top: 28px;
+    --submit__button_padding-bottom: 28px;
     --submit__button_background-color_hover: var(--button_background-color_hover);
     background-color: var(--button_background-color_hover);
     color: var(--button_color_hover);
     border: unset;
-    font-family: var(--default_font-family, inherit);
-    font-size: 14px;
+    font-family: var(--p_font-family, inherit);
+    font-size: 40px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 20px;
-    letter-spacing: 3px;
+    font-weight: 500;
+    line-height: 32px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
@@ -912,6 +943,7 @@
       line-height: 18px;
       letter-spacing: initial;
       margin-left: 11px;
+      text-transform: capitalize;
     }
   }
 
@@ -929,9 +961,14 @@
     padding: var(--spacing-6, 24px) var(--spacing-8, 32px);
     margin: var(--spacing-3, 12px) 0;
     border: 1px solid var(--color_black);
-    display: grid;
-    grid-template-columns: 124px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: var(--spacing-10, 40px);
+
+    img {
+      width: 124px;
+    }
 
     p {
       margin: 0;
@@ -1523,36 +1560,43 @@
       display: block;
     }
   }
+
+  .en__ecardrecipients__futureDelivery input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .en__ecardrecipients__futureDelivery input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
 }
 
 [data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {
 
-  h2 {
-    text-transform: capitalize;
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 36px;
-    display: flex;
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
+  .en__component--ecardblock {
+    h2 {
+      font-family: var(--default_font-family);
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
 
-  h2::before {
-    width: 4px;
-    height: 34px;
-    content: "";
-    display: inline-block;
-    background-color: var(--color_black);
-    margin-right: 30px;
+    h2::before {
+      display: none;
+    }
   }
-
 
   .ecard-warning {
-    background-color: #f44336;
-    padding: 10px;
-    border-radius: 5px;
-    color: white;
+    background-color: var(--color_sand_50);
+    padding: var(--spacing-6, 24px) var(--spacing-8, 32px);
+    margin: var(--spacing-3, 12px) 0;
+    border: 1px solid var(--color_black);
 
     >*:first-child {
       margin-top: 0;
@@ -1608,6 +1652,20 @@
     position: relative;
     justify-content: flex-start;
     align-items: center;
+  }
+
+  .en__ecarditems__showprev {
+    background: var(--button_background-color);
+    color: var(--button_color);
+    font-size: var(--button_font-size);
+    font-weight: var(--button_font-weight);
+    font-family: var(--button_font-family);
+    padding: var(--button_padding);
+
+    &:hover {
+      background: var(--button_background-color_hover);
+      color: var(--button_color_hover);
+    }
   }
 
   button.en__ecarditems__button.en__ecarditems__addrecipient {

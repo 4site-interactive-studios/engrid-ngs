@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 18, 2026 @ 12:17:22 ET
+ *  Date: Tuesday, June 23, 2026 @ 16:37:01 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.7
@@ -25213,10 +25213,8 @@ class RememberMe {
       let hasFieldData = Object.keys(this.fieldData).length > 0;
       if (!hasFieldData) {
         this.insertRememberMeOptin();
-        this.rememberMeOptIn = false;
       } else {
         this.insertClearRememberMeLink();
-        this.rememberMeOptIn = true;
       }
       this.writeFields();
       this._form.onSubmit.subscribe(() => {
@@ -27806,7 +27804,16 @@ class SwapAmounts {
     this._frequency = DonationFrequency.getInstance();
     this.defaultChange = false; // Tracks if user changed away from default after swap
     this.swapped = false; // Tracks if we've already executed at least one swap
+    this.hasOneTimeNSG = false;
+    this.hasRecurringNSG = false;
     this.loadAmountsFromUrl();
+    this.hasOneTimeNSG = !!(window.EngagingNetworks.suggestedGift && window.EngagingNetworks.suggestedGift.single && window.EngagingNetworks.suggestedGift.single.length > 0);
+    this.hasRecurringNSG = !!(window.EngagingNetworks.suggestedGift && window.EngagingNetworks.suggestedGift.recurring && window.EngagingNetworks.suggestedGift.recurring.length > 0);
+    if (this.hasOneTimeNSG || this.hasRecurringNSG) {
+      this.logger.log("Detected NSG amounts", {
+        suggestedGift: window.EngagingNetworks.suggestedGift
+      });
+    }
     if (!this.shouldRun()) return;
     // Respond when frequency changes
     this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
@@ -27855,6 +27862,17 @@ class SwapAmounts {
     const freq = this._frequency.frequency;
     const config = configs[freq];
     if (!config) return;
+    if (this.shouldUseNSG(freq, config)) {
+      this.logger.log(`NSG present for ${freq}, using NSG amounts`, {
+        suggestedGift: window.EngagingNetworks.suggestedGift
+      });
+      window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.toEnAmountListNSG(window.EngagingNetworks.suggestedGift, freq), {
+        ignoreCurrentValue: true
+      });
+      this._amount.load();
+      this.swapped = true;
+      return;
+    }
     const stickyDefault = !!config.stickyDefault;
     // If stickyDefault, always ignore current value so selected flag in list enforces default
     const ignoreCurrentValue = stickyDefault ? true : this.ignoreCurrentValue();
@@ -27867,6 +27885,15 @@ class SwapAmounts {
     });
     this.swapped = true;
   }
+  shouldUseNSG(freq, config) {
+    if (freq === "onetime" && this.hasOneTimeNSG && !config.overrideNSG) {
+      return true;
+    }
+    if (freq === "monthly" && this.hasRecurringNSG && !config.overrideNSG) {
+      return true;
+    }
+    return false;
+  }
   /**
    * Convert the internal config object into the structure Engaging Networks expects
    */
@@ -27877,12 +27904,22 @@ class SwapAmounts {
       value: value.toString()
     }));
   }
+  /**
+   * Convert the Engaging Networks NSG config object into the structure Engaging Network Lists expect
+   */
+  toEnAmountListNSG(config, freq) {
+    const frequency = freq === "onetime" ? "single" : "recurring";
+    return config[frequency].map(({
+      nextSuggestedGift,
+      value
+    }) => ({
+      selected: nextSuggestedGift,
+      label: value > 0 ? value.toString() : "Other",
+      value: value > 0 ? value.toString() : "other"
+    }));
+  }
   shouldRun() {
-    const hasNSG = window.EngagingNetworks.suggestedGift !== undefined && Object.keys(window.EngagingNetworks.suggestedGift).length > 0;
-    if (!!window.EngridAmounts && hasNSG) {
-      this.logger.log("Not swapping amounts because NSG is active on page");
-    }
-    return !!window.EngridAmounts && !hasNSG;
+    return !!window.EngridAmounts;
   }
   ignoreCurrentValue() {
     const urlParam = engrid_ENGrid.getUrlParameter("transaction.donationAmt");
@@ -29673,6 +29710,7 @@ class SupporterHub {
     this.logger.log("Enabled");
     this.watch();
     this.preventDuplicateSubmits();
+    this.pageAltsAndArias();
   }
   shoudRun() {
     return "pageJson" in window && "pageType" in window.pageJson && window.pageJson.pageType === "supporterhub";
@@ -29690,6 +29728,16 @@ class SupporterHub {
                 this.logger.log("Overlay found");
                 this.creditCardUpdate(node);
                 this.amountLabelUpdate(node);
+                this.dialogAltsAndArias(node);
+              }
+            }
+          });
+          mutation.removedNodes.forEach(node => {
+            if (node.nodeName === "DIV") {
+              const overlay = node;
+              if (overlay.classList.contains("en__hubOverlay") || overlay.classList.contains("en__hubPledge__panels")) {
+                this.logger.log("Overlay removed");
+                this.inertPage(false);
               }
             }
           });
@@ -29706,7 +29754,34 @@ class SupporterHub {
     if (hubOverlay) {
       this.creditCardUpdate(hubOverlay);
       this.amountLabelUpdate(hubOverlay);
+      this.dialogAltsAndArias(hubOverlay);
     }
+  }
+  pageAltsAndArias() {
+    // Find every en__component--hubgadget and set role as button and aria-label as the span content of the component
+    document.querySelectorAll(".en__component--hubgadget").forEach(node => {
+      const button = node;
+      const labelSpan = button.querySelector("span");
+      if (!labelSpan) return;
+      const img = button.querySelector("img");
+      img === null || img === void 0 ? void 0 : img.setAttribute("aria-hidden", "true");
+      const slug = engrid_ENGrid.slugify(labelSpan.innerText);
+      const labelId = `hubgadget-label-${slug}`;
+      labelSpan.setAttribute("id", labelId);
+      button.setAttribute("aria-labelledby", labelId);
+      button.setAttribute("role", "button");
+      button.setAttribute("aria-controls", `huboverlay-${slug}`);
+      button.setAttribute("aria-haspopup", "dialog");
+      if (!button.classList.contains("en__component--hubgadget--inactive")) {
+        button.setAttribute("tabindex", "0");
+        button.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            button.click();
+          }
+        });
+      }
+    });
   }
   creditCardUpdate(overlay) {
     window.setTimeout(() => {
@@ -29732,6 +29807,61 @@ class SupporterHub {
         });
       }
     }, 300);
+  }
+  dialogAltsAndArias(overlay) {
+    window.setTimeout(() => {
+      this.inertPage(true, overlay);
+      const header = overlay.querySelector(".en__hubOverlay__header"),
+        closeButton = header.querySelector("a");
+      // Tag close button
+      if (header && closeButton) {
+        closeButton.setAttribute("role", "button");
+        closeButton.setAttribute("aria-label", "Close");
+      }
+      // Tag header and label dialog
+      const headerTitle = header.querySelector("h2");
+      const slug = engrid_ENGrid.slugify((headerTitle === null || headerTitle === void 0 ? void 0 : headerTitle.innerText) || "supporter-hub-overlay");
+      let headerTitleId = `huboverlay-title-${slug}`;
+      if (headerTitle) {
+        headerTitleId = headerTitle.id || headerTitleId;
+        headerTitle.setAttribute("id", headerTitleId);
+      }
+      const popup = overlay.querySelector(".en__hubOverlay__popup");
+      if (popup) {
+        popup.setAttribute("id", `huboverlay-${slug}`);
+        popup.setAttribute("role", "dialog");
+        popup.setAttribute("aria-modal", "true");
+        if (headerTitle) {
+          popup.setAttribute("aria-labelledby", headerTitleId);
+        } else {
+          popup.setAttribute("aria-label", "Supporter Hub Overlay");
+        }
+      }
+    }, 300);
+  }
+  inertPage(inert, overlay) {
+    if (inert) {
+      const hubOverlay = overlay && overlay.classList.contains("en__hubOverlay") ? overlay : document.querySelector(".en__hubOverlay") || overlay;
+      if (!hubOverlay) return;
+      let element = hubOverlay;
+      while (element && element !== document.body) {
+        const parent = element.parentElement;
+        if (parent) {
+          Array.from(parent.children).forEach(sibling => {
+            if (sibling !== element && sibling instanceof HTMLElement && !sibling.hasAttribute("inert")) {
+              sibling.setAttribute("inert", "");
+              sibling.dataset.engridInert = "true";
+            }
+          });
+        }
+        element = parent;
+      }
+    } else if (!document.querySelector(".en__hubOverlay, .en__hubPledge__panels")) {
+      document.querySelectorAll("[data-engrid-inert]").forEach(element => {
+        element.removeAttribute("inert");
+        delete element.dataset.engridInert;
+      });
+    }
   }
   // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
   preventDuplicateSubmits() {
@@ -32464,7 +32594,7 @@ class PreferredPaymentMethod {
   }
 }
 ;// ../engrid/packages/scripts/dist/version.js
-const AppVersion = "0.25.6";
+const AppVersion = "0.25.8";
 ;// ../engrid/packages/scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
@@ -33812,17 +33942,20 @@ function _defineProperty(e, r, t) {
  * @date 02-06-2026
  */
 
+
 class GiftAmounts {
   constructor() {
     _defineProperty(this, "monthlyHeartRadioSelector", '.radio-to-buttons_recurrfreq input[type="radio"][value="MONTHLY"]');
-    _defineProperty(this, "monthlyHeartAnimationDuration", 1500);
+    _defineProperty(this, "monthlyHeartAnimationDuration", 500);
     _defineProperty(this, "monthlyMobileHeartMediaQuery", "(max-width: 619px)");
     _defineProperty(this, "monthlyMobileHeartFloatInClass", "monthly-heart-float-in");
     _defineProperty(this, "monthlyMobileHeartFloatOutClass", "monthly-heart-float-out");
-    this.addMonthlyHeart();
+    _defineProperty(this, "donationFrequency", DonationFrequency.getInstance());
+    this.addFrequencyChangeListener();
     this.addRecurringGiftCallout();
     this.wrapFrequencyLabelGiveText();
     this.positionProgressBarCount();
+    this.handleFrequencyChange();
   }
   getMonthlyHeartFirstTextNode(node) {
     if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
@@ -33878,22 +34011,21 @@ class GiftAmounts {
     });
     window.setTimeout(() => floatingHeart.remove(), this.monthlyHeartAnimationDuration + 100);
   }
-  addMonthlyHeart() {
-    document.addEventListener("change", event => {
-      const target = event.target;
-      if (!(target instanceof HTMLInputElement) || !target.checked) return;
-      if (target.matches(this.monthlyHeartRadioSelector)) {
-        const label = target.nextElementSibling;
-        if (!label || !label.classList.contains("en__field__label--item")) return;
-        this.spawnMonthlyHeart(label);
-        return;
-      }
-      if (target.name !== "transaction.recurrfreq") return;
-      const monthlyFrequencyInput = document.querySelector(this.monthlyHeartRadioSelector);
-      const label = monthlyFrequencyInput?.nextElementSibling;
-      if (monthlyFrequencyInput?.checked || !label || !label.classList.contains("en__field__label--item")) return;
-      this.spawnMonthlyHeart(label, false);
+  addFrequencyChangeListener() {
+    this.donationFrequency.onFrequencyChange.subscribe(() => {
+      this.handleFrequencyChange();
     });
+  }
+  handleFrequencyChange() {
+    const currentFrequency = this.donationFrequency.frequency.toUpperCase();
+    const otherInput = document.querySelector("input[name='transaction.donationAmt.other']");
+    if (otherInput) {
+      otherInput.setAttribute("placeholder", currentFrequency === "MONTHLY" ? "Other/mo" : "Other");
+    }
+    const monthlyFrequencyInput = document.querySelector(this.monthlyHeartRadioSelector);
+    const label = monthlyFrequencyInput?.nextElementSibling;
+    if (!label || !label.classList.contains("en__field__label--item")) return;
+    this.spawnMonthlyHeart(label, currentFrequency === "MONTHLY");
   }
   addRecurringGiftCallout() {
     const recurringGiftCallout = document.querySelector(".recurring-callout-left, .recurring-callout-right");
