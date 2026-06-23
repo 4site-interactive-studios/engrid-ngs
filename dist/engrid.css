@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 23, 2026 @ 17:31:15 ET
+ *  Date: Tuesday, June 23, 2026 @ 17:33:33 ET
  *  By: nick
  *  ENGrid styles: v0.25.6
  *  ENGrid scripts: v0.25.7
@@ -8999,10 +8999,10 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
     width:24px;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .en__field__item input[value=MONTHLY]+.en__field__label--item.monthly-heart-float-in:before{
-    animation:floatIn 1s ease-out forwards;
+    animation:floatIn .5s ease-out forwards;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .en__field__item input[value=MONTHLY]+.en__field__label--item.monthly-heart-float-out:before{
-    animation:floatOut 1s ease-out forwards;
+    animation:floatOut .5s ease-out forwards;
   }
   [data-engrid-theme=ngs][data-engrid-layout] .monthly-heart-float{
     display:none;

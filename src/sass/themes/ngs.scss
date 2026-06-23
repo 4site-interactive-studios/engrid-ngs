@@ -1339,11 +1339,11 @@
       }
 
       &.monthly-heart-float-in::before {
-        animation: floatIn 1s ease-out forwards;
+        animation: floatIn 0.5s ease-out forwards;
       }
 
       &.monthly-heart-float-out::before {
-        animation: floatOut 1s ease-out forwards;
+        animation: floatOut 0.5s ease-out forwards;
       }
 
     }
