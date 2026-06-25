@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 23, 2026 @ 17:33:33 ET
+ *  Date: Thursday, June 25, 2026 @ 13:41:05 ET
  *  By: nick
- *  ENGrid styles: v0.25.6
- *  ENGrid scripts: v0.25.7
+ *  ENGrid styles: v0.25.10
+ *  ENGrid scripts: v0.25.9
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -18868,6 +18868,7 @@ class DonationAmount {
 }
 
 ;// ./node_modules/@4site/engrid-scripts/dist/engrid.js
+const errorCallbacks = new Map();
 class engrid_ENGrid {
     constructor() {
         if (!engrid_ENGrid.enForm) {
@@ -19306,6 +19307,7 @@ class engrid_ENGrid {
             else {
                 errorMessageElement.innerHTML = errorMessage;
             }
+            errorCallbacks.forEach((callback) => callback());
         }
     }
     static removeError(element) {
@@ -19390,6 +19392,24 @@ class engrid_ENGrid {
     // This function is used to run a callback function when an error is displayed on the page
     static watchForError(callback) {
         const errorElement = document.querySelector(".en__errorList");
+        const callbackType = engrid_ENGrid.getErrorCallbackKey(callback);
+        // Register callback so setError can trigger it too
+        if (!errorCallbacks.has(callbackType)) {
+            errorCallbacks.set(callbackType, callback);
+        }
+        if (errorElement && !errorElement.dataset[callbackType]) {
+            errorElement.dataset[callbackType] = "true";
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+                        callback();
+                    }
+                });
+            });
+            observer.observe(errorElement, { childList: true });
+        }
+    }
+    static getErrorCallbackKey(callback) {
         const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
         // Avoid duplicate callbacks
         let callbackType = callback.toString();
@@ -19403,18 +19423,7 @@ class engrid_ENGrid {
         callbackType = callbackType.replace(/[^a-zA-Z0-9]/g, "");
         // Limit to 20 characters and add prefix
         callbackType = callbackType.substring(0, 20);
-        callbackType = "engrid" + capitalize(callbackType);
-        if (errorElement && !errorElement.dataset[callbackType]) {
-            errorElement.dataset[callbackType] = "true";
-            const observer = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-                        callback();
-                    }
-                });
-            });
-            observer.observe(errorElement, { childList: true });
-        }
+        return "engrid" + capitalize(callbackType);
     }
     // Get the Payment Type
     static getPaymentType() {
@@ -28151,7 +28160,18 @@ class SwapAmounts {
         this._frequency = DonationFrequency.getInstance();
         this.defaultChange = false; // Tracks if user changed away from default after swap
         this.swapped = false; // Tracks if we've already executed at least one swap
+        this.hasOneTimeNSG = false;
+        this.hasRecurringNSG = false;
         this.loadAmountsFromUrl();
+        this.hasOneTimeNSG = !!(window.EngagingNetworks.suggestedGift &&
+            window.EngagingNetworks.suggestedGift.single &&
+            window.EngagingNetworks.suggestedGift.single.length > 0);
+        this.hasRecurringNSG = !!(window.EngagingNetworks.suggestedGift &&
+            window.EngagingNetworks.suggestedGift.recurring &&
+            window.EngagingNetworks.suggestedGift.recurring.length > 0);
+        if (this.hasOneTimeNSG || this.hasRecurringNSG) {
+            this.logger.log("Detected NSG amounts", { suggestedGift: window.EngagingNetworks.suggestedGift });
+        }
         if (!this.shouldRun())
             return;
         // Respond when frequency changes
@@ -28211,6 +28231,13 @@ class SwapAmounts {
         const config = configs[freq];
         if (!config)
             return;
+        if (this.shouldUseNSG(freq, config)) {
+            this.logger.log(`NSG present for ${freq}, using NSG amounts`, { suggestedGift: window.EngagingNetworks.suggestedGift });
+            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.toEnAmountListNSG(window.EngagingNetworks.suggestedGift, freq), { ignoreCurrentValue: true });
+            this._amount.load();
+            this.swapped = true;
+            return;
+        }
         const stickyDefault = !!config.stickyDefault;
         // If stickyDefault, always ignore current value so selected flag in list enforces default
         const ignoreCurrentValue = stickyDefault ? true : this.ignoreCurrentValue();
@@ -28218,6 +28245,15 @@ class SwapAmounts {
         this._amount.load();
         this.logger.log("Amounts Swapped To", config, { ignoreCurrentValue });
         this.swapped = true;
+    }
+    shouldUseNSG(freq, config) {
+        if (freq === "onetime" && this.hasOneTimeNSG && !config.overrideNSG) {
+            return true;
+        }
+        if (freq === "monthly" && this.hasRecurringNSG && !config.overrideNSG) {
+            return true;
+        }
+        return false;
     }
     /**
      * Convert the internal config object into the structure Engaging Networks expects
@@ -28229,13 +28265,19 @@ class SwapAmounts {
             value: value.toString(),
         }));
     }
+    /**
+     * Convert the Engaging Networks NSG config object into the structure Engaging Network Lists expect
+     */
+    toEnAmountListNSG(config, freq) {
+        const frequency = freq === "onetime" ? "single" : "recurring";
+        return config[frequency].map(({ nextSuggestedGift, value }) => ({
+            selected: nextSuggestedGift,
+            label: value > 0 ? value.toString() : "Other",
+            value: value > 0 ? value.toString() : "other",
+        }));
+    }
     shouldRun() {
-        const hasNSG = window.EngagingNetworks.suggestedGift !== undefined &&
-            Object.keys(window.EngagingNetworks.suggestedGift).length > 0;
-        if (!!window.EngridAmounts && hasNSG) {
-            this.logger.log("Not swapping amounts because NSG is active on page");
-        }
-        return !!window.EngridAmounts && !hasNSG;
+        return !!window.EngridAmounts;
     }
     ignoreCurrentValue() {
         const urlParam = engrid_ENGrid.getUrlParameter("transaction.donationAmt");
@@ -28948,11 +28990,14 @@ class PremiumGift {
                             if (newPremiumGift) {
                                 newPremiumGift.checked = true;
                                 newPremiumGift.dispatchEvent(new Event("change"));
+                                this.altsAndArias();
                             }
                         }, 100);
                     }
                     window.setTimeout(() => {
                         this.checkPremiumGift();
+                        this.altsAndArias();
+                        this.maxDonationAria();
                     }, 110);
                 }
             });
@@ -29039,35 +29084,78 @@ class PremiumGift {
     }
     // Sets alt tags for premium gift images and aria tags for premium gift radio inputs
     altsAndArias() {
-        const premiumTitle = document.querySelectorAll(".en__pg__detail h2.en__pg__name");
+        const premiumHeader = document.querySelector(".en__pgHeader");
+        const radioGroup = document.querySelector(".en__pgList");
+        if (premiumHeader && radioGroup) {
+            const premiumHeaderId = premiumHeader.id || "premium-gift-header";
+            premiumHeader.setAttribute("id", premiumHeaderId);
+            premiumHeader.setAttribute("role", "heading");
+            premiumHeader.setAttribute("aria-level", "2");
+            radioGroup.setAttribute("aria-labelledby", premiumHeaderId);
+            radioGroup.setAttribute("role", "radiogroup");
+        }
         const multistepBackButton = document.querySelectorAll(".multistep-button-container button.btn-back");
-        premiumTitle.forEach((item) => {
-            if (item) {
-                const titleText = item.innerHTML;
-                const parent = item.parentElement;
-                const prevSibling = parent === null || parent === void 0 ? void 0 : parent.previousElementSibling;
-                const radioInputSibling = prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.previousElementSibling;
-                if (prevSibling) {
-                    const imageDiv = prevSibling.querySelector(".en__pg__images");
-                    if (imageDiv) {
-                        const img = imageDiv.querySelector("img");
-                        if (img) {
-                            img.setAttribute("alt", titleText);
-                            img.style.width = "125px";
-                            img.style.height = "100px";
-                        }
-                    }
+        multistepBackButton.forEach((item) => {
+            item.setAttribute("aria-label", "Back");
+        });
+        const premiumRow = document.querySelectorAll(".en__pg");
+        premiumRow.forEach((item) => {
+            const premiumTitle = item.querySelector(".en__pg__detail h2.en__pg__name");
+            const titleText = (premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.innerHTML) || "";
+            const premiumGiftInput = item.querySelector('input[name="en__pg"]');
+            const premiumGiftId = (premiumGiftInput === null || premiumGiftInput === void 0 ? void 0 : premiumGiftInput.value) || engrid_ENGrid.slugify(titleText);
+            premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.setAttribute("id", `premium-gift-option-${premiumGiftId}`);
+            const details = item.querySelector(".en__pg__detail");
+            const display = item.querySelector(".en__pg__display");
+            const select = item.querySelector(".en__pg__select");
+            if (select) {
+                const radioInput = select.querySelector('input[type="radio"]');
+                if (radioInput) {
+                    radioInput.setAttribute("aria-labelledby", (premiumTitle === null || premiumTitle === void 0 ? void 0 : premiumTitle.id) || "");
                 }
-                if (radioInputSibling) {
-                    const radioInput = radioInputSibling.querySelector('input[type="radio"]');
-                    if (radioInput) {
-                        radioInput.setAttribute("aria-label", titleText);
+            }
+            if (details) {
+                const optionTypesParent = details.querySelector(".en__pg__optionTypes");
+                if (optionTypesParent) {
+                    this.altsAndAriasForSelects(optionTypesParent, titleText, premiumGiftId);
+                }
+            }
+            if (display) {
+                const imageDiv = display.querySelector(".en__pg__images");
+                if (imageDiv) {
+                    const img = imageDiv.querySelector("img");
+                    if (img) {
+                        img.setAttribute("alt", titleText);
+                        img.style.width = "125px";
+                        img.style.height = "100px";
                     }
                 }
             }
-            multistepBackButton.forEach((item) => {
-                item.setAttribute("aria-label", "Back");
+        });
+        this.syncOptionSelectStates();
+    }
+    syncOptionSelectStates() {
+        const premiumRows = document.querySelectorAll(".en__pg");
+        premiumRows.forEach((row) => {
+            const radioInput = row.querySelector('input[name="en__pg"]');
+            const optionSelects = row.querySelectorAll(".en__pg__optionType select");
+            optionSelects.forEach((select) => {
+                select.disabled = !(radioInput === null || radioInput === void 0 ? void 0 : radioInput.checked);
             });
+        });
+    }
+    altsAndAriasForSelects(optionTypesParent, titleText, premiumGiftId) {
+        optionTypesParent.setAttribute("aria-label", `Options for ${titleText}`);
+        const optionTypes = optionTypesParent.querySelectorAll(".en__pg__optionType");
+        optionTypes.forEach((option, index) => {
+            const label = option.querySelector("label");
+            const select = option.querySelector('select');
+            if (label && select) {
+                const labelId = engrid_ENGrid.slugify(label.innerText) || index.toString();
+                select.setAttribute("id", `premium-gift-option-type-${premiumGiftId}-${labelId}`);
+                label.setAttribute("for", select.id);
+                label.setAttribute("aria-label", `${label.innerText} for ${titleText}`);
+            }
         });
     }
     // This is for the Maximize My Donation aria-label - the tree structure for it is slightly different.
@@ -30143,6 +30231,7 @@ class SupporterHub {
         this.logger.log("Enabled");
         this.watch();
         this.preventDuplicateSubmits();
+        this.pageAltsAndArias();
     }
     shoudRun() {
         return ("pageJson" in window &&
@@ -30163,6 +30252,17 @@ class SupporterHub {
                                 this.logger.log("Overlay found");
                                 this.creditCardUpdate(node);
                                 this.amountLabelUpdate(node);
+                                this.dialogAltsAndArias(node);
+                            }
+                        }
+                    });
+                    mutation.removedNodes.forEach((node) => {
+                        if (node.nodeName === "DIV") {
+                            const overlay = node;
+                            if (overlay.classList.contains("en__hubOverlay") ||
+                                overlay.classList.contains("en__hubPledge__panels")) {
+                                this.logger.log("Overlay removed");
+                                this.inertPage(false);
                             }
                         }
                     });
@@ -30179,7 +30279,35 @@ class SupporterHub {
         if (hubOverlay) {
             this.creditCardUpdate(hubOverlay);
             this.amountLabelUpdate(hubOverlay);
+            this.dialogAltsAndArias(hubOverlay);
         }
+    }
+    pageAltsAndArias() {
+        // Find every en__component--hubgadget and set role as button and aria-label as the span content of the component
+        document.querySelectorAll(".en__component--hubgadget").forEach((node) => {
+            const button = node;
+            const labelSpan = button.querySelector("span");
+            if (!labelSpan)
+                return;
+            const img = button.querySelector("img");
+            img === null || img === void 0 ? void 0 : img.setAttribute("aria-hidden", "true");
+            const slug = engrid_ENGrid.slugify(labelSpan.innerText);
+            const labelId = `hubgadget-label-${slug}`;
+            labelSpan.setAttribute("id", labelId);
+            button.setAttribute("aria-labelledby", labelId);
+            button.setAttribute("role", "button");
+            button.setAttribute("aria-controls", `huboverlay-${slug}`);
+            button.setAttribute("aria-haspopup", "dialog");
+            if (!button.classList.contains("en__component--hubgadget--inactive")) {
+                button.setAttribute("tabindex", "0");
+                button.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        button.click();
+                    }
+                });
+            }
+        });
     }
     creditCardUpdate(overlay) {
         window.setTimeout(() => {
@@ -30206,6 +30334,70 @@ class SupporterHub {
                 });
             }
         }, 300);
+    }
+    dialogAltsAndArias(overlay) {
+        window.setTimeout(() => {
+            this.inertPage(true, overlay);
+            const header = overlay.querySelector(".en__hubOverlay__header"), closeButton = header.querySelector("a");
+            // Tag close button
+            if (header && closeButton) {
+                closeButton.setAttribute("role", "button");
+                closeButton.setAttribute("aria-label", "Close");
+            }
+            // Tag header and label dialog
+            const headerTitle = header.querySelector("h2");
+            const slug = engrid_ENGrid.slugify((headerTitle === null || headerTitle === void 0 ? void 0 : headerTitle.innerText) || "supporter-hub-overlay");
+            let headerTitleId = `huboverlay-title-${slug}`;
+            if (headerTitle) {
+                headerTitleId = headerTitle.id || headerTitleId;
+                headerTitle.setAttribute("id", headerTitleId);
+            }
+            const popup = overlay.querySelector(".en__hubOverlay__popup");
+            if (popup) {
+                popup.setAttribute("id", `huboverlay-${slug}`);
+                popup.setAttribute("role", "dialog");
+                popup.setAttribute("aria-modal", "true");
+                if (headerTitle) {
+                    popup.setAttribute("aria-labelledby", headerTitleId);
+                }
+                else {
+                    popup.setAttribute("aria-label", "Supporter Hub Overlay");
+                }
+            }
+        }, 300);
+    }
+    inertPage(inert, overlay) {
+        if (inert) {
+            const hubOverlay = overlay && overlay.classList.contains("en__hubOverlay")
+                ? overlay
+                : document.querySelector(".en__hubOverlay") ||
+                    overlay;
+            if (!hubOverlay)
+                return;
+            let element = hubOverlay;
+            while (element && element !== document.body) {
+                const parent = element.parentElement;
+                if (parent) {
+                    Array.from(parent.children).forEach((sibling) => {
+                        if (sibling !== element &&
+                            sibling instanceof HTMLElement &&
+                            !sibling.hasAttribute("inert")) {
+                            sibling.setAttribute("inert", "");
+                            sibling.dataset.engridInert = "true";
+                        }
+                    });
+                }
+                element = parent;
+            }
+        }
+        else if (!document.querySelector(".en__hubOverlay, .en__hubPledge__panels")) {
+            document
+                .querySelectorAll("[data-engrid-inert]")
+                .forEach((element) => {
+                element.removeAttribute("inert");
+                delete element.dataset.engridInert;
+            });
+        }
     }
     // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
     preventDuplicateSubmits() {
@@ -33098,7 +33290,7 @@ class PreferredPaymentMethod {
 }
 
 ;// ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.25.7";
+const AppVersion = "0.25.9";
 
 ;// ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -33200,6 +33392,7 @@ const AppVersion = "0.25.7";
 
 
 ;// ./src/scripts/main.js
+
 const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   // Find "give-by-select-wrapper" -- Code block character limits meant we couldn't add the image URLs in the HTML, so we have to do it here.
@@ -33239,6 +33432,35 @@ const customScript = function (App) {
       cardsElement.setAttribute("src", "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2184/payment-type-cards.png?v=1780423619000");
     }
   }
+
+  /**
+   * Function to rearrange eCard related elements on the page.
+   * Moves .en__ecarditems__action to come after .en__ecardmessage and
+   * moves .en__ecardrecipients__futureDelivery to come after .en__ecardrecipients.
+   */
+  function rearrangeEcardElements() {
+    // Get the elements
+    const ecardItemsAction = document.querySelector(".en__ecarditems__action");
+    const ecardMessage = document.querySelector(".en__ecardmessage");
+    const ecardRecipientsFutureDelivery = document.querySelector(".en__ecardrecipients__futureDelivery");
+    const ecardRecipients = document.querySelector(".en__ecardrecipients");
+
+    // Move .en__ecarditems__action so it comes after .en__ecardmessage
+    if (ecardItemsAction && ecardMessage) {
+      ecardMessage.insertAdjacentElement("afterend", ecardItemsAction);
+    }
+
+    // Move .en__ecardrecipients__futureDelivery so it comes after .en__ecardrecipients
+    if (ecardRecipientsFutureDelivery && ecardRecipients) {
+      ecardRecipients.insertAdjacentElement("afterend", ecardRecipientsFutureDelivery);
+    }
+  }
+
+  // Call the function
+  if (engrid_ENGrid.getPageType() === "ECARD") {
+    rearrangeEcardElements();
+  }
+
   // Find the select element within the wrapper
   // Add your client scripts here
   App.setBodyData("client-js-loading", "finished");
@@ -36828,6 +37050,41 @@ class a11y_A11y {
       inputElement.removeAttribute('aria-describedby');
     }
   }
+  /**
+   * Make everything on the page inert except the supplied overlay element and
+   * its ancestors. This hides background content from assistive technology and
+   * prevents focus from escaping a modal-style overlay.
+   *
+   * @param inert   When true, set `inert` on all siblings of the overlay and of
+   *                each of its ancestors. When false, remove `inert` from every
+   *                element this method previously marked (tracked via the
+   *                `data-engrid-inert` flag).
+   * @param overlay The element that should remain interactive. Required when
+   *                `inert` is true; ignored when `inert` is false.
+   */
+  static inertPage(inert, overlay) {
+    if (inert) {
+      if (!overlay) return;
+      let element = overlay;
+      while (element && element !== document.body) {
+        const parent = element.parentElement;
+        if (parent) {
+          Array.from(parent.children).forEach(sibling => {
+            if (sibling !== element && sibling instanceof HTMLElement && !sibling.hasAttribute("inert")) {
+              sibling.setAttribute("inert", "");
+              sibling.dataset.engridInert = "true";
+            }
+          });
+        }
+        element = parent;
+      }
+    } else {
+      document.querySelectorAll("[data-engrid-inert]").forEach(element => {
+        element.removeAttribute("inert");
+        delete element.dataset.engridInert;
+      });
+    }
+  }
   manageErrorListAlertRole() {
     const errorList = document.querySelector('ul.en__errorList');
     if (!errorList) return;
@@ -36956,6 +37213,7 @@ class ecard_Ecard {
     this._form = en_form_EnForm.getInstance();
     this.logger = new logger_EngridLogger("Ecard", "red", "#f5f5f5", "🪪");
     if (!this.shouldRun()) return;
+    this.altsAndArias();
     this._form.onValidate.subscribe(() => this.checkRecipientFields());
     const schedule = dist_engrid_ENGrid.getUrlParameter("engrid_ecard.schedule");
     const scheduleField = dist_engrid_ENGrid.getField("ecard.schedule");
@@ -37006,6 +37264,191 @@ class ecard_Ecard {
       addRecipientButton.click();
     }
     return true;
+  }
+  altsAndArias() {
+    document.querySelectorAll(".en__ecarditems__list").forEach(list => {
+      this.altsAndAriasEcardItemsList(list);
+    });
+    const ecardMessage = document.querySelector(".en__ecardmessage");
+    if (ecardMessage) {
+      this.coupleH2AndInput(ecardMessage, "Add a Message to your eCard");
+    }
+    const ecardRecipients = document.querySelector(".en__ecardrecipients");
+    if (ecardRecipients) {
+      const recipientName = ecardRecipients.querySelector(".en__ecardrecipients__name");
+      if (recipientName) {
+        this.coupleLabelAndInput(recipientName, "Recipient Name");
+      }
+      const recipientEmail = ecardRecipients.querySelector(".en__ecardrecipients__email");
+      if (recipientEmail) {
+        this.coupleLabelAndInput(recipientEmail, "Recipient Email");
+      }
+    }
+    const ecardFutureDelivery = document.querySelector(".en__ecardrecipients__futureDelivery");
+    if (ecardFutureDelivery) {
+      this.coupleH2AndInput(ecardFutureDelivery, "Schedule your eCard for future delivery");
+    }
+    const previewButton = document.querySelector(".en__ecarditems__showprev");
+    if (previewButton) {
+      previewButton.setAttribute("aria-controls", "ecard-preview");
+      previewButton.setAttribute("aria-haspopup", "dialog");
+    }
+    const previewModal = document.querySelector(".en__ecarditems__preview");
+    if (previewModal) {
+      previewModal.setAttribute("role", "dialog");
+      previewModal.setAttribute("aria-modal", "true");
+      previewModal.setAttribute("aria-label", "Ecard Preview Modal");
+      previewModal.setAttribute("id", "ecard-preview");
+      const closeButton = previewModal.querySelector(".en__ecarditems__prevclose");
+      if (closeButton) {
+        closeButton.setAttribute("role", "button");
+        closeButton.setAttribute("aria-label", "Close Preview");
+        document.addEventListener("keydown", e => {
+          if (e.key === "Escape" && previewModal.classList.contains("preview--show")) {
+            closeButton.click();
+          }
+        });
+      }
+      const iframe = previewModal.querySelector("iframe");
+      if (iframe) {
+        iframe.setAttribute("title", "Ecard Preview Frame");
+      }
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          if (mutation.type === "attributes" && mutation.attributeName === "class") {
+            const target = mutation.target;
+            if (target.classList.contains("preview--show")) {
+              a11y_A11y.inertPage(true, previewModal);
+              // Focus the iframe or the first focusable element in the modal
+              const focusableElements = previewModal.querySelectorAll('iframe, a[href], area[href], button:not([disabled]), object, embed, [tabindex="0"]');
+              if (focusableElements.length) {
+                focusableElements[0].focus();
+              }
+            } else {
+              a11y_A11y.inertPage(false);
+              // Return focus to the preview button
+              if (previewButton) {
+                previewButton.focus();
+              }
+            }
+          }
+        });
+      });
+      observer.observe(previewModal, {
+        attributes: true,
+        attributeFilter: ["class"]
+      });
+    }
+  }
+  altsAndAriasEcardItemsList(list) {
+    // if there's a sibling h2, use its text as the aria-label for the list
+    const h2 = list.previousElementSibling;
+    if (h2 && h2.tagName === "H2") {
+      const id = `ecard-list-${Math.random().toString(36).substring(2, 9)}`;
+      h2.setAttribute("id", id);
+      list.setAttribute("aria-labelledby", id);
+    }
+    list.setAttribute("role", "radiogroup");
+    const thumbs = Array.from(list.querySelectorAll(".en__ecarditems__thumb"));
+    let isSelection = false;
+    thumbs.forEach((thumb, index) => {
+      thumb.setAttribute("role", "radio");
+      if (thumb.classList.contains("thumb--active")) {
+        thumb.setAttribute("aria-checked", "true");
+        thumb.setAttribute("tabindex", "0");
+        isSelection = true;
+      } else {
+        thumb.setAttribute("aria-checked", "false");
+        thumb.setAttribute("tabindex", "-1");
+      }
+      const img = thumb.querySelector("img");
+      if (img) {
+        thumb.setAttribute("aria-label", img.alt || "Ecard Thumbnail");
+        img.setAttribute("aria-hidden", "true");
+      }
+      // Keyboard navigation (WAI-ARIA radio group pattern)
+      thumb.addEventListener("keydown", e => {
+        let nextIndex = null;
+        switch (e.key) {
+          case "ArrowRight":
+          case "ArrowDown":
+            nextIndex = (index + 1) % thumbs.length;
+            break;
+          case "ArrowLeft":
+          case "ArrowUp":
+            nextIndex = (index - 1 + thumbs.length) % thumbs.length;
+            break;
+          case "Home":
+            nextIndex = 0;
+            break;
+          case "End":
+            nextIndex = thumbs.length - 1;
+            break;
+          case "Enter":
+          case " ":
+            e.preventDefault();
+            thumb.click();
+            return;
+          default:
+            return;
+        }
+        e.preventDefault();
+        // In a radio group, moving focus also selects the option.
+        // click() lets EN's own handler set the value + thumb--active class;
+        // the MutationObserver below then syncs aria-checked + tabindex.
+        thumbs[nextIndex].focus();
+        thumbs[nextIndex].click();
+      });
+    });
+    if (!isSelection && thumbs.length) {
+      thumbs[0].setAttribute("tabindex", "0");
+    }
+    // MutationObserver to watch for "thumb--active" class changes and keep
+    // aria-checked + roving tabindex in sync with the selected thumb
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === "attributes" && mutation.attributeName === "class") {
+          const target = mutation.target;
+          if (target.classList.contains("thumb--active")) {
+            target.setAttribute("aria-checked", "true");
+            // Roving tabindex: only the active thumb is tabbable
+            target.setAttribute("tabindex", "0");
+            thumbs.forEach(t => {
+              if (t !== target) t.setAttribute("tabindex", "-1");
+            });
+          } else {
+            target.setAttribute("aria-checked", "false");
+          }
+        }
+      });
+    });
+    observer.observe(list, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["class"]
+    });
+  }
+  coupleLabelAndInput(parent, labelText) {
+    const label = parent.querySelector("label");
+    const input = parent.querySelector("input, textarea, select");
+    if (label && input) {
+      const id = `ecard-input-${Math.random().toString(36).substring(2, 9)}`;
+      label.setAttribute("id", id);
+      input.setAttribute("aria-labelledby", id);
+    } else if (input) {
+      input.setAttribute("aria-label", labelText);
+    }
+  }
+  coupleH2AndInput(parent, labelText) {
+    const h2 = parent.querySelector("h2");
+    const input = parent.querySelector("textarea, input, select");
+    if (h2 && input) {
+      const id = `ecard-message-${Math.random().toString(36).substring(2, 9)}`;
+      h2.setAttribute("id", id);
+      input.setAttribute("aria-labelledby", id);
+    } else if (input) {
+      input.setAttribute("aria-label", labelText);
+    }
   }
 }
 ;// ../engrid/packages/scripts/dist/click-to-expand.js
@@ -45957,7 +46400,7 @@ class supporter_hub_SupporterHub {
               const overlay = node;
               if (overlay.classList.contains("en__hubOverlay") || overlay.classList.contains("en__hubPledge__panels")) {
                 this.logger.log("Overlay removed");
-                this.inertPage(false);
+                a11y_A11y.inertPage(false);
               }
             }
           });
@@ -46030,13 +46473,22 @@ class supporter_hub_SupporterHub {
   }
   dialogAltsAndArias(overlay) {
     window.setTimeout(() => {
-      this.inertPage(true, overlay);
+      const hubOverlay = overlay.classList.contains("en__hubOverlay") ? overlay : document.querySelector(".en__hubOverlay") || overlay;
+      a11y_A11y.inertPage(true, hubOverlay);
       const header = overlay.querySelector(".en__hubOverlay__header"),
         closeButton = header.querySelector("a");
       // Tag close button
       if (header && closeButton) {
         closeButton.setAttribute("role", "button");
         closeButton.setAttribute("aria-label", "Close");
+        document.addEventListener("keydown", e => {
+          if (e.key === "Escape") {
+            this.logger.log("Escape key pressed, closing overlay");
+            closeButton.click();
+          }
+        }, {
+          once: true
+        });
       }
       // Tag header and label dialog
       const headerTitle = header.querySelector("h2");
@@ -46058,30 +46510,6 @@ class supporter_hub_SupporterHub {
         }
       }
     }, 300);
-  }
-  inertPage(inert, overlay) {
-    if (inert) {
-      const hubOverlay = overlay && overlay.classList.contains("en__hubOverlay") ? overlay : document.querySelector(".en__hubOverlay") || overlay;
-      if (!hubOverlay) return;
-      let element = hubOverlay;
-      while (element && element !== document.body) {
-        const parent = element.parentElement;
-        if (parent) {
-          Array.from(parent.children).forEach(sibling => {
-            if (sibling !== element && sibling instanceof HTMLElement && !sibling.hasAttribute("inert")) {
-              sibling.setAttribute("inert", "");
-              sibling.dataset.engridInert = "true";
-            }
-          });
-        }
-        element = parent;
-      }
-    } else if (!document.querySelector(".en__hubOverlay, .en__hubPledge__panels")) {
-      document.querySelectorAll("[data-engrid-inert]").forEach(element => {
-        element.removeAttribute("inert");
-        delete element.dataset.engridInert;
-      });
-    }
   }
   // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
   preventDuplicateSubmits() {
