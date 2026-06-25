@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 25, 2026 @ 13:41:05 ET
+ *  Date: Thursday, June 25, 2026 @ 18:14:51 ET
  *  By: nick
  *  ENGrid styles: v0.25.10
  *  ENGrid scripts: v0.25.9
@@ -8136,6 +8136,7 @@ body[data-engrid-debug]:before{
   --p_font-weight:initial;
   --p_line-height:25.6px;
   --a_font-family:var(--p_font-family);
+  --a_text-decoration:underline;
   --label_font-family:var(--p_font-family);
   --label_font-weight:500;
   --label_line-height:22px;
@@ -8203,12 +8204,6 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=ngs] *{
   -webkit-font-smoothing:antialiased;
-}
-[data-engrid-theme=ngs] a{
-  font-size:var(--default_font-size);
-  line-height:22px;
-  -webkit-text-decoration:none;
-  text-decoration:none;
 }
 [data-engrid-theme=ngs] h2,[data-engrid-theme=ngs] h6{
   text-transform:uppercase;
@@ -8848,6 +8843,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   grid-column:bc;
 }
 [data-engrid-theme=ngs] .ngs-footer{
+  --a_text-decoration:none;
   --default_font-size:14px;
   --default_line-height:22px;
   --a_font-size:var(--default_font-size);

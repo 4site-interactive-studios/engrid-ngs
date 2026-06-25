@@ -79,6 +79,7 @@
 
   // TYPOGRAPHY A
   --a_font-family: var(--p_font-family);
+  --a_text-decoration: underline;
   // --a_color: #FFCC00;
 
   // TYPOGRAPHY A:FOCUS
@@ -187,12 +188,6 @@
 
   * {
     -webkit-font-smoothing: antialiased;
-  }
-
-  a {
-    font-size: var(--default_font-size);
-    text-decoration: none;
-    line-height: 22px;
   }
 
   h2 {
@@ -1045,6 +1040,7 @@
   }
 
   .ngs-footer {
+    --a_text-decoration: none;
     --default_font-size: 14px;
     --default_line-height: 22px;
     --a_font-size: var(--default_font-size);
