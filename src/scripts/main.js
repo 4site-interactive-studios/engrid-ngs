@@ -101,6 +101,12 @@ export const customScript = function (App) {
     rearrangeEcardElements();
   }
 
+  // If the page has no page background image (data-engrid-no-backgroundimage) and is a 1 col layout, switch layout to centercenter1col
+  if (document.body.getAttribute("data-engrid-layout").indexOf("1col") !== -1 && document.body.hasAttribute("data-engrid-no-page-backgroundimage")) {
+    document.body.setAttribute("data-engrid-layout", "centercenter1col");
+  }
+
+
   // Find the select element within the wrapper
   // Add your client scripts here
   App.setBodyData("client-js-loading", "finished");

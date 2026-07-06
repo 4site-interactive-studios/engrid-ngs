@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 2, 2026 @ 10:32:29 ET
+ *  Date: Monday, July 6, 2026 @ 12:18:28 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -8252,6 +8252,9 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=ngs] .body-title h1{
   max-width:499px;
 }
+[data-engrid-theme=ngs][data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .body-headerOutside,[data-engrid-theme=ngs][data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .content-footer,[data-engrid-theme=ngs][data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .content-footerSpacer{
+  box-shadow:0 3px 3px 0 #0000004d;
+}
 [data-engrid-theme=ngs] .en__component--formblock .en__field .en__field__element>.en__field__input--vgs,[data-engrid-theme=ngs] .en__component--formblock .en__field .en__field__element>input,[data-engrid-theme=ngs] .en__component--formblock .en__field .en__field__element>select{
   margin-top:var(--spacing-2, 8px);
 }
@@ -8875,6 +8878,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 }
 [data-engrid-theme=ngs] .content-footerSpacer{
   background-color:var(--engrid__body_background-color);
+  grid-column:bc;
   height:var(--spacing-10, 40px);
 }
 [data-engrid-theme=ngs] .content-footer{

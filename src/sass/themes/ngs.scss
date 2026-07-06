@@ -232,6 +232,12 @@
     }
   }
 
+  &[data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .body-headerOutside,
+  &[data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .content-footerSpacer,
+  &[data-engrid-layout*="1col"] div:not(.pboAdvancedRow__preview) .content-footer {
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 3px 0px;
+  }
+
   .en__component--formblock .en__field .en__field__element>input,
   .en__component--formblock .en__field .en__field__element>select,
   .en__component--formblock .en__field .en__field__element>.en__field__input--vgs {
@@ -1061,6 +1067,7 @@
 
   // Content Footer
   .content-footerSpacer {
+    grid-column: bc;
     height: var(--spacing-10, 40px);
     background-color: var(--engrid__body_background-color);
   }
