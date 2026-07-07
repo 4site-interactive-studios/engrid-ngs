@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 6, 2026 @ 12:18:28 ET
+ *  Date: Tuesday, July 7, 2026 @ 15:40:48 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -9171,7 +9171,7 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   [data-engrid-theme=ngs][data-engrid-layout] .ngs-footer .footer-columns .give-phone p{
     margin:0;
   }
-  [data-engrid-theme=ngs][data-engrid-layout][data-engrid-page-background=image]:not([data-engrid-animation-loaded]):not([data-engrid-no-animate-background]) .background-mobile-cover{
+  [data-engrid-theme=ngs][data-engrid-layout][data-engrid-page-background=image]:not([data-engrid-no-animate-background]) .background-mobile-cover{
     height:25vh;
     object-fit:cover;
     object-position:center;

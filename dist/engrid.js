@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 6, 2026 @ 12:18:28 ET
+ *  Date: Tuesday, July 7, 2026 @ 15:40:48 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -35197,8 +35197,7 @@ const options_OptionsDefaults = {
   StickyNSG: false,
   StickyPrepopulation: false,
   PreferredPaymentMethod: false,
-  PageLayouts: ["leftleft1col", "centerleft1col", "centercenter1col", "centercenter2col", "centerright1col", "rightright1col", "none"],
-  UseBodyBannerImageAsBackground: false
+  PageLayouts: ["leftleft1col", "centerleft1col", "centercenter1col", "centercenter2col", "centerright1col", "rightright1col", "none"]
 };
 ;// ../engrid/packages/scripts/dist/interfaces/upsell-options.js
 const upsell_options_UpsellOptionsDefaults = {
@@ -36880,8 +36879,6 @@ class app_App extends dist_engrid_ENGrid {
     new custom_currency_CustomCurrency();
     // Auto Country Select
     new auto_country_select_AutoCountrySelect();
-    // Page Background
-    new page_background_PageBackground(this.options.UseBodyBannerImageAsBackground);
     // Add Image Attribution
     if (this.options.MediaAttribution) new media_attribution_MediaAttribution();
     // Apple Pay
@@ -36919,6 +36916,8 @@ class app_App extends dist_engrid_ENGrid {
     new a11y_A11y();
     new add_name_to_message_AddNameToMessage();
     new expand_region_name_ExpandRegionName();
+    // Page Background
+    new page_background_PageBackground();
     // Url Params to Form Fields
     new url_to_form_UrlToForm();
     // Required if Visible Fields
@@ -36940,7 +36939,7 @@ class app_App extends dist_engrid_ENGrid {
     // Supporter Hub Features
     new supporter_hub_SupporterHub();
     // Digital Wallets Features
-    if (dist_engrid_ENGrid.getPageType() === "DONATION") {
+    if (dist_engrid_ENGrid.getPageType() === "DONATION" || dist_engrid_ENGrid.getPageType() === "EVENT") {
       new digital_wallets_DigitalWallets();
       new preferred_payment_method_PreferredPaymentMethod();
     }
@@ -41471,16 +41470,12 @@ class set_recurr_freq_setRecurrFreq {
 ;// ../engrid/packages/scripts/dist/page-background.js
 
 class page_background_PageBackground {
-  constructor(useBodyBannerImage = false) {
+  constructor() {
     // @TODO: Change page-backgroundImage to page-background
     this.pageBackground = document.querySelector(".page-backgroundImage");
-    this.bodyBannerImage = null;
     this.mutationObserver = null;
     this.logger = new logger_EngridLogger("PageBackground", "lightblue", "darkblue", "🖼️");
-    if (useBodyBannerImage) {
-      this.bodyBannerImage = document.querySelector(".body-banner img");
-    }
-    if (!this.pageBackground && !this.bodyBannerImage) {
+    if (!this.pageBackground) {
       this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
       return;
     }
@@ -41493,34 +41488,20 @@ class page_background_PageBackground {
    * Initialize background image by finding and setting CSS custom property
    */
   initializeBackgroundImage() {
-    var _a;
-    if (!this.pageBackground && !this.bodyBannerImage) return;
-    let backgroundImg = (_a = this.pageBackground) === null || _a === void 0 ? void 0 : _a.querySelector("img");
-    // If page background has an image, continue with that as the image source, otherwise check for body banner image
-    if (!backgroundImg && this.bodyBannerImage) {
-      this.logger.log("No image found in page background, using body banner image as background image instead");
-      backgroundImg = this.bodyBannerImage;
-      // Clone the body banner image to the page background section to ensure it is present in the DOM for processing
-      if (this.pageBackground) {
-        const clonedImage = backgroundImg.cloneNode(true);
-        this.pageBackground.appendChild(clonedImage);
-        backgroundImg = clonedImage;
-        // Remove the no-page-background data attribute if it exists, since we now have a background image
-        document.body.removeAttribute("data-engrid-no-page-backgroundImage");
-        dist_engrid_ENGrid.setBodyData("use-body-banner-background", "");
-      }
-    } else if (!backgroundImg) {
-      this.logger.log("No image found in page background and no body banner image found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+    if (!this.pageBackground) return;
+    const pageBackgroundImg = this.pageBackground.querySelector("img");
+    if (!pageBackgroundImg) {
+      this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
       return;
     }
-    const dataSrc = backgroundImg.getAttribute("data-src");
-    const src = backgroundImg.src;
+    const dataSrc = pageBackgroundImg.getAttribute("data-src");
+    const src = pageBackgroundImg.src;
     if (dataSrc) {
       this.setBackgroundImageUrl(dataSrc, "data-src");
     } else if (src) {
       this.setBackgroundImageUrl(src, "src");
     } else {
-      this.logger.log("A background image set in the page was found but without a data-src or src value, no action taken", backgroundImg);
+      this.logger.log("A background image set in the page was found but without a data-src or src value, no action taken", pageBackgroundImg);
     }
   }
   /**

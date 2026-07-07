@@ -1533,9 +1533,14 @@
       }
     }
 
-    &[data-engrid-page-background="image"]:not([data-engrid-animation-loaded]):not([data-engrid-no-animate-background]) {
+    &[data-engrid-page-background="image"]:not([data-engrid-no-animate-background]) {
       .background-mobile-cover {
-        height: 25vh; // resting / reduced-motion size (smallest frame)
+        height: 25vh; // resting / reduced-motion size (smallest frame);
+        // persists after [data-engrid-animation-loaded] is set so the element
+        // doesn't jump back to its ungated default height when the forwards
+        // fill is released. The 75vh start-frame rule below has equal
+        // specificity and comes later in source order, so it still wins
+        // while the animation is active.
         width: 100%;
         object-fit: cover;
         object-position: center;
