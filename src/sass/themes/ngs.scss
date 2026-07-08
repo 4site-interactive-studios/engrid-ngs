@@ -1158,11 +1158,6 @@
     }
   }
 
-  &[data-engrid-page-background="image"] .page-backgroundImage::before {
-    left: 640px;
-    width: calc(100% - 640px);
-  }
-
   .showif-apple {
     display: none;
   }
@@ -1577,6 +1572,14 @@
   }
 
   @mixin desktop {
+
+    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] .page-backgroundImage:before,
+    &[data-engrid-page-background="image"][data-engrid-layout="leftleft1col"] figure.media-with-attribution {
+      background-position: 50%;
+      left: 640px;
+      right: 0;
+      width: calc(100% - 640px);
+    }
 
     // STYLES
     .background-mobile {

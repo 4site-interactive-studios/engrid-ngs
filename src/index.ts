@@ -1,5 +1,5 @@
-import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
+// import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
@@ -11,6 +11,7 @@ import PremiumGifts from "./scripts/premium-gifts";
 
 const options: Options = {
   applePay: false,
+  UseBodyBannerImageAsBackground: true,
   CapitalizeFields: true,
   ClickToExpand: true,
   CurrencySymbol: "$",
