@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 9, 2026 @ 17:48:53 ET
+ *  Date: Tuesday, July 14, 2026 @ 17:21:40 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -8644,9 +8644,9 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   visibility:hidden;
 }
 [data-engrid-theme=ngs][data-engrid-currency-code=USD] .en__submit button .live-variable-currency,[data-engrid-theme=ngs][data-engrid-currency-code=USD] .engrid-currency-symbol{
-  font-size:0;
-  letter-spacing:0;
-  line-height:0;
+  font-size:0 !important;
+  letter-spacing:0 !important;
+  line-height:0 !important;
 }
 [data-engrid-theme=ngs][data-engrid-currency-code=USD] .en__submit button .live-variable-currency:before,[data-engrid-theme=ngs][data-engrid-currency-code=USD] .engrid-currency-symbol:before{
   background-color:currentColor;
@@ -8680,9 +8680,10 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   gap:var(--spacing-2, 8px);
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other{
-  --donation-amount__button_background-color_checked:var(--color_white);
-  --donation-amount__button_color_checked:var(--donation-amount_button_color);
   position:relative;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--withOther--active .en__field__item--other{
+  color:#fff;
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item--other:before{
   background-color:currentColor;
@@ -9291,6 +9292,26 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 }
 [data-engrid-theme=ngs] .en__ecardrecipients__futureDelivery input[type=date]::-webkit-date-and-time-value{
   text-align:left;
+}
+[data-engrid-theme=ngs][data-engrid-payment-type=ach]:not(#en__pagebuilder):not([data-engrid-debug]) .showif-ach-selected{
+  display:block;
+}
+[data-engrid-theme=ngs]:not([data-engrid-payment-type=ach]):not(#en__pagebuilder):not([data-engrid-debug]) .showif-ach-selected,[data-engrid-theme=ngs][data-engrid-payment-type=ach]:not(#en__pagebuilder):not([data-engrid-debug]) .hideif-ach-selected{
+  display:none;
+}
+[data-engrid-theme=ngs]:not([data-engrid-payment-type=ach]):not(#en__pagebuilder):not([data-engrid-debug]) .hideif-ach-selected{
+  display:block;
+}
+[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] div:not(.pboAdvancedRow__preview) .body-headerOutside,[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] div:not(.pboAdvancedRow__preview) .content-footer,[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] div:not(.pboAdvancedRow__preview) .content-footerSpacer,[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] div:not(.pboAdvancedRow__preview) .en__component--advcolumn[class*=body- i]:not([class*=outside i]):not([class*=overlay i]),[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col][data-engrid-no-body-banner] .body-bannerOverlay{
+  box-shadow:none;
+}
+[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] .content-footer{
+  grid-column:pc;
+}
+[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] .footer-columns,[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] .footer-main-copy,[data-engrid-theme=ngs][data-engrid-no-page-backgroundimage][data-engrid-layout=centercenter1col] .logo-copy{
+  margin:0 auto;
+  max-width:640px;
+  width:100%;
 }
 
 [data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__component--ecardblock h2{

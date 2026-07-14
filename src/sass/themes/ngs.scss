@@ -783,9 +783,9 @@
 
   &[data-engrid-currency-code="USD"] .engrid-currency-symbol,
   &[data-engrid-currency-code="USD"] .en__submit button .live-variable-currency {
-    font-size: 0px;
-    line-height: 0;
-    letter-spacing: 0;
+    font-size: 0px !important;
+    line-height: 0 !important;
+    letter-spacing: 0 !important;
 
     &::before {
       content: "";
@@ -830,9 +830,13 @@
 
 
     .en__field__item--other {
-      --donation-amount__button_background-color_checked: var(--color_white);
-      --donation-amount__button_color_checked: var(--donation-amount_button_color);
       position: relative;
+    }
+
+    &.en__field--withOther--active {
+      .en__field__item--other {
+        color: white;
+      }
     }
 
     .en__field__item--other:before {
@@ -1710,6 +1714,47 @@
 
   .en__ecardrecipients__futureDelivery input[type="date"]::-webkit-date-and-time-value {
     text-align: left;
+  }
+
+  &[data-engrid-payment-type="ach"]:not(#en__pagebuilder):not([data-engrid-debug]) {
+    .showif-ach-selected {
+      display: block;
+    }
+
+    .hideif-ach-selected {
+      display: none;
+    }
+  }
+
+  &:not([data-engrid-payment-type="ach"]):not(#en__pagebuilder):not([data-engrid-debug]) {
+    .showif-ach-selected {
+      display: none;
+    }
+
+    .hideif-ach-selected {
+      display: block;
+    }
+  }
+
+  // Remove box shadow
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] div:not(.pboAdvancedRow__preview) .body-headerOutside,
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] div:not(.pboAdvancedRow__preview) .content-footer,
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] div:not(.pboAdvancedRow__preview) .content-footerSpacer,
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] div:not(.pboAdvancedRow__preview) .en__component--advcolumn[class*=body- i]:not([class*=outside i]):not([class*=overlay i]),
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"][data-engrid-no-body-banner] .body-bannerOverlay {
+    box-shadow: none;
+  }
+
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] .content-footer {
+    grid-column: pc;
+  }
+
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] .logo-copy,
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] .footer-main-copy,
+  &[data-engrid-no-page-backgroundimage][data-engrid-layout="centercenter1col"] .footer-columns {
+    margin: 0 auto;
+    max-width: 640px;
+    width: 100%;
   }
 
 }

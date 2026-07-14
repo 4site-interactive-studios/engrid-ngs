@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 9, 2026 @ 17:48:53 ET
+ *  Date: Tuesday, July 14, 2026 @ 17:21:40 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -24611,21 +24611,19 @@ class PageBackground {
     var _a;
     if (!this.pageBackground && !this.bodyBannerImage) return;
     let backgroundImg = (_a = this.pageBackground) === null || _a === void 0 ? void 0 : _a.querySelector("img");
-    // If page background has an image, continue with that as the image source, otherwise check for body banner image
-    if (!backgroundImg && this.bodyBannerImage) {
+    // If page background has an image, and pageBackground exists but is EMPTY, continue with that as the image source, otherwise check for body banner image
+    if (!backgroundImg && this.bodyBannerImage && this.pageBackground && this.pageBackground.children.length === 0) {
       this.logger.log("No image found in page background, using body banner image as background image instead");
       backgroundImg = this.bodyBannerImage;
       // Clone the body banner image to the page background section to ensure it is present in the DOM for processing
-      if (this.pageBackground) {
-        const clonedImage = backgroundImg.cloneNode(true);
-        this.pageBackground.appendChild(clonedImage);
-        backgroundImg = clonedImage;
-        // Remove the no-page-background data attribute if it exists, since we now have a background image
-        document.body.removeAttribute("data-engrid-no-page-backgroundImage");
-        engrid_ENGrid.setBodyData("use-body-banner-background", "");
-      }
+      const clonedImage = backgroundImg.cloneNode(true);
+      this.pageBackground.appendChild(clonedImage);
+      backgroundImg = clonedImage;
+      // Remove the no-page-background data attribute if it exists, since we now have a background image
+      document.body.removeAttribute("data-engrid-no-page-backgroundImage");
+      engrid_ENGrid.setBodyData("use-body-banner-background", "");
     } else if (!backgroundImg) {
-      this.logger.log("No image found in page background and no body banner image found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+      this.logger.log("No image found in page background and no body banner image found (or pageBackground is already occupied), any default image set in the theme on --engrid__page-backgroundImage_url will be used");
       return;
     }
     const dataSrc = backgroundImg.getAttribute("data-src");
