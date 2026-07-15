@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 14, 2026 @ 17:21:40 ET
+ *  Date: Wednesday, July 15, 2026 @ 10:26:49 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -24589,11 +24589,12 @@ class PageBackground {
   constructor(useBodyBannerImage = false) {
     // @TODO: Change page-backgroundImage to page-background
     this.pageBackground = document.querySelector(".page-backgroundImage");
+    this.bodyBanner = document.querySelector(".body-banner");
     this.bodyBannerImage = null;
     this.mutationObserver = null;
     this.logger = new EngridLogger("PageBackground", "lightblue", "darkblue", "🖼️");
-    if (useBodyBannerImage) {
-      this.bodyBannerImage = document.querySelector(".body-banner img");
+    if (useBodyBannerImage && this.bodyBanner) {
+      this.bodyBannerImage = this.bodyBanner.querySelector(".body-banner img.preferred-image, .body-banner img");
     }
     if (!this.pageBackground && !this.bodyBannerImage) {
       this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
@@ -24614,11 +24615,12 @@ class PageBackground {
     // If page background has an image, and pageBackground exists but is EMPTY, continue with that as the image source, otherwise check for body banner image
     if (!backgroundImg && this.bodyBannerImage && this.pageBackground && this.pageBackground.children.length === 0) {
       this.logger.log("No image found in page background, using body banner image as background image instead");
-      backgroundImg = this.bodyBannerImage;
-      // Clone the body banner image to the page background section to ensure it is present in the DOM for processing
-      const clonedImage = backgroundImg.cloneNode(true);
-      this.pageBackground.appendChild(clonedImage);
-      backgroundImg = clonedImage;
+      // Clone the body banner contents (NOT THE PARENT NODE) into the page background section
+      const clonedBodyBanner = this.bodyBanner.cloneNode(true);
+      while (clonedBodyBanner.firstChild) {
+        this.pageBackground.appendChild(clonedBodyBanner.firstChild);
+      }
+      backgroundImg = this.pageBackground.querySelector("img.preferred-image, img");
       // Remove the no-page-background data attribute if it exists, since we now have a background image
       document.body.removeAttribute("data-engrid-no-page-backgroundImage");
       engrid_ENGrid.setBodyData("use-body-banner-background", "");

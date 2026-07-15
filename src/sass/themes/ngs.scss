@@ -1191,10 +1191,17 @@
       display: none;
     }
 
-    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+    &:not(#en__pagebuilder)[data-engrid-layout*="1col"]:not([data-engrid-no-page-backgroundImage]) {
       .page-backgroundImage {
+        display: unset;
         grid-row: content-header;
         grid-column: pc;
+      }
+    }
+
+    &[data-engrid-use-body-banner-background]:not(#en__pagebuilder) {
+      .body-banner {
+        display: none;
       }
     }
 
@@ -1204,6 +1211,15 @@
       left: 0;
       right: $one_col_body-column_max-width;
       width: calc(100% - $one_col_body-column_max-width);
+    }
+
+    &[data-engrid-page-background="image"]:not([data-engrid-no-animate-background]) {
+      .background-mobile-cover {
+        height: 25vh;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
     }
 
 
@@ -1529,20 +1545,6 @@
         .give-phone p {
           margin: 0;
         }
-      }
-    }
-
-    &[data-engrid-page-background="image"]:not([data-engrid-no-animate-background]) {
-      .background-mobile-cover {
-        height: 25vh; // resting / reduced-motion size (smallest frame);
-        // persists after [data-engrid-animation-loaded] is set so the element
-        // doesn't jump back to its ungated default height when the forwards
-        // fill is released. The 75vh start-frame rule below has equal
-        // specificity and comes later in source order, so it still wins
-        // while the animation is active.
-        width: 100%;
-        object-fit: cover;
-        object-position: center;
       }
     }
 
