@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 15, 2026 @ 10:26:49 ET
- *  By: nick
- *  ENGrid styles: v0.25.11
- *  ENGrid scripts: v0.25.11
+ *  Date: Tuesday, July 21, 2026 @ 22:48:01 ET
+ *  By: fernando
+ *  ENGrid styles: v0.25.13
+ *  ENGrid scripts: v0.25.13
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -9416,14 +9416,11 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   background-color:var(--button_background-color_hover);
   color:var(--button_color_hover);
 }
-[data-engrid-theme=ngs][data-engrid-page-type=e-card] button.en__ecarditems__button.en__ecarditems__addrecipient:after{
-  content:" Add Recipient";
+[data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__ecardrecipients__email button{
+  display:none;
 }
 [data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__ecardrecipients__list{
   background-color:var(--engrid__body-main_background-color);
-}
-[data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__ecardrecipients__list:has(>.en__ecardrecipients__recipient):before{
-  content:"Recipients:";
 }
 [data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__ecardrecipients__recipient{
   align-items:center;
@@ -9460,6 +9457,9 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
     right:15px;
     top:calc(50% - 15px);
   }
+}
+[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-footer,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-footerSpacer,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-header,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-preFooter{
+  z-index:3;
 }
 [data-engrid-theme=ngs][data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecarditems__showprev{
   display:none;
