@@ -1872,18 +1872,15 @@
       background-color: var(--button_background-color_hover);
       color: var(--button_color_hover);
     }
+  }
 
-    &::after {
-      content: " Add Recipient";
-    }
+  // Hide the button until it gets moved outside and into its own wrapper
+  .en__ecardrecipients__email button {
+    display: none;
   }
 
   .en__ecardrecipients__list {
     background-color: var(--engrid__body-main_background-color);
-  }
-
-  .en__ecardrecipients__list:has(> .en__ecardrecipients__recipient):before {
-    content: "Recipients:";
   }
 
   .en__ecardrecipients__recipient {
@@ -1928,6 +1925,14 @@
         top: calc(50% - 15px);
       }
     }
+  }
+
+  // Prevents modals like the eCard preview modal from being hidden behind the header and footer
+  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footer,
+  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footerSpacer,
+  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-header,
+  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-preFooter {
+    z-index: 3;
   }
 
   &[data-engrid-embedded-ecard="true"] {
