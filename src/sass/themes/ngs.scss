@@ -1759,185 +1759,217 @@
     width: 100%;
   }
 
-}
+  &[data-engrid-page-type="e-card"] {
 
-[data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {
+    .en__component--ecardblock {
+      h2 {
+        font-family: var(--default_font-family);
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: unset;
+      }
 
-  .en__component--ecardblock {
-    h2 {
-      font-family: var(--default_font-family);
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: normal;
-      text-transform: unset;
-    }
-
-    h2::before {
-      display: none;
-    }
-  }
-
-  .ecard-warning {
-    background-color: var(--color_sand_50);
-    padding: var(--spacing-6, 24px) var(--spacing-8, 32px);
-    margin: var(--spacing-3, 12px) 0;
-    border: 1px solid var(--color_black);
-
-    >*:first-child {
-      margin-top: 0;
-    }
-
-    >*:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-
-  .en__ecardrecipients__detail {
-    input:not(.en__field__input--vgs) {
-      margin-top: var(--spacing-2, 8px);
-      margin-bottom: var(--fields_spacing-block);
-      padding: var(--input_padding);
-    }
-
-    input.invalid {
-      border: 2px solid var(--error__color);
-      padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
-    }
-
-    input:focus {
-      outline: none;
-      border: 2px solid var(--color_blue);
-      padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
-    }
-  }
-
-  .en__ecardrecipients__list {
-    margin-bottom: 20px;
-  }
-
-  .en__ecardrecipients__name {
-    width: 100% !important;
-    margin-bottom: 10px;
-
-    input {
-      width: 100%;
-    }
-  }
-
-  .en__ecardrecipients__email {
-    width: 100% !important;
-
-    input {
-      width: 100%;
-    }
-  }
-
-  .en__ecardrecipients__detail {
-    position: relative;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .en__ecarditems__showprev {
-    background: var(--button_background-color);
-    color: var(--button_color);
-    font-size: var(--button_font-size);
-    font-weight: var(--button_font-weight);
-    font-family: var(--button_font-family);
-    padding: var(--button_padding);
-
-    &:hover {
-      background: var(--button_background-color_hover);
-      color: var(--button_color_hover);
-    }
-  }
-
-  button.en__ecarditems__button.en__ecarditems__addrecipient {
-    position: static;
-    margin: 10px 0 0 !important;
-    width: auto;
-    height: auto;
-    padding: var(--button_padding) !important;
-    color: var(--button_color);
-    background-color: var(--button_background-color);
-    font-family: var(--button_font-family) !important;
-    font-size: var(--button_font-size) !important;
-    font-weight: var(--button_font-weight);
-    line-height: var(--button_line-height);
-    letter-spacing: var(--button_letter-spacing);
-
-    &:hover {
-      background-color: var(--button_background-color_hover);
-      color: var(--button_color_hover);
-    }
-  }
-
-  // Hide the button until it gets moved outside and into its own wrapper
-  .en__ecardrecipients__email button {
-    display: none;
-  }
-
-  .en__ecardrecipients__list {
-    background-color: var(--engrid__body-main_background-color);
-  }
-
-  .en__ecardrecipients__recipient {
-    align-items: center;
-    padding: 10px 0px;
-    background-color: var(--engrid__body-main_background-color);
-
-    input.ecardrecipient__name,
-    input.ecardrecipient__email {
-      background-color: var(--engrid__body-main_background-color);
-
-      @media screen and (min-width: 600px) {
-        width: 47.5% !important;
+      h2::before {
+        display: none;
       }
     }
-  }
 
-  .ecardrecipient__remove button {
-    margin: 0;
+    .ecard-warning {
+      background-color: var(--color_sand_50);
+      padding: var(--spacing-6, 24px) var(--spacing-8, 32px);
+      margin: var(--spacing-3, 12px) 0;
+      border: 1px solid var(--color_black);
 
-    background: var(--error__color);
-    color: white;
+      >*:first-child {
+        margin-top: 0;
+      }
 
-    &:hover {
-      color: white;
+      >*:last-child {
+        margin-bottom: 0;
+      }
     }
-  }
 
-  @media screen and (max-width: 600px) {
-    .en__ecardrecipients__recipient {
-      position: relative;
-      flex-direction: column;
-      align-items: flex-start;
+
+    .en__ecardrecipients__detail {
+      input:not(.en__field__input--vgs) {
+        margin-top: var(--spacing-2, 8px);
+        margin-bottom: var(--fields_spacing-block);
+        padding: var(--input_padding);
+      }
+
+      input.invalid {
+        border: 2px solid var(--error__color);
+        padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
+      }
+
+      input:focus {
+        outline: none;
+        border: 2px solid var(--color_blue);
+        padding: calc(var(--input_padding_vertical) - 1px) calc(var(--input_padding_horizontal) - 1px);
+      }
+    }
+
+    .en__ecardrecipients__list {
+      margin-bottom: 20px;
+    }
+
+    .en__ecardrecipients__name {
+      width: 100% !important;
+      margin-bottom: 10px;
 
       input {
-        width: calc(100% - 50px) !important;
-      }
-
-      .ecardrecipient__remove {
-        position: absolute;
-        right: 15px;
-        top: calc(50% - 15px);
+        width: 100%;
       }
     }
-  }
 
-  // Prevents modals like the eCard preview modal from being hidden behind the header and footer
-  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footer,
-  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footerSpacer,
-  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-header,
-  &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-preFooter {
-    z-index: 3;
-  }
+    .en__ecardrecipients__email {
+      width: 100% !important;
 
-  &[data-engrid-embedded-ecard="true"] {
+      input {
+        width: 100%;
+      }
+    }
+
+    .en__ecardrecipients__detail {
+      position: relative;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
     .en__ecarditems__showprev {
+      background: var(--button_background-color);
+      color: var(--button_color);
+      font-size: var(--button_font-size);
+      font-weight: var(--button_font-weight);
+      font-family: var(--button_font-family);
+      padding: var(--button_padding);
+
+      &:hover {
+        background: var(--button_background-color_hover);
+        color: var(--button_color_hover);
+      }
+    }
+
+    button.en__ecarditems__button.en__ecarditems__addrecipient {
+      position: static;
+      margin: 10px 0 0 !important;
+      width: auto;
+      height: auto;
+      padding: var(--button_padding) !important;
+      color: var(--button_color);
+      background-color: var(--button_background-color);
+      font-family: var(--button_font-family) !important;
+      font-size: var(--button_font-size) !important;
+      font-weight: var(--button_font-weight);
+      line-height: var(--button_line-height);
+      letter-spacing: var(--button_letter-spacing);
+
+      &:hover {
+        background-color: var(--button_background-color_hover);
+        color: var(--button_color_hover);
+      }
+    }
+
+    // Hide the button until it gets moved outside and into its own wrapper
+    .en__ecardrecipients__email button {
       display: none;
     }
+
+    .en__ecardrecipients__list {
+      background-color: var(--engrid__body-main_background-color);
+    }
+
+    .en__ecardrecipients__recipient {
+      align-items: center;
+      padding: 10px 0px;
+      background-color: var(--engrid__body-main_background-color);
+
+      input.ecardrecipient__name,
+      input.ecardrecipient__email {
+        background-color: var(--engrid__body-main_background-color);
+
+        @media screen and (min-width: 600px) {
+          width: 47.5% !important;
+        }
+      }
+    }
+
+    .ecardrecipient__remove button {
+      margin: 0;
+
+      background: var(--error__color);
+      color: white;
+
+      &:hover {
+        color: white;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .en__ecardrecipients__recipient {
+        position: relative;
+        flex-direction: column;
+        align-items: flex-start;
+
+        input {
+          width: calc(100% - 50px) !important;
+        }
+
+        .ecardrecipient__remove {
+          position: absolute;
+          right: 15px;
+          top: calc(50% - 15px);
+        }
+      }
+    }
+
+    // Prevents modals like the eCard preview modal from being hidden behind the header and footer
+    &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footer,
+    &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-footerSpacer,
+    &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-header,
+    &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-preFooter {
+      z-index: 3;
+    }
+
+    &[data-engrid-embedded-ecard="true"] {
+      .en__ecarditems__showprev {
+        display: none;
+      }
+    }
   }
+
+  // Restore standard tile chrome on the Apple Pay giveBySelect option. Core's
+  // @supports rule strips the border and checked fill to make room for a native
+  // Apple Pay button inside the label; our tile uses a logo image like the rest.
+  @supports (-webkit-appearance: -apple-pay-button) {
+    .en__field--giveBySelect .en__field__input.en__field__input--radio[value="applepay"] {
+      + label {
+        border-width: var(--button_border-width, 2px) !important;
+      }
+      &:checked + label {
+        background-color: var(--button_background-color_checked, var(--color_black)) !important;
+      }
+    }
+  }
+
+  // Size the injected Vantiv Apple Pay button like the regular submit button
+  // (full width, tall, black), matching the Stripe wallet button treatment.
+  // Overrides core's inline-block / white-outline defaults.
+  @supports (-webkit-appearance: -apple-pay-button) {
+    #apple-pay {
+      width: 100%;
+      margin-top: 2rem; // same spacing the submit button gets
+    }
+    #apple-pay .apple-pay-button {
+      display: block;
+      width: 100%;
+      height: 60px; // matches the giveBySelect tile height
+      border-radius: 4px;
+      -apple-pay-button-type: donate;
+      // -apple-pay-button-style: black; // cssnano converts "black" to "#000" but that becomes invalid so we use JS to inject this CSS on the element
+      cursor: pointer;
+    }
+  }  
 }

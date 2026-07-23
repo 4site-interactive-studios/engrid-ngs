@@ -1,4 +1,4 @@
-import { ENGrid } from "@4site/engrid-scripts";
+import { ENGrid, DonationAmount, ProcessingFees } from "@4site/engrid-scripts";
 
 export const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
@@ -287,4 +287,214 @@ export const customScript = function (App) {
   window.setTimeout(() => {
     App.setBodyData("animation-loaded", "true");
   }, 3000);
+
+  // Apple Pay on Vantiv (see vantivApplePay below)
+  vantivApplePay(App);
 };
+
+// ---------------------------------------------------------------------------
+// Apple Pay on Vantiv (Worldpay), via Engaging Networks.
+//
+// Lifted from the legacy natgeoPage donation template (v4.0.1), stripped to
+// the payment flow, and wired into ENgrid. While the applepay giveBySelect
+// tile is selected, the EN submit button is swapped for a native Apple Pay
+// button; on authorization the wallet's billing details are copied back into
+// the EN supporter fields (the Vantiv gateway does not do this on its own),
+// the payment token is posted in the hidden PkPaymentToken field, and the
+// form is submitted directly.
+//
+// Requirements:
+// - merchant* globals defined in the page template <head>
+// - an "applepay" option in transaction.paymenttype
+// - companion CSS in themes/ngs.scss hides the applepay giveBySelect tile
+//   when data-engrid-apple-pay-available="false" (refined below from
+//   canMakePaymentsWithActiveCard); non-supporting browsers are already
+//   hidden by ENgrid core's @supports (-webkit-appearance: -apple-pay-button)
+// ---------------------------------------------------------------------------
+function vantivApplePay(App) {
+  if (!checkApplePay()) return;
+
+  if (window.ApplePaySession) {
+    window.ApplePaySession.canMakePaymentsWithActiveCard(window.merchantIdentifier).then(function (canMakePayments) {
+      if (canMakePayments) {
+        showApplePayButton();
+        App.setBodyData("apple-pay-available", "true");
+      } else {
+        hideApplePayButton();
+        App.setBodyData("apple-pay-available", "false");
+      }
+    });
+  } else {
+    hideApplePayButton();
+    App.setBodyData("apple-pay-available", "false");
+  }
+
+  function checkApplePay() {
+    // already initialized (called again or included twice)
+    if (document.getElementById("apple-pay")) return true;
+
+    const paymenttype = document.getElementsByName("transaction.paymenttype");
+    const pageform = document.querySelector("form.en__component--page");
+    const submitBlock = document.querySelector(".en__submit");
+    if (!paymenttype.length || !pageform || !submitBlock) return false;
+
+    let applepayReady = false;
+    for (let i = 0; i < paymenttype[0].length; i++) {
+      if (paymenttype[0].options[i].value == "applepay") {
+        applepayReady = true;
+      }
+    }
+    if (applepayReady) {
+      const div = document.createElement("div");
+      div.setAttribute("id", "apple-pay");
+      submitBlock.parentNode.appendChild(div);
+      // -apple-pay-button-style is set inline because cssnano's colormin
+      // rewrites the keyword "black" to #000 in the built stylesheet, which
+      // is not a valid value for this property, so Safari drops it.
+      div.innerHTML =
+        '<div id="apple-pay-button" class="apple-pay-button" style="-apple-pay-button-type: donate; -apple-pay-button-style: black;"></div>';
+      const input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", "PkPaymentToken");
+      pageform.appendChild(input);
+      paymenttype[0].addEventListener("change", function () {
+        paymenttype[0].value == "applepay" ? showApplePayBlock() : hideApplePayBlock();
+      });
+      paymenttype[0].value == "applepay" ? showApplePayBlock() : hideApplePayBlock();
+      document.getElementById("apple-pay-button").addEventListener("click", onPayClicked);
+    }
+    return applepayReady;
+  }
+
+  function showApplePayButton() {
+    document.getElementById("apple-pay-button").hidden = false;
+  }
+
+  function hideApplePayButton() {
+    const button = document.getElementById("apple-pay-button");
+    if (button) button.hidden = true;
+  }
+
+  function showApplePayBlock() {
+    document.getElementById("apple-pay").hidden = false;
+    document.querySelector(".en__submit").hidden = true;
+  }
+
+  function hideApplePayBlock() {
+    document.getElementById("apple-pay").hidden = true;
+    document.querySelector(".en__submit").hidden = false;
+  }
+
+  function performValidation(url) {
+    return new Promise(function (resolve, reject) {
+      const validationData =
+        "&merchantIdentifier=" + window.merchantIdentifier +
+        "&merchantDomain=" + window.merchantDomainName +
+        "&displayName=" + window.merchantDisplayName;
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(JSON.parse(this.responseText));
+      };
+      xhr.onerror = reject;
+      xhr.open("GET", "/ea-dataservice/rest/applepay/validateurl?url=" + url + validationData);
+      xhr.send();
+    });
+  }
+
+  // Mimics jQuery .val(): sets '' for null/undefined instead of the string
+  // "undefined", and is a no-op when the field isn't on the page.
+  function setVal(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value == null ? "" : value;
+  }
+
+  // True when the field exists, EN marks it mandatory, and it's empty.
+  function requiredFieldEmpty(id) {
+    const el = document.getElementById(id);
+    return !!(el && el.closest(".en__field.en__mandatory") && el.value.trim() === "");
+  }
+
+  function onPayClicked() {
+    try {
+      // Pre-flight: the wallet supplies billing address and phone, but not
+      // these. Catch them before the sheet opens so a donor never authorizes
+      // a payment EN will bounce for a missing mandatory field.
+      const missing = [];
+      if (requiredFieldEmpty("en__field_supporter_firstName")) missing.push("First Name");
+      if (requiredFieldEmpty("en__field_supporter_lastName")) missing.push("Last Name");
+      if (requiredFieldEmpty("en__field_supporter_emailAddress")) missing.push("Email");
+      const optIn = document.querySelector('input[name="supporter.questions.478149"]');
+      if (
+        optIn &&
+        optIn.closest(".en__field.en__mandatory") &&
+        !document.querySelector('input[name="supporter.questions.478149"]:checked')
+      ) {
+        missing.push("the email updates Yes/No selection");
+      }
+      if (missing.length) {
+        alert("Please complete the following before continuing to Apple Pay: " + missing.join(", ") + ".");
+        return;
+      }
+
+      const baseAmount = DonationAmount.getInstance().amount;
+      if (!baseAmount || baseAmount <= 0) {
+        alert("Please select a gift amount before continuing to Apple Pay.");
+        return;
+      }
+      if (baseAmount < 5) {
+        alert("The minimum donation amount is $5.");
+        return;
+      }
+      // ProcessingFees mirrors EN's own fee cover calculation, so the sheet
+      // total matches what EN will actually charge.
+      const donationAmount = (baseAmount + ProcessingFees.getInstance().fee).toFixed(2);
+
+      const request = {
+        supportedNetworks: window.merchantSupportedNetworks,
+        merchantCapabilities: window.merchantCapabilities,
+        countryCode: window.merchantCountryCode,
+        currencyCode: window.merchantCurrencyCode,
+        requiredBillingContactFields: ["postalAddress", "phone"],
+        total: {
+          label: window.merchantTotalLabel || window.merchantDisplayName || "National Geographic Society",
+          amount: donationAmount,
+          type: "final",
+        },
+      };
+      const session = new window.ApplePaySession(3, request);
+      session.onvalidatemerchant = function (event) {
+        performValidation(event.validationURL).then(function (merchantSession) {
+          session.completeMerchantValidation(merchantSession);
+        });
+      };
+      session.onpaymentauthorized = function (event) {
+        // Pass the billing info from Apple Pay back into the EN billing
+        // fields - this won't happen automatically with Vantiv Apple Pay.
+        const billing = event.payment.billingContact || {};
+        const addressLines = billing.addressLines || [];
+        setVal("en__field_supporter_address1", addressLines[0]);
+        setVal("en__field_supporter_address2", addressLines[1]);
+        setVal("en__field_supporter_city", billing.locality);
+        setVal("en__field_supporter_region", billing.administrativeArea);
+        setVal("en__field_supporter_postcode", billing.postalCode);
+        setVal("en__field_supporter_country", billing.countryCode);
+        setVal("en__field_supporter_phoneNumber", billing.phone);
+
+        // Apple Pay gifts are one-time on this setup; make sure recurrpay
+        // isn't submitted blank when we bypass the EN submit button.
+        const recurrpay = document.querySelector('[name="transaction.recurrpay"]');
+        if (recurrpay && !recurrpay.value) recurrpay.value = "N";
+
+        document.getElementsByName("PkPaymentToken")[0].value = JSON.stringify(event.payment.token);
+        document.querySelector(".en__submit").hidden = false;
+        document.querySelector("form.en__component--page").submit();
+      };
+      session.oncancel = function () {
+        // Donor closed the sheet; return them to the form quietly.
+      };
+      session.begin();
+    } catch (e) {
+      alert("Apple Pay error: '" + e.message + "'");
+    }
+  }
+}

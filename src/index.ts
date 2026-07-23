@@ -10,7 +10,7 @@ import ImageCredits from "./scripts/image-credits";
 import PremiumGifts from "./scripts/premium-gifts";
 
 const options: Options = {
-  applePay: false,
+  applePay: true,
   UseBodyBannerImageAsBackground: true,
   CapitalizeFields: true,
   ClickToExpand: true,
