@@ -1769,6 +1769,15 @@
     }
   }
 
+  // Hide the Osano cookie consent banner (and its persistent widget) when
+  // the page is embedded in an iFrame - consent belongs to the parent page
+  &[data-engrid-embedded] {
+    .osano-cm-window__dialog,
+    .osano-cm-widget {
+      display: none !important;
+    }
+  }
+
 }
 
 [data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {
