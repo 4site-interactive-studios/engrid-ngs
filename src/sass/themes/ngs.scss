@@ -1759,6 +1759,16 @@
     width: 100%;
   }
 
+  // Apple Pay: size the ENgrid wallet button like the NGS submit button
+  // (full-width, tile-height). The button markup, the submit swap, and the
+  // wallet flow itself all come from ENgrid core.
+  @supports (-webkit-appearance: -apple-pay-button) {
+    .apple-pay-container .apple-pay-button {
+      height: 60px; // matches the giveBySelect tile height
+      border-radius: 4px;
+    }
+  }
+
 }
 
 [data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {
