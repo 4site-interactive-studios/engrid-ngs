@@ -1,5 +1,5 @@
-// import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
+import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard, ApplePay } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+// import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard, ApplePay } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
@@ -8,9 +8,10 @@ import GiftAmounts from "./scripts/gift-amounts";
 import GiftDesignationOptIns from "./scripts/gift-designation-opt-ins";
 import ImageCredits from "./scripts/image-credits";
 import PremiumGifts from "./scripts/premium-gifts";
+import VantivApplePay from "./scripts/vantiv-apple-pay";
 
 const options: Options = {
-  applePay: false,
+  applePay: true,
   UseBodyBannerImageAsBackground: true,
   CapitalizeFields: true,
   ClickToExpand: true,
@@ -53,6 +54,7 @@ const options: Options = {
     new PremiumGifts();
     new GiftAmounts();
     new Ecard();
+    new VantivApplePay(ApplePay.getInstance(), DonationAmount.getInstance());
     customScript(App);
   },
   onResize: () => console.log("Starter Theme Window Resized"),

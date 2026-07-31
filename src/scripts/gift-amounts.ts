@@ -4,7 +4,7 @@
  * @date 02-06-2026
  */
 
-import { DonationFrequency } from "../../../engrid/packages/scripts";
+import { DonationFrequency } from "@4site/engrid-scripts";
 
 export default class GiftAmounts {
   private monthlyHeartRadioSelector =
