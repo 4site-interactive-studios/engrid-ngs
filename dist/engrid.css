@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 15, 2026 @ 10:26:49 ET
+ *  Date: Friday, July 31, 2026 @ 12:33:11 ET
  *  By: nick
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -2600,18 +2600,27 @@ body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:
   .apple-pay-button,.apple-pay-button-white-with-line{
     -apple-pay-button-style:white-outline;
   }
-  .en__field__input.en__field__input--radio[value=applepay]+label{
-    border-width:0 !important;
-  }
-  .en__field__input.en__field__input--radio[value=applepay]:checked+label{
-    background-color:initial !important;
-  }
-  .en__field__input.en__field__input--radio[value=applepay]:checked+label .apple-pay-button{
-    -apple-pay-button-style:inherit !important;
-  }
 }
 @supports not (-webkit-appearance:-apple-pay-button){
   .apple-pay-button,.apple-pay-container,.en__field__input.en__field__input--radio[value=applepay]+label{
+    display:none;
+  }
+}
+@supports (-webkit-appearance:-apple-pay-button){
+  .apple-pay-container{
+    margin-top:2rem;
+    width:100%;
+  }
+  .apple-pay-container .apple-pay-button{
+    cursor:pointer;
+    display:block;
+    height:45px;
+    width:100%;
+  }
+  body:not(#en__pagebuilder):not([data-engrid-apple-pay-available=true]) .apple-pay-container,body:not(#en__pagebuilder):not([data-engrid-payment-type=applepay]) .apple-pay-container{
+    display:none;
+  }
+  body:not(#en__pagebuilder)[data-engrid-apple-pay-available=false] .en__field__input.en__field__input--radio[value=applepay]+label,body:not(#en__pagebuilder)[data-engrid-apple-pay-available=true][data-engrid-payment-type=applepay] .en__submit{
     display:none;
   }
 }
