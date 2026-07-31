@@ -11,98 +11,97 @@ import { ENGrid, EngridLogger, IframeQueue } from "@4site/engrid-scripts";
 import * as cookie from "@4site/engrid-scripts/dist/cookie";
 import { resolveSupporterEmail } from "./helpers/resolve-supporter-email";
 
-export interface GiftDesignationOptInsConfig {
-  designations?: {
-    [key: string]: string
-  },
-  fieldName?: string
-  parentFieldSelector?: string
-}
-
-const DEFAULT_CONFIG: GiftDesignationOptInsConfig = {
-  designations: {},
-  fieldName: "giftDesignation",
-  parentFieldSelector: "#giftDesignationParent"
-}
-
 export default class GiftDesignationOptIns {
   private logger = new EngridLogger("NGS GiftDesignationOptIns", "#FCAB23", "dodgerblue", "🧧")
-  private config: GiftDesignationOptInsConfig;
-  private selectField: HTMLSelectElement | null = null;
-  private other1Field: HTMLInputElement | null = null;
+  private fundIdFieldName: string
+  private fundIdField: HTMLSelectElement | null = null
 
-  constructor(private incomingConfig: GiftDesignationOptInsConfig) {
-    this.config = { ...DEFAULT_CONFIG, ...incomingConfig }
+  constructor(fieldName: string = "transaction.othamt1") {
+    this.fundIdFieldName = fieldName
     if (ENGrid.isThankYouPage()) {
       // Check what gift designation the supporter selected on the donation form
-      const selectedValue = cookie.get('designation') ?? false
+      const selectedValue = localStorage.getItem('designation') ?? false
+      this.logger.log(`GiftDesignationOptIns is running on the thank you page. Supporter selected gift designation: ${selectedValue}`)
       if (selectedValue && selectedValue !== "") {
-        const queue = IframeQueue.getInstance();
-        resolveSupporterEmail(this.logger).then((email) => {
-          if (email) {
-            queue.enqueue({
-              url: 'https://give.nationalgeographic.org/page/192242/data/1',
-              fields: { [`supporter.questions.${selectedValue}`]: 'Y', 'supporter.emailAddress': email },
-              onComplete: () => {
-                this.logger.log(`Successfully sent gift designation opt-in for designation ID ${selectedValue}.`)
-              }
-            });
-            queue.process();
-          } else {
-            this.logger.error(`Could not resolve supporter email address, so gift designation opt-in for designation ID ${selectedValue} was not sent.`)
-          }
-        });
+        const selectedValueSplit = selectedValue.split("||")
+        if (selectedValueSplit.length == 1 || selectedValueSplit[1] === "") {
+          this.logger.error(`Gift designation value "${selectedValue}" does not have ID, allowing designation but skipping opt-ins.`)
+        } else {
+          const queue = IframeQueue.getInstance();
+          resolveSupporterEmail(this.logger).then((email) => {
+            if (email) {
+              queue.enqueue({
+                url: 'https://give.nationalgeographic.org/page/192242/data/1',
+                fields: { [`supporter.questions.${selectedValueSplit[1]}`]: 'Y', 'supporter.emailAddress': email },
+                onComplete: () => {
+                  this.logger.log(`Successfully sent gift designation opt-in for designation ID ${selectedValueSplit[1]}.`)
+                }
+              });
+              queue.process();
+            } else {
+              this.logger.error(`Could not resolve supporter email address, so gift designation opt-in for designation ID ${selectedValueSplit[1]} was not sent.`)
+            }
+          });
+        }
         ENGrid.setBodyData('designation', 'y')
       } else {
         ENGrid.setBodyData('designation', 'n')
       }
+      localStorage.removeItem('designation')
     } else if (this.shouldRun()) {
-      ENGrid.createHiddenInput('supporter.questions.476085', 'Y')
-      this.other1Field = ENGrid.createHiddenInput("transaction.othamt1")
+      localStorage.removeItem('designation') // needs to run before handleSelection to ensure that the value is not cleared
       this.populateDesignations()
       this.addListeners()
+      if (this.fundIdField!.value) {
+        this.handleSelection(this.fundIdField!)
+      }
+      if (this.fundIdField!.options.length <= 1) {
+        this.hideField()
+      }
     } else {
-      this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.config.fieldName}" does not exist or no designations are configured.`)
+      localStorage.removeItem('designation')
+      this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.fundIdFieldName}" does not exist or no designations are configured.`)
       this.hideField()
     }
-    cookie.remove('designation')
   }
 
   private shouldRun() {
-    this.selectField = ENGrid.getField(this.config.fieldName!) as HTMLSelectElement | null
-    return !!this.selectField && Object.keys(this.config.designations!).length > 0
+    this.fundIdField = ENGrid.getField(this.fundIdFieldName) as HTMLSelectElement | null
+    return !!this.fundIdField && this.fundIdField.options.length > 0
   }
 
   private populateDesignations() {
-    if (!this.selectField) return
-    const selectOption = document.createElement("option")
-    selectOption.value = ""
-    selectOption.textContent = "Select a designation"
-    this.selectField.appendChild(selectOption)
-    Object.keys(this.config.designations!).forEach((value: string) => {
-      const option = document.createElement("option")
-      option.value = this.config.designations![value]
-      option.textContent = value
-      this.selectField!.appendChild(option)
+    // Read option text content "Name||ID" and set data-attribute for on each option for it's ID.
+    Array.from(this.fundIdField!.options).forEach((option) => {
+      const optionText = option.textContent || ""
+      const optionValue = option.value || ""
+      if (optionText.includes("||")) {
+        const [name, id] = optionText.split("||")
+        option.textContent = name
+        option.setAttribute("data-designation-id", id)
+      }
     })
-    this.logger.log(`Populated gift designation field: ${this.config.fieldName} with ${Object.keys(this.config.designations!).length} options.`)
+  }
+
+  private handleSelection(field: HTMLSelectElement) {
+    const selectedValue = field.value
+    const selectedOptionId = field.options[field.selectedIndex].getAttribute("data-designation-id") || ""
+    localStorage.setItem('designation', `${selectedValue}||${selectedOptionId}`)
+    this.logger.log(`Supporter selected gift designation with ID ${selectedOptionId} and name "${selectedValue}".`)
   }
 
   private addListeners() {
-    this.selectField?.addEventListener("change", (event) => {
-      const selectedValue = (event.target as HTMLSelectElement).value
-      this.other1Field!.value = (event.target as HTMLSelectElement).selectedOptions[0].textContent || ""
-      cookie.set('designation', selectedValue)
-      this.logger.log(`Supporter selected gift designation with ID ${selectedValue} and name "${this.other1Field!.value}".`)
+    this.fundIdField?.addEventListener("change", (event) => {
+      this.handleSelection(event.target as HTMLSelectElement)
     })
   }
 
   private hideField() {
-    const field = document.querySelector(this.config.parentFieldSelector!) as HTMLElement | null
+    const field = this.fundIdField?.closest(".en__field") as HTMLElement | null
     if (field) {
-      field.classList.add("i1-hide")
+      field.classList.add("hide")
     }
-    this.logger.log(`Hiding gift designation field: ${this.config.parentFieldSelector}`)
+    this.logger.log(`Hiding gift designation field: ${this.fundIdFieldName} because it does not exist or has 1 or no options.`)
   }
 
 }

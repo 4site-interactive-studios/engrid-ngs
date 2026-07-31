@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 27, 2026 @ 02:45:50 ET
+ *  Date: Friday, July 31, 2026 @ 12:51:12 ET
  *  By: fernando
- *  ENGrid styles: v0.26.0
- *  ENGrid scripts: v0.26.0
+ *  ENGrid styles: v0.27.0
+ *  ENGrid scripts: v0.27.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12575,10 +12575,11 @@ class App extends engrid_ENGrid {
         // Supporter Hub Features
         new SupporterHub();
         // Digital Wallets Features
-        if (engrid_ENGrid.getPageType() === "DONATION") {
+        if (engrid_ENGrid.getPageType() === "DONATION" ||
+            engrid_ENGrid.getPageType() === "EVENT") {
             new DigitalWallets();
-            new PreferredPaymentMethod();
         }
+        new PreferredPaymentMethod();
         // Mobile CTA
         new MobileCTA();
         // Live Frequency
@@ -26730,7 +26731,7 @@ class PreferredPaymentMethod {
 }
 
 ;// ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.26.0";
+const AppVersion = "0.27.0";
 
 ;// ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -28497,8 +28498,6 @@ function resolveSupporterEmail(logger) {
 }
 ;// ./src/scripts/gift-designation-opt-ins.ts
 
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Gift Designation Opt-Ins
  * @author npgiano
@@ -28510,95 +28509,100 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
  */
 
 
-
-const DEFAULT_CONFIG = {
-  designations: {},
-  fieldName: "giftDesignation",
-  parentFieldSelector: "#giftDesignationParent"
-};
 class GiftDesignationOptIns {
-  constructor(incomingConfig) {
-    this.incomingConfig = incomingConfig;
+  constructor(fieldName = "transaction.othamt1") {
     _defineProperty(this, "logger", new EngridLogger("NGS GiftDesignationOptIns", "#FCAB23", "dodgerblue", "🧧"));
-    _defineProperty(this, "config", void 0);
-    _defineProperty(this, "selectField", null);
-    _defineProperty(this, "other1Field", null);
-    this.config = _objectSpread(_objectSpread({}, DEFAULT_CONFIG), incomingConfig);
+    _defineProperty(this, "fundIdFieldName", void 0);
+    _defineProperty(this, "fundIdField", null);
+    this.fundIdFieldName = fieldName;
     if (engrid_ENGrid.isThankYouPage()) {
       // Check what gift designation the supporter selected on the donation form
-      const selectedValue = get('designation') ?? false;
+      const selectedValue = localStorage.getItem('designation') ?? false;
+      this.logger.log(`GiftDesignationOptIns is running on the thank you page. Supporter selected gift designation: ${selectedValue}`);
       if (selectedValue && selectedValue !== "") {
-        const queue = IframeQueue.getInstance();
-        resolveSupporterEmail(this.logger).then(email => {
-          if (email) {
-            queue.enqueue({
-              url: 'https://give.nationalgeographic.org/page/192242/data/1',
-              fields: {
-                [`supporter.questions.${selectedValue}`]: 'Y',
-                'supporter.emailAddress': email
-              },
-              onComplete: () => {
-                this.logger.log(`Successfully sent gift designation opt-in for designation ID ${selectedValue}.`);
-              }
-            });
-            queue.process();
-          } else {
-            this.logger.error(`Could not resolve supporter email address, so gift designation opt-in for designation ID ${selectedValue} was not sent.`);
-          }
-        });
+        const selectedValueSplit = selectedValue.split("||");
+        if (selectedValueSplit.length == 1 || selectedValueSplit[1] === "") {
+          this.logger.error(`Gift designation value "${selectedValue}" does not have ID, allowing designation but skipping opt-ins.`);
+        } else {
+          const queue = IframeQueue.getInstance();
+          resolveSupporterEmail(this.logger).then(email => {
+            if (email) {
+              queue.enqueue({
+                url: 'https://give.nationalgeographic.org/page/192242/data/1',
+                fields: {
+                  [`supporter.questions.${selectedValueSplit[1]}`]: 'Y',
+                  'supporter.emailAddress': email
+                },
+                onComplete: () => {
+                  this.logger.log(`Successfully sent gift designation opt-in for designation ID ${selectedValueSplit[1]}.`);
+                }
+              });
+              queue.process();
+            } else {
+              this.logger.error(`Could not resolve supporter email address, so gift designation opt-in for designation ID ${selectedValueSplit[1]} was not sent.`);
+            }
+          });
+        }
         engrid_ENGrid.setBodyData('designation', 'y');
       } else {
         engrid_ENGrid.setBodyData('designation', 'n');
       }
+      localStorage.removeItem('designation');
     } else if (this.shouldRun()) {
-      engrid_ENGrid.createHiddenInput('supporter.questions.476085', 'Y');
-      this.other1Field = engrid_ENGrid.createHiddenInput("transaction.othamt1");
+      localStorage.removeItem('designation'); // needs to run before handleSelection to ensure that the value is not cleared
       this.populateDesignations();
       this.addListeners();
+      if (this.fundIdField.value) {
+        this.handleSelection(this.fundIdField);
+      }
+      if (this.fundIdField.options.length <= 1) {
+        this.hideField();
+      }
     } else {
-      this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.config.fieldName}" does not exist or no designations are configured.`);
+      localStorage.removeItem('designation');
+      this.logger.log(`GiftDesignationOptIns will not run because either the field "${this.fundIdFieldName}" does not exist or no designations are configured.`);
       this.hideField();
     }
-    remove('designation');
   }
   shouldRun() {
-    this.selectField = engrid_ENGrid.getField(this.config.fieldName);
-    return !!this.selectField && Object.keys(this.config.designations).length > 0;
+    this.fundIdField = engrid_ENGrid.getField(this.fundIdFieldName);
+    return !!this.fundIdField && this.fundIdField.options.length > 0;
   }
   populateDesignations() {
-    if (!this.selectField) return;
-    const selectOption = document.createElement("option");
-    selectOption.value = "";
-    selectOption.textContent = "Select a designation";
-    this.selectField.appendChild(selectOption);
-    Object.keys(this.config.designations).forEach(value => {
-      const option = document.createElement("option");
-      option.value = this.config.designations[value];
-      option.textContent = value;
-      this.selectField.appendChild(option);
+    // Read option text content "Name||ID" and set data-attribute for on each option for it's ID.
+    Array.from(this.fundIdField.options).forEach(option => {
+      const optionText = option.textContent || "";
+      const optionValue = option.value || "";
+      if (optionText.includes("||")) {
+        const [name, id] = optionText.split("||");
+        option.textContent = name;
+        option.setAttribute("data-designation-id", id);
+      }
     });
-    this.logger.log(`Populated gift designation field: ${this.config.fieldName} with ${Object.keys(this.config.designations).length} options.`);
+  }
+  handleSelection(field) {
+    const selectedValue = field.value;
+    const selectedOptionId = field.options[field.selectedIndex].getAttribute("data-designation-id") || "";
+    localStorage.setItem('designation', `${selectedValue}||${selectedOptionId}`);
+    this.logger.log(`Supporter selected gift designation with ID ${selectedOptionId} and name "${selectedValue}".`);
   }
   addListeners() {
-    this.selectField?.addEventListener("change", event => {
-      const selectedValue = event.target.value;
-      this.other1Field.value = event.target.selectedOptions[0].textContent || "";
-      set('designation', selectedValue);
-      this.logger.log(`Supporter selected gift designation with ID ${selectedValue} and name "${this.other1Field.value}".`);
+    this.fundIdField?.addEventListener("change", event => {
+      this.handleSelection(event.target);
     });
   }
   hideField() {
-    const field = document.querySelector(this.config.parentFieldSelector);
+    const field = this.fundIdField?.closest(".en__field");
     if (field) {
-      field.classList.add("i1-hide");
+      field.classList.add("hide");
     }
-    this.logger.log(`Hiding gift designation field: ${this.config.parentFieldSelector}`);
+    this.logger.log(`Hiding gift designation field: ${this.fundIdFieldName} because it does not exist or has 1 or no options.`);
   }
 }
 ;// ./src/scripts/image-credits.ts
 
-function image_credits_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function image_credits_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? image_credits_ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : image_credits_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Image Credits
  * @author npgiano
@@ -28611,7 +28615,7 @@ function image_credits_objectSpread(e) { for (var r = 1; r < arguments.length; r
  * </div>
  */
 
-const image_credits_DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
   creditsContainerSelector: ".background-image-credits",
   authorSelector: ".background-image-credits-author",
   descriptionSelector: ".background-image-credits-description"
@@ -28623,7 +28627,7 @@ class ImageCredits {
     _defineProperty(this, "config", void 0);
     _defineProperty(this, "author", null);
     _defineProperty(this, "description", null);
-    this.config = image_credits_objectSpread(image_credits_objectSpread({}, image_credits_DEFAULT_CONFIG), incomingConfig);
+    this.config = _objectSpread(_objectSpread({}, DEFAULT_CONFIG), incomingConfig);
     if (!this.shouldRun()) {
       this.logger.log(`ImageCredits will not run because the container "${this.config.creditsContainerSelector}" does not exist.`);
       return;
@@ -28938,32 +28942,7 @@ const options = {
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     new DonationLightboxForm(DonationAmount, DonationFrequency, App);
-    new GiftDesignationOptIns({
-      designations: {
-        "Big Cats Initiative": "476017",
-        "Last Wild Places": "476084",
-        "Plastics Initiative": "476085",
-        "Pristine Seas": "476087",
-        "Sumatran Rhino": "476088",
-        "Elephants": "476089",
-        "Photo Ark": "476090",
-        "Okavango Delta": "476092",
-        "Conservation": "476093",
-        "Ocean": "1211164",
-        "Land": "1211165",
-        "Human History and Culture": "1211166",
-        "Human Ingenuity": "1211187",
-        "Planetary Health": "1908405",
-        "Space": "1908407",
-        "Science & Research": "2245319",
-        "Exploration & Adventure": "2245322",
-        "Travel": "2245323",
-        "Photography & Storytelling": "2245324",
-        "Education": "2245325"
-      },
-      fieldName: "giftDesignation",
-      parentFieldSelector: "#giftDesignationParent"
-    });
+    new GiftDesignationOptIns("transaction.othamt1");
     new IframeQueue();
     new ImageCredits();
     new PremiumGifts();
