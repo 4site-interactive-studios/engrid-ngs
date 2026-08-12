@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, July 31, 2026 @ 12:51:12 ET
- *  By: fernando
+ *  Date: Wednesday, August 12, 2026 @ 15:45:03 ET
+ *  By: nick
  *  ENGrid styles: v0.27.0
  *  ENGrid scripts: v0.27.0
  *
@@ -8804,6 +8804,13 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   transition:width .35s ease;
   width:0;
   z-index:-1;
+}
+[data-engrid-theme=ngs] .en__pg__name{
+  font-size:1.375rem;
+  font-weight:500;
+  line-height:1.875rem;
+  margin-bottom:.375rem;
+  text-transform:none;
 }
 [data-engrid-theme=ngs][data-engrid-page-type=donation] .en__submit button{
   font-family:var(--p_font-family, inherit);
