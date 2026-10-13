@@ -949,8 +949,7 @@
     }
   }
 
-
-  body:not(#en__pagebuilder)[data-engrid-payment-type=applepay] .en__field--phoneNumber:not(.en__mandatory) {
+  &:not(#en__pagebuilder)[data-engrid-payment-type="applepay"] .en__field--phoneNumber:not(.en__mandatory) {
     display: none;
   }
 
