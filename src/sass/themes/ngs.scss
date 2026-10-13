@@ -949,6 +949,11 @@
     }
   }
 
+
+  body:not(#en__pagebuilder)[data-engrid-payment-type=applepay] .en__field--phoneNumber:not(.en__mandatory) {
+    display: none;
+  }
+
   .en__submit button {
     font-weight: var(--submit__button_font-weight, --button_font-weight);
     line-height: var(--submit__button_line-height, --button_line-height);
@@ -1376,7 +1381,6 @@
         font-size: 8px;
       }
     }
-
 
     .radio-to-buttons_recurrfreq .en__field--recurrfreq .en__field__element--radio {
       --recurrfreq-selected-indicator_offset: 4px;
