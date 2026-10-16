@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 15, 2026 @ 16:29:58 ET
+ *  Date: Friday, October 16, 2026 @ 09:29:57 ET
  *  By: pedroluan
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -8525,8 +8525,41 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 [data-engrid-theme=ngs] .two-col-container .content-footerSpacer{
   display:none;
 }
+@media (max-width:1252px){
+  [data-engrid-theme=ngs] .two-col-container{
+    --donation-amount__button_count:2;
+  }
+}
+
 [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container{
   --donation-amount__button_count:2;
+}
+@media (max-width:1115px){
+  [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container .en__field--donationAmt .en__field__element--radio .en__field__label--item,[data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container .en__field__input--other{
+    box-sizing:border-box;
+    height:85px;
+  }
+  [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container .en__field__item--other .en__field__input--other::placeholder{
+    color:#0000;
+  }
+  [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container .en__field__item--other:after{
+    content:" Other\a/mo";
+    font-size:22px;
+    font-style:italic;
+    left:35px;
+    letter-spacing:normal;
+    line-height:1.2;
+    opacity:.75;
+    pointer-events:none;
+    position:absolute;
+    text-transform:none;
+    top:50%;
+    transform:translateY(-50%);
+    white-space:pre;
+  }
+  [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .two-col-container .en__field__item--other:has(.en__field__input--other:not(:placeholder-shown)):after{
+    display:none;
+  }
 }
 
 [data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-page-background=image]:not(#en__pagebuilder) .page-backgroundImage:before{

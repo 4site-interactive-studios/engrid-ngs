@@ -544,7 +544,6 @@
       column-gap: 0px;
     }
 
-
     .body-title, .body-top, .body-main {
       box-sizing: border-box;
       justify-self: center;
@@ -607,6 +606,48 @@
 
     .content-footerSpacer {
       display: none;
+    }
+
+    @at-root [data-engrid-theme="ngs"] .two-col-container {
+      @media (max-width: 1252px) {
+        --donation-amount__button_count: 2;
+      }
+    }
+
+    @at-root [data-engrid-theme="ngs"][data-engrid-transaction-recurring-frequency="monthly"] .two-col-container {
+      --donation-amount__button_count: 2;
+      @media (max-width: 1115px) {
+        .en__field--donationAmt .en__field__element--radio .en__field__label--item, .en__field__input--other {
+          box-sizing: border-box;
+          height: 85px;
+        }
+
+        .en__field__item--other {
+          .en__field__input--other::placeholder {
+            color: transparent;
+          }
+
+          &::after {
+            content: " Other\A/mo";
+            white-space: pre;
+            position: absolute;
+            left: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 22px;
+            font-style: italic;
+            letter-spacing: normal;
+            line-height: 1.2;
+            opacity: .75;
+            pointer-events: none;
+            text-transform: none;
+          }
+
+          &:has(.en__field__input--other:not(:placeholder-shown))::after {
+            display: none;
+          }
+        }
+      }
     }
   }
 
