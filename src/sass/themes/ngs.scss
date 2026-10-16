@@ -531,8 +531,39 @@
   }
 
   &.two-col-container {
+    .header-logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+  
+      img {
+        height: 120px;
+        padding: 15px;
+      }
+
+      &.dark-background {
+        background-color: var(--color_black);
+      }
+
+      &.sand-background {
+        background-color: var(--color_sand);
+      }
+
+      .tagline {
+        font-family: var(--default_font-family);
+        font-size: var(--font-size-d6, 13px);
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: 2.6px;
+        line-height: var(--line-height-d6, 16px);
+        max-width: 214px;
+        text-transform: uppercase;
+      }
+    }
+
     form > .en__component--advrow {
-      margin: 130px 59px 0;
+      margin-top: 40px;
       justify-content: space-between;
       width: 100%;
       margin-left: auto;
@@ -541,8 +572,23 @@
       column-gap: 32px;
 
       @media (max-width: 800px) {
-        margin-top: 0px;
         column-gap: 0px;
+      }
+    }
+
+    form > .en__component--advrow:has(.body-main .video-container) {
+      margin-top: 0px;
+
+      @media (max-width: 799px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        column-gap: 0;
+        row-gap: 0;
+
+        .body-main {
+          order: -1;
+        }
       }
     }
 
@@ -563,6 +609,20 @@
         min-width: 100%;
         max-width: 100%;
         width: 100vw;
+      }
+    }
+
+    h1 {
+      margin-top: 0;
+
+      @media(max-width: 1300px){
+        font-size: 56px;
+        line-height: 64px;
+      }
+
+      @media(max-width: 1181px){
+        font-size: 45px;
+        line-height: 52px;
       }
     }
 
@@ -588,6 +648,13 @@
     }
 
     .body-main {
+      .en__component--codeblock:has(.video-container) {
+        @media (min-width: 800px) {
+          position: sticky;
+          top: 20px;
+        }
+      }
+
       h3 {
         text-align: center;
         font-size: 28px;
@@ -610,6 +677,13 @@
       display: none;
     }
 
+    .en__field--recurrfreq .en__field__element--radio .en__field__label--item {
+      @media (max-width: 1349px) {
+        box-sizing: border-box;
+        height: 100px;
+      }
+    }
+
     @at-root [data-engrid-theme="ngs"].two-col-container {
       @media (max-width: 1252px) {
         --donation-amount__button_count: 2;
@@ -618,13 +692,16 @@
 
     @at-root [data-engrid-theme="ngs"][data-engrid-transaction-recurring-frequency="monthly"].two-col-container {
       --donation-amount__button_count: 2;
-      @media (max-width: 1115px) {
-        .en__field--donationAmt .en__field__element--radio .en__field__label--item, .en__field__input--other {
+
+      .en__field--donationAmt .en__field__element--radio .en__field__label--item, .en__field__input--other {
+        @media (max-width: 1115px) {
           box-sizing: border-box;
           height: 85px;
         }
+      }
 
-        .en__field__item--other {
+      .en__field__item--other {
+        @media (max-width: 1115px) {
           .en__field__input--other::placeholder {
             color: transparent;
           }
