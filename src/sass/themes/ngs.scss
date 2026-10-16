@@ -530,18 +530,20 @@
     }
   }
 
-  .two-col-container{
-    margin: 130px 59px 0;
-    justify-content: space-between;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    float: none;
-    column-gap: 32px;
-    
-    @media (max-width: 800px) {
-      margin-top: 0px;
-      column-gap: 0px;
+  &.two-col-container {
+    form > .en__component--advrow {
+      margin: 130px 59px 0;
+      justify-content: space-between;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      float: none;
+      column-gap: 32px;
+
+      @media (max-width: 800px) {
+        margin-top: 0px;
+        column-gap: 0px;
+      }
     }
 
     .body-title, .body-top, .body-main {
@@ -608,13 +610,13 @@
       display: none;
     }
 
-    @at-root [data-engrid-theme="ngs"] .two-col-container {
+    @at-root [data-engrid-theme="ngs"].two-col-container {
       @media (max-width: 1252px) {
         --donation-amount__button_count: 2;
       }
     }
 
-    @at-root [data-engrid-theme="ngs"][data-engrid-transaction-recurring-frequency="monthly"] .two-col-container {
+    @at-root [data-engrid-theme="ngs"][data-engrid-transaction-recurring-frequency="monthly"].two-col-container {
       --donation-amount__button_count: 2;
       @media (max-width: 1115px) {
         .en__field--donationAmt .en__field__element--radio .en__field__label--item, .en__field__input--other {
