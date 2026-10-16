@@ -665,6 +665,20 @@
       }
     }
 
+    .click-to-expand {
+      margin-bottom: 40px;
+    }
+
+    .museum-benefits-block {
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .divider-line {
+      height: 1px !important;
+      width: 100% !important; 
+    }
+
     .image-credit {
       font-size: 14px;
       font-style: italic;
