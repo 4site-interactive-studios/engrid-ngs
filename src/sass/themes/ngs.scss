@@ -695,6 +695,10 @@
 
     .body-main {
       .en__component--codeblock:has(.video-container) {
+        @media (min-width: 1170px) {
+          padding-top: 20px;
+        }
+    
         @media (min-width: 800px) {
           position: sticky;
           top: 20px;
