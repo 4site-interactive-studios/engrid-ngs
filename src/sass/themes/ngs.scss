@@ -578,6 +578,31 @@
       }
     }
 
+    .video-container.vertical-video {
+      max-width: 315px;
+      margin-left: auto;
+      margin-right: auto;
+
+      // Overrides the embed's own padding-bottom/height hack and inline iframe sizing
+      .video-wrapper {
+        position: relative;
+        height: auto !important;
+        padding-bottom: 0 !important;
+        aspect-ratio: 9 / 16;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+
+      iframe {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        aspect-ratio: auto !important;
+      }
+    }
+
     form > .en__component--advrow {
       margin-top: 40px;
       justify-content: space-between;
