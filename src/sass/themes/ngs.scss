@@ -758,6 +758,12 @@
         }
       }
     }
+
+    @media (max-width: 901px) {
+      #footer .bg-darkgrey p {
+        margin-left: 0px;
+      }
+    }
   }
 
   &[data-engrid-layout="centercenter2col"][data-engrid-page-background="image"]:not(#en__pagebuilder) {
