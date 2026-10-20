@@ -1964,10 +1964,4 @@
   &[data-ecard-preview="visible"]:not(#en__pagebuilder):not(.freeze) .content-preFooter {
     z-index: 3;
   }
-
-  &[data-engrid-embedded-ecard="true"] {
-    .en__ecarditems__showprev {
-      display: none;
-    }
-  }
 }
