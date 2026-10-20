@@ -536,10 +536,19 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 40px;
-  
+
+      @media (max-width: 400px) {
+        margin-bottom: 20px;
+      }
+
       img {
         height: 120px;
         padding: 15px;
+
+        @media (max-width: 500px) {
+          height: clamp(64px, 20vw, 90px);
+          padding: 10px;
+        }
       }
 
       &.dark-background {
@@ -559,6 +568,12 @@
         line-height: var(--line-height-d6, 16px);
         max-width: 214px;
         text-transform: uppercase;
+
+        @media (max-width: 400px) {
+          padding: 15px;
+          max-width: 155px;
+          font-size: 12px;
+        }
       }
     }
 

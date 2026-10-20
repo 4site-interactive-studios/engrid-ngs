@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, October 16, 2026 @ 13:34:33 ET
+ *  Date: Tuesday, October 20, 2026 @ 07:38:13 ET
  *  By: pedroluan
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -8461,9 +8461,20 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   justify-content:center;
   margin-bottom:40px;
 }
+@media (max-width:400px){
+  [data-engrid-theme=ngs].two-col-container .header-logo-container{
+    margin-bottom:20px;
+  }
+}
 [data-engrid-theme=ngs].two-col-container .header-logo-container img{
   height:120px;
   padding:15px;
+}
+@media (max-width:500px){
+  [data-engrid-theme=ngs].two-col-container .header-logo-container img{
+    height:clamp(64px, 20vw, 90px);
+    padding:10px;
+  }
 }
 [data-engrid-theme=ngs].two-col-container .header-logo-container.dark-background{
   background-color:var(--color_black);
@@ -8480,6 +8491,13 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   line-height:var(--line-height-d6, 16px);
   max-width:214px;
   text-transform:uppercase;
+}
+@media (max-width:400px){
+  [data-engrid-theme=ngs].two-col-container .header-logo-container .tagline{
+    font-size:12px;
+    max-width:155px;
+    padding:15px;
+  }
 }
 [data-engrid-theme=ngs].two-col-container form>.en__component--advrow{
   column-gap:32px;
