@@ -694,6 +694,9 @@
     }
 
     .body-main {
+      align-self: start;
+      height: fit-content;
+
       .en__component--codeblock:has(.video-container) {
         @media (min-width: 1170px) {
           padding-top: 20px;
