@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 21, 2026 @ 13:02:26 ET
+ *  Date: Thursday, October 22, 2026 @ 10:43:47 ET
  *  By: nick
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -3988,6 +3988,10 @@ button.en__ecarditems__prevclose{
 
 body.engrid-ecard-preview-delegated .en__ecarditems__preview{
   display:none !important;
+}
+
+.en__ecarditems__prevwrap{
+  max-width:90vw;
 }
 .en__ecardrecipients__futureDelivery input[type=date]{
   appearance:none;

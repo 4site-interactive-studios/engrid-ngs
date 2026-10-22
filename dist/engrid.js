@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 21, 2026 @ 13:02:26 ET
+ *  Date: Thursday, October 22, 2026 @ 10:43:47 ET
  *  By: nick
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -21356,11 +21356,25 @@ class Ecard {
       if (closeButton) {
         closeButton.setAttribute("role", "button");
         closeButton.setAttribute("aria-label", "Close Preview");
-        document.addEventListener("keydown", e => {
+        const handleEscape = e => {
           if (e.key === "Escape" && previewModal.classList.contains("preview--show")) {
             closeButton.click();
           }
-        });
+        };
+        document.addEventListener("keydown", handleEscape);
+        const previewIframe = previewModal.querySelector("iframe");
+        if (previewIframe) {
+          const bindIframeEscape = () => {
+            var _a;
+            try {
+              (_a = previewIframe.contentDocument) === null || _a === void 0 ? void 0 : _a.addEventListener("keydown", handleEscape);
+            } catch (e) {
+              // Cross-origin previews cannot expose their keyboard events.
+            }
+          };
+          previewIframe.addEventListener("load", bindIframeEscape);
+          bindIframeEscape();
+        }
       }
       const iframe = previewModal.querySelector("iframe");
       if (iframe) {
@@ -21556,7 +21570,7 @@ class EcardPreview {
     previewButton.style.display = "none";
     window.addEventListener("message", e => {
       var _a;
-      if (e.origin !== location.origin || !((_a = e.data) === null || _a === void 0 ? void 0 : _a.action)) return;
+      if (e.source !== window.parent || e.origin !== location.origin || !((_a = e.data) === null || _a === void 0 ? void 0 : _a.action)) return;
       if (e.data.action === "ecard_preview_available") {
         this.previewCapable = true;
         if (this.handshakeTimer) {
@@ -21630,6 +21644,9 @@ class EcardPreview {
     }
   }
   setupParentPage() {
+    window.addEventListener("resize", () => {
+      document.querySelectorAll(".en__ecarditems__preview.preview--show").forEach(modal => this.fitPreviewToContent(modal));
+    });
     window.addEventListener("message", e => {
       var _a;
       if (e.origin !== location.origin || !((_a = e.data) === null || _a === void 0 ? void 0 : _a.action)) return;
@@ -21648,10 +21665,13 @@ class EcardPreview {
       }
     });
     document.addEventListener("keydown", e => {
-      if (e.key === "Escape" && this.delegatedModal) {
-        this.closeDelegatedPreview();
-      }
+      this.handlePreviewEscape(e);
     });
+  }
+  handlePreviewEscape(e) {
+    if (e.key === "Escape" && this.delegatedModal) {
+      this.closeDelegatedPreview();
+    }
   }
   showDelegatedPreview(previewUrl, iframe) {
     var _a, _b, _c;
@@ -21686,10 +21706,21 @@ class EcardPreview {
         <button type="button" class="en__ecarditems__prevclose" role="button" aria-label="Close Preview">✕</button>
       </div>`;
     const previewIframe = modal.querySelector("iframe");
+    const handleEscape = e => this.handlePreviewEscape(e);
+    const bindIframeEscape = () => {
+      var _a;
+      try {
+        (_a = previewIframe.contentDocument) === null || _a === void 0 ? void 0 : _a.addEventListener("keydown", handleEscape);
+      } catch (e) {
+        // Cross-origin previews cannot expose their keyboard events.
+      }
+    };
+    previewIframe.addEventListener("load", bindIframeEscape);
     previewIframe.src = previewUrl;
     (_b = modal.querySelector(".en__ecarditems__prevclose")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => this.closeDelegatedPreview());
     document.body.appendChild(modal);
     this.delegatedModal = modal;
+    bindIframeEscape();
     // Center like EN does and widen to fit the preview content once the
     // iframe has loaded
     this.fitPreviewToContent(modal);
@@ -21719,8 +21750,7 @@ class EcardPreview {
     this.centerPreviewWrap(modal);
     const wrap = modal.querySelector(".en__ecarditems__prevwrap");
     const iframe = modal.querySelector("iframe");
-    if (!wrap || !iframe || iframe.dataset.engridFitBound) return;
-    iframe.dataset.engridFitBound = "true";
+    if (!wrap || !iframe) return;
     const widen = () => {
       var _a, _b, _c, _d;
       let contentWidth = 0;
@@ -21734,8 +21764,9 @@ class EcardPreview {
         return;
       }
       if (!contentWidth) return;
-      // Leave a gutter so the modal never touches the viewport edges
-      const maxWidth = window.innerWidth - 32;
+      // Never exceed 90vw (matches the CSS max-width on the wrap) and leave
+      // a gutter so the modal never touches the viewport edges
+      const maxWidth = Math.min(window.innerWidth * 0.9, window.innerWidth - 32);
       const targetWidth = Math.min(contentWidth, maxWidth);
       if (targetWidth > wrap.offsetWidth) {
         wrap.style.width = `${targetWidth}px`;
@@ -21748,7 +21779,10 @@ class EcardPreview {
         widen();
       }
     } catch (e) {}
-    iframe.addEventListener("load", widen);
+    if (!iframe.dataset.engridFitBound) {
+      iframe.dataset.engridFitBound = "true";
+      iframe.addEventListener("load", widen);
+    }
   }
   closeDelegatedPreview() {
     var _a, _b, _c;
