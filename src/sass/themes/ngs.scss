@@ -554,6 +554,10 @@
 
       &.dark-background {
         background-color: var(--color_black);
+
+        .tagline {
+          color: var(--color_white);
+        }
       }
 
       &.sand-background {
