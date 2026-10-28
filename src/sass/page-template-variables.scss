@@ -8,7 +8,11 @@ $one_col_body-column_min-width: 640px;
 $one_col_body-column_offset-width: 100px;
 
 // TWO COLUMN LAYOUTS
+// $two_col_content-column_min-width is the viewport width where ENgrid turns centercenter2col into the 2-col grid.
+// It MUST equal the theme's `desktop` breakpoint (themes/ngs.scss: @media (min-width: 800px)). The theme's `tablet`
+// mixin (641-799px) sets `grid-template-columns: unset` on the advanced row, so if the 2-col grid is still active
+// below 800px the columns are wiped while the 2-col rows stay, and .body-top / .body-main render on top of each other.
 $two_col_content-column_max-width: 1280px;
-$two_col_content-column_min-width: 900px;
+$two_col_content-column_min-width: 800px;
 $two_col_body-column_max-width: 1080px;
-$two_col_body-column_min-width: 900px;
+$two_col_body-column_min-width: 601px;
