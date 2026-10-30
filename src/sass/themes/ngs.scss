@@ -829,15 +829,8 @@
       flex-basis: 100%;
     }
 
-    // Left-align the amounts, keeping the currency symbol and "/mo" inline when a label wraps
     .en__field__label--item {
-      display: block;
       text-align: left;
-
-      .engrid-currency-symbol,
-      &::after {
-        display: inline;
-      }
     }
 
     // Line up the "Other" currency symbol and text with the button labels (2px border + 28px padding)
@@ -849,6 +842,44 @@
       input {
         padding-left: 39px;
       }
+    }
+  }
+
+  // Let the amount labels flow as text, so the currency symbol and the frequency suffix stay
+  // inline with the amount when a label wraps
+  .radio-to-buttons_donationAmt.vertical-stack,
+  .radio-to-buttons_donationAmt.symbolic-handles {
+    .en__field--donationAmt .en__field__label--item {
+      display: block;
+
+      .engrid-currency-symbol,
+      &::after {
+        display: inline;
+      }
+    }
+  }
+
+  // Add the "symbolic-handles" class to the donation amount form block to put the frequency suffix
+  // right after the amount ("$5/mo - protect our ocean"). GiftAmounts wraps the label text after
+  // the amount in .donation-amount-handle, which carries the suffix instead of the label.
+  .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt {
+    .en__field__label--item:has(> .donation-amount-handle)::after {
+      content: none;
+    }
+
+    .donation-amount-handle::before {
+      font-family: "Grosvenor Book";
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 18px;
+      vertical-align: top;
+    }
+  }
+
+  @each $frequency in monthly, annual, quarterly {
+    &[data-engrid-transaction-recurring-frequency="#{$frequency}"] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle::before {
+      content: var(--give-#{$frequency}-donation-amount-appended-label);
     }
   }
 

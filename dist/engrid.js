@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, October 30, 2026 @ 10:19:30 ET
+ *  Date: Friday, October 30, 2026 @ 10:58:38 ET
  *  By: rcw-015crmhcar95n8nr6er7guj5
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -28626,6 +28626,7 @@ class GiftAmounts {
     this.addFrequencyChangeListener();
     this.addRecurringGiftCallout();
     this.wrapFrequencyLabelGiveText();
+    this.wrapSymbolicHandles();
     this.positionProgressBarCount();
     this.handleFrequencyChange();
   }
@@ -28749,6 +28750,43 @@ class GiftAmounts {
       giveSpan.textContent = "GIVE ";
       giveSpan.style.marginRight = ".5ch";
       label.insertAdjacentElement("afterbegin", giveSpan);
+    });
+  }
+
+  // In a "symbolic-handles" donation amount block, wrap the handle (the label text after the
+  // amount) in a span, so the frequency suffix can sit right after the amount
+  // ("$5/mo - protect our ocean", "$5/mo protect our ocean"). EN re-renders the amounts when
+  // the frequency changes, so the observer wraps the new labels too.
+  wrapSymbolicHandles() {
+    const amountField = document.querySelector(".radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt");
+    if (!amountField) return;
+
+    // The amount at the start of the label: any leading non-digits (like "[$]") plus the first
+    // number with its thousands/decimal separators ("5", "1,000", "12.50"). The rest is the handle.
+    const amountPattern = /^\D*?\d+(?:[.,]\d+)*/;
+    const wrapHandles = () => {
+      amountField.querySelectorAll(".en__field__item:not(.en__field__item--other) .en__field__label--item").forEach(label => {
+        if (label.querySelector(".donation-amount-handle")) return;
+        const amountAndHandleNode = Array.from(label.childNodes).find(node => node.nodeType === Node.TEXT_NODE && amountPattern.test(node.textContent || ""));
+        if (!amountAndHandleNode) return;
+        const amountAndHandle = amountAndHandleNode.textContent || "";
+        const [amount] = amountAndHandle.match(amountPattern);
+        // A label with only the amount keeps the default suffix at the end
+        if (!amountAndHandle.slice(amount.length).trim()) return;
+
+        // Split "5 - protect our ocean" in two: amountAndHandleNode keeps only the amount ("5")
+        // and handleNode gets the rest (" - protect our ocean")
+        const handleNode = amountAndHandleNode.splitText(amount.length);
+        const handleSpan = document.createElement("span");
+        handleSpan.className = "donation-amount-handle";
+        handleNode.replaceWith(handleSpan);
+        handleSpan.appendChild(handleNode);
+      });
+    };
+    wrapHandles();
+    new MutationObserver(wrapHandles).observe(amountField, {
+      childList: true,
+      subtree: true
     });
   }
   positionProgressBarCount() {
