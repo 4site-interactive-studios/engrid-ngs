@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 13, 2026 @ 11:38:32 ET
- *  By: pedroluan
+ *  Date: Friday, October 30, 2026 @ 10:58:38 ET
+ *  By: rcw-015crmhcar95n8nr6er7guj5
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
  *
@@ -8664,6 +8664,44 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
   letter-spacing:1px;
   padding:0 !important;
   text-transform:uppercase;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt.en__field--radio>.en__field__element.en__field__element--radio .en__field__item{
+  flex-basis:100%;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item{
+  text-align:left;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__item--other:before{
+  left:30px;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__item--other input{
+  padding-left:39px;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item{
+  display:block;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item .engrid-currency-symbol,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item:after,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item .engrid-currency-symbol,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item:after{
+  display:inline;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item:has(>.donation-amount-handle):after{
+  content:none;
+}
+[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .donation-amount-handle:before{
+  font-family:Grosvenor Book;
+  font-size:18px;
+  font-style:italic;
+  font-weight:500;
+  line-height:18px;
+  vertical-align:top;
+}
+[data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle:before{
+  content:var(--give-monthly-donation-amount-appended-label);
+}
+[data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=annual] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle:before{
+  content:var(--give-annual-donation-amount-appended-label);
+}
+[data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=quarterly] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle:before{
+  content:var(--give-quarterly-donation-amount-appended-label);
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__element--radio{
   gap:var(--spacing-2, 8px);
