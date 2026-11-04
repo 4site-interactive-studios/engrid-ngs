@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 22, 2026 @ 10:43:47 ET
+ *  Date: Wednesday, November 4, 2026 @ 16:17:26 ET
  *  By: nick
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -18305,6 +18305,7 @@ const OptionsDefaults = {
   Debug: false,
   RememberMe: false,
   TidyContact: false,
+  TidyContactEmail: false,
   RegionLongFormat: "",
   CountryDisable: [],
   Placeholders: false,
@@ -18913,11 +18914,14 @@ class DonationAmount {
     // Load the current amount
     this.load();
   }
-  // The "other" radio is the one whose value isn't a numeric amount
-  // (EN renders it as value="other"), so it cleans to 0
+  // EN may render the "other" radio with a non-numeric or non-positive value
   isOtherAmountSelected() {
     const selectedAmount = document.querySelector(`input[name="${this._radios}"]:checked`);
-    return selectedAmount !== null && engrid_ENGrid.cleanAmount(selectedAmount.value) === 0;
+    if (!selectedAmount) {
+      return false;
+    }
+    const amount = Number(selectedAmount.value);
+    return !Number.isFinite(amount) || amount <= 0;
   }
   syncOtherAmount(field, formatValue = false) {
     const otherIsSelected = this.isOtherAmountSelected();
@@ -20303,6 +20307,9 @@ class App extends engrid_ENGrid {
     if (this.options.NeverBounceAPI) new NeverBounce(this.options.NeverBounceAPI, this.options.NeverBounceDateField, this.options.NeverBounceStatusField, this.options.NeverBounceDateFormat);
     // FreshAddress
     if (this.options.FreshAddress) new FreshAddress();
+    // TidyContact Email. Must stay below the window.enOnValidate assignment,
+    // so the TC Email bundle wraps ENgrid's hook instead of being overwritten by it.
+    if (this.options.TidyContactEmail) new TidyContactEmail();
     new ShowIfAmount();
     new OtherAmount();
     new MinMaxAmount();
@@ -22111,6 +22118,7 @@ class DataAttributes {
 class iFrame {
   constructor() {
     this._form = EnForm.getInstance();
+    this.resizeObserver = null;
     this.logger = new EngridLogger("iFrame", "brown", "gray", "📡");
     if (this.inIframe()) {
       // Add the data-engrid-embedded attribute when inside an iFrame if it wasn't already added by a script in the Page Template
@@ -22202,6 +22210,7 @@ class iFrame {
         if (iframe) {
           if (event.data.hasOwnProperty("frameHeight")) {
             iframe.style.height = event.data.frameHeight + "px";
+            this.logger.log(`iFrame Event - Resized iframe element to ${event.data.frameHeight}px`);
             if (event.data.frameHeight > 0) {
               iframe.classList.add("loaded");
             } else {
@@ -22237,6 +22246,8 @@ class iFrame {
     // Scroll to top of iFrame
     this.logger.log("iFrame Event - window.onload");
     this.sendIframeHeight();
+    // Continuously re-send the height whenever the body size changes
+    this.observeHeightChanges();
     window.parent.postMessage({
       scroll: this.shouldScroll()
     }, "*");
@@ -22245,15 +22256,39 @@ class iFrame {
     // matches it by Page ID to advance to the next queued iframe. Fires
     // exactly once per Thank-You-page load. See iframe-queue.ts.
     this.sendIframeQueueThankYouPing();
-    // On click fire the resize event
-    document.addEventListener("click", e => {
-      this.logger.log("iFrame Event - click");
-      setTimeout(() => {
-        this.sendIframeHeight();
-      }, 100);
-    });
     // Watch for errors and send the height
     engrid_ENGrid.watchForError(this.sendIframeHeight.bind(this));
+  }
+  /**
+   * Observes document.body for size changes (DOM mutations, font/image
+   * loads, CSS transitions) and re-sends the iframe height to the parent.
+   *
+   * Uses a leading + trailing throttle via debounceWithImmediate: the
+   * first change is sent immediately, and the settled height is always
+   * re-sent once changes stop for 120ms. Animated transitions therefore
+   * don't flood the parent page with one message per frame, but the
+   * parent always ends up matching the final resolved height.
+   */
+  observeHeightChanges() {
+    if (typeof ResizeObserver === "undefined") {
+      this.logger.log("ResizeObserver not supported in this browser");
+      return;
+    }
+    let lastSent = -1;
+    const throttledSend = this.debounceWithImmediate((_entries, _observer, immediate) => {
+      const height = document.body.offsetHeight;
+      // Skip redundant sends when the settled height is unchanged
+      if (height === lastSent) {
+        this.logger.log(`iFrame Event - ResizeObserver settled at unchanged height ${height}px, skipping send`);
+        return;
+      }
+      lastSent = height;
+      this.logger.log(`iFrame Event - ResizeObserver ${immediate ? "leading" : "trailing"} resize: sending height ${height}px`);
+      this.sendIframeHeight();
+    }, 120);
+    this.resizeObserver = new ResizeObserver(throttledSend);
+    this.resizeObserver.observe(document.body);
+    this.logger.log("iFrame Event - Observing body resize");
   }
   /**
    * Posts a `engrid-iframe-queue:thank-you` message to the parent window
@@ -22384,11 +22419,11 @@ class iFrame {
     return (...args) => {
       clearTimeout(timer);
       if (firstEvent) {
-        func.apply(this, args);
+        func.apply(this, [...args, true]);
         firstEvent = false;
       }
       timer = setTimeout(() => {
-        func.apply(this, args);
+        func.apply(this, [...args, false]);
         firstEvent = true;
       }, timeout);
     };
@@ -27012,23 +27047,35 @@ class RememberMe {
     }
   }
   insertClearRememberMeLink() {
+    var _a;
     let clearRememberMeField = document.getElementById("clear-autofill-data");
+    const {
+      html,
+      hasInnerLink
+    } = this.buildClearLabelMarkup();
     if (!clearRememberMeField) {
-      clearRememberMeField = document.createElement("a");
+      clearRememberMeField = document.createElement(hasInnerLink ? "span" : "a");
       clearRememberMeField.setAttribute("id", "clear-autofill-data");
-      clearRememberMeField.classList.add("label-tooltip");
-      clearRememberMeField.setAttribute("style", "cursor: pointer;");
-      clearRememberMeField.innerHTML = this.fieldClearLabel;
+      if (hasInnerLink) {
+        clearRememberMeField.classList.add("clear-autofill-data-wrapper");
+      } else {
+        clearRememberMeField.classList.add("label-tooltip");
+        clearRememberMeField.setAttribute("style", "cursor: pointer;");
+      }
+      clearRememberMeField.innerHTML = html;
       const targetField = this.getElementByFirstSelector(this.fieldClearSelectorTarget);
       if (targetField) {
-        if (this.fieldClearSelectorTargetLocation === "after") {
+        if (this.fieldClearSelectorTargetLocation === "rightSide") {
+          this.placeOnRightSide(targetField, clearRememberMeField);
+        } else if (this.fieldClearSelectorTargetLocation === "after") {
           targetField.appendChild(clearRememberMeField);
         } else {
           targetField.prepend(clearRememberMeField);
         }
       }
     }
-    clearRememberMeField.addEventListener("click", e => {
+    const clickTarget = hasInnerLink ? (_a = clearRememberMeField.querySelector("#clear-autofill-data-link")) !== null && _a !== void 0 ? _a : clearRememberMeField : clearRememberMeField;
+    const onClear = e => {
       e.preventDefault();
       this.clearFields(["supporter.country" /*, 'supporter.emailAddress'*/]);
       if (this.useRemote()) {
@@ -27045,13 +27092,57 @@ class RememberMe {
       this.rememberMeOptIn = false;
       this._events.dispatchClear();
       window.dispatchEvent(new CustomEvent("RememberMe_Cleared"));
-    });
+    };
+    clickTarget.addEventListener("click", onClear);
     this._events.dispatchLoad(true);
     window.dispatchEvent(new CustomEvent("RememberMe_Loaded", {
       detail: {
         withData: true
       }
     }));
+  }
+  escapeHtml(value) {
+    const map = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
+    return value.replace(/[&<>"']/g, c => map[c]);
+  }
+  buildClearLabelMarkup() {
+    var _a;
+    const username = this.getUsernameFromFieldData();
+    const label = username ? this.fieldClearLabel.replace(/\$username/g, () => this.escapeHtml(username)) : this.fieldClearLabel.replace(/[^\S\r\n]?\$username/g, "");
+    // Only the first non-empty {...} segment becomes the clickable clear link.
+    // Any additional {...} segments remain as literal text (braces included),
+    // and empty {} braces are left as-is. When no non-empty braces are present,
+    // the entire element is clickable (legacy behaviour).
+    const match = label.match(/\{([^}]+)\}/);
+    if (!match) {
+      return {
+        html: label,
+        hasInnerLink: false
+      };
+    }
+    const before = label.slice(0, match.index);
+    const linkText = match[1];
+    const after = label.slice(((_a = match.index) !== null && _a !== void 0 ? _a : 0) + match[0].length);
+    const html = before + `<a id="clear-autofill-data-link" class="label-tooltip" style="cursor: pointer;">${linkText}</a>` + after;
+    return {
+      html,
+      hasInnerLink: true
+    };
+  }
+  getUsernameFromFieldData() {
+    const value = this.fieldData["supporter.firstName"];
+    return value ? value.trim() : "";
+  }
+  getClearLabelPlainText() {
+    const username = this.getUsernameFromFieldData();
+    const label = username ? this.fieldClearLabel.replace(/\$username/g, () => username) : this.fieldClearLabel.replace(/[^\S\r\n]?\$username/g, "");
+    return label.replace(/\{([^}]*)\}/g, "$1");
   }
   getElementByFirstSelector(selectorsString) {
     // iterate through the selectors until we find one that exists
@@ -27065,13 +27156,73 @@ class RememberMe {
     }
     return targetField;
   }
+  placeOnRightSide(targetField, elementToPlace) {
+    const wrapperClass = "rememberme-right-side-wrapper";
+    let wrapper;
+    if (targetField.parentElement && targetField.parentElement.classList.contains(wrapperClass)) {
+      wrapper = targetField.parentElement;
+    } else {
+      // Read the target's computed styles BEFORE moving it into the flex
+      // wrapper. Once inside a flex container, margin collapsing no longer
+      // applies and the reported values can change. We transfer the original
+      // margin-top to the wrapper itself so the block retains its vertical
+      // spacing in the document flow, and zero out the target's own margin-top
+      // so it doesn't double-apply inside the flex row.
+      const targetStyle = window.getComputedStyle(targetField);
+      const targetMarginTop = targetStyle.marginTop;
+      const targetMarginBottom = targetStyle.marginBottom;
+      wrapper = document.createElement("div");
+      wrapper.classList.add(wrapperClass);
+      wrapper.style.display = "flex";
+      wrapper.style.alignItems = "center";
+      wrapper.style.gap = "8px";
+      wrapper.style.flexWrap = "wrap";
+      // Transfer vertical margins from the target to the wrapper so the
+      // surrounding layout is unchanged after the DOM move.
+      wrapper.style.marginTop = targetMarginTop;
+      wrapper.style.marginBottom = targetMarginBottom;
+      if (targetField.parentNode) {
+        targetField.parentNode.insertBefore(wrapper, targetField);
+      }
+      // Zero out the target's own margin-top/-bottom now that the wrapper
+      // owns them, so they don't double-apply inside the flex row.
+      targetField.style.marginTop = "0px";
+      targetField.style.marginBottom = "0px";
+      wrapper.appendChild(targetField);
+    }
+    // Read padding-left AFTER the wrapper exists but before any alignment
+    // logic, so it reflects the current computed value.
+    const targetPaddingLeft = window.getComputedStyle(targetField).paddingLeft;
+    wrapper.appendChild(elementToPlace);
+    const applyAlignment = () => {
+      const wrapped = elementToPlace.offsetTop > targetField.offsetTop;
+      if (wrapped) {
+        // When wrapped below, left-align with the target's content area.
+        elementToPlace.style.marginTop = "0px";
+        elementToPlace.style.marginLeft = targetPaddingLeft;
+      } else {
+        // When side-by-side, both items are already vertically centred by the
+        // flex container — no extra margin-top needed on elementToPlace.
+        elementToPlace.style.marginTop = "0px";
+        elementToPlace.style.marginLeft = "0px";
+      }
+    };
+    // Defer the first alignment check to the next animation frame so the
+    // browser has had a chance to perform layout. Without this, offsetTop on
+    // both elements is still 0 (or stale) at call time.
+    requestAnimationFrame(applyAlignment);
+    if (typeof window.ResizeObserver === "function") {
+      const observer = new window.ResizeObserver(() => applyAlignment());
+      observer.observe(wrapper);
+    }
+  }
   insertRememberMeOptin() {
     let rememberMeOptInField = document.getElementById("remember-me-opt-in");
     if (!rememberMeOptInField) {
       const rememberMeLabel = this.rememberMeLabel;
       const rememberMeInfo = engrid_ENGrid.t("rememberMe.tooltip", {
         label: rememberMeLabel,
-        clearLabel: this.fieldClearLabel
+        clearLabel: this.getClearLabelPlainText()
       });
       const rememberMeOptInFieldChecked = this.rememberMeOptIn ? "checked" : "";
       const rememberMeOptInField = document.createElement("div");
@@ -27095,7 +27246,11 @@ class RememberMe {
 			`;
       const targetField = this.getElementByFirstSelector(this.fieldOptInSelectorTarget);
       if (targetField && targetField.parentNode) {
-        targetField.parentNode.insertBefore(rememberMeOptInField, this.fieldOptInSelectorTargetLocation == "before" ? targetField : targetField.nextSibling);
+        if (this.fieldOptInSelectorTargetLocation === "rightSide") {
+          this.placeOnRightSide(targetField, rememberMeOptInField);
+        } else {
+          targetField.parentNode.insertBefore(rememberMeOptInField, this.fieldOptInSelectorTargetLocation == "before" ? targetField : targetField.nextSibling);
+        }
         const rememberMeCheckbox = document.getElementById("remember-me-checkbox");
         if (rememberMeCheckbox) {
           rememberMeCheckbox.addEventListener("change", () => {
@@ -29405,6 +29560,79 @@ class TidyContact {
     });
     this._form.submitPromise = ret;
     return ret;
+  }
+}
+;// ../engrid/packages/scripts/dist/tidycontact-email.js
+
+// Same selector the TC Email bundle uses to find its own tag (script-config.ts)
+const TC_EMAIL_SCRIPT = "script[src*='raisemore-email'], script[data-raisemore-email]";
+const DEFAULT_RELAY_URL = "https://email-validator.4sitestudios.com";
+const DEFAULT_VERSION = "v1";
+class TidyContactEmail {
+  constructor() {
+    this.logger = new EngridLogger("TidyContactEmail", "#FFFFFF", "#4d9068", "📧");
+    this.options = null;
+    const options = engrid_ENGrid.getOption("TidyContactEmail");
+    if (!options) return;
+    this.options = options;
+    if (!this.shouldRun()) return;
+    this.loadScript();
+  }
+  shouldRun() {
+    var _a, _b;
+    if (!((_a = this.options) === null || _a === void 0 ? void 0 : _a.clientKey)) {
+      this.logger.danger("clientKey not set. TidyContact Email will not load.");
+      return false;
+    }
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has("bypassemailvalidation")) {
+      this.logger.log("Bypass Email Validation Enabled - not loading TidyContact Email");
+      return false;
+    }
+    const pageTypes = (_b = this.options.pageTypes) !== null && _b !== void 0 ? _b : [];
+    if (pageTypes.length > 0 && pageTypes.indexOf(engrid_ENGrid.getPageType()) === -1) {
+      this.logger.log("TidyContact Email is disabled on this page type");
+      return false;
+    }
+    if (!engrid_ENGrid.getField("supporter.emailAddress")) {
+      this.logger.log("E-mail Field Not Found");
+      return false;
+    }
+    if (engrid_ENGrid.getOption("NeverBounceAPI") || engrid_ENGrid.getOption("FreshAddress")) {
+      this.logger.danger("NeverBounce or FreshAddress is also enabled. Two email validators on one field is not supported, so TidyContact Email will not load.");
+      return false;
+    }
+    if (document.querySelector(TC_EMAIL_SCRIPT)) {
+      this.logger.log("TidyContact Email script already on the page (manual install). Not loading it again.");
+      return false;
+    }
+    return true;
+  }
+  loadScript() {
+    const options = this.options;
+    const relayUrl = (options.relayUrl || DEFAULT_RELAY_URL).replace(/\/+$/, "");
+    const script = document.createElement("script");
+    script.src = options.scriptUrl || `${relayUrl}/embed/engrid/${options.version || DEFAULT_VERSION}/raisemore-email.js`;
+    script.setAttribute("data-raisemore-email", "");
+    script.setAttribute("data-relay-url", relayUrl);
+    script.setAttribute("data-client-key", options.clientKey);
+    // Only what the client set; everything else keeps TC Email's own defaults
+    const optional = [["timeout-ms", options.timeoutMs], ["hard-block", options.hardBlock], ["prefill-skip", options.prefillSkip], ["en-recognition", options.enRecognition]];
+    optional.forEach(([name, value]) => {
+      if (value !== undefined && value !== null) {
+        script.setAttribute(`data-${name}`, String(value));
+      }
+    });
+    script.onload = () => {
+      engrid_ENGrid.setBodyData("tidycontact-email", "loaded");
+      this.logger.success(`Loaded ${script.src}`);
+    };
+    script.onerror = () => {
+      engrid_ENGrid.setBodyData("tidycontact-email", "error");
+      this.logger.danger(`Could not load ${script.src}. The form keeps working without email validation.`);
+    };
+    engrid_ENGrid.setBodyData("tidycontact-email", "loading");
+    document.body.appendChild(script);
   }
 }
 ;// ../engrid/packages/scripts/dist/live-currency.js
@@ -34753,9 +34981,10 @@ class PreferredPaymentMethod {
   }
 }
 ;// ../engrid/packages/scripts/dist/version.js
-const AppVersion = "0.28.3";
+const AppVersion = "0.28.7";
 ;// ../engrid/packages/scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
@@ -53135,12 +53364,25 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
  *   <div class="background-image-credits-author">Author Name</div>
  *   <div class="background-image-credits-description">Description</div>
  * </div>
+ *
+ * Video credits (optional): add a similar block next to the
+ * ".video-container" it refers to (ideally in the same code block):
+ * <div class="hide video-credits">
+ *   <div class="video-credits-author">Author Name</div>
+ *   <div class="video-credits-description">Description</div>
+ * </div>
+ * While the mouse is over that video, the hover card shows the video credits
+ * instead of the background image credits.
  */
 
 const DEFAULT_CONFIG = {
   creditsContainerSelector: ".background-image-credits",
   authorSelector: ".background-image-credits-author",
-  descriptionSelector: ".background-image-credits-description"
+  descriptionSelector: ".background-image-credits-description",
+  videoCreditsContainerSelector: ".video-credits",
+  videoAuthorSelector: ".video-credits-author",
+  videoDescriptionSelector: ".video-credits-description",
+  videoSelector: ".video-container"
 };
 class ImageCredits {
   constructor(incomingConfig = {}) {
@@ -53149,17 +53391,18 @@ class ImageCredits {
     _defineProperty(this, "config", void 0);
     _defineProperty(this, "author", null);
     _defineProperty(this, "description", null);
+    _defineProperty(this, "videoCredits", []);
     this.config = _objectSpread(_objectSpread({}, DEFAULT_CONFIG), incomingConfig);
     if (!this.shouldRun()) {
-      this.logger.log(`ImageCredits will not run because the container "${this.config.creditsContainerSelector}" does not exist.`);
+      this.logger.log(`ImageCredits will not run because neither "${this.config.creditsContainerSelector}" nor "${this.config.videoCreditsContainerSelector}" exist.`);
       return;
     }
     this.extractCredits();
+    this.extractVideoCredits();
     this.displayCredits();
   }
   shouldRun() {
-    const container = document.querySelector(this.config.creditsContainerSelector);
-    return !!container;
+    return !!document.querySelector(this.config.creditsContainerSelector) || !!document.querySelector(this.config.videoCreditsContainerSelector);
   }
   extractCredits() {
     const container = document.querySelector(this.config.creditsContainerSelector);
@@ -53174,52 +53417,155 @@ class ImageCredits {
     }
     this.logger.log(`Extracted image credits - Author: "${this.author ?? "N/A"}", Description: "${this.description ?? "N/A"}"`);
   }
-  displayCredits() {
-    if (!this.author && !this.description) return;
-    if (this.author) {
-      const footerCredits = document.createElement("p");
-      footerCredits.className = "footer-image-credits";
-      footerCredits.textContent = `Photo © ${this.author}`;
-      const insertPoint = document.querySelector(".footer-main-copy");
-      insertPoint?.appendChild(footerCredits);
+  extractVideoCredits() {
+    const blocks = document.querySelectorAll(this.config.videoCreditsContainerSelector);
+    blocks.forEach(block => {
+      const author = block.querySelector(this.config.videoAuthorSelector)?.textContent?.trim() || null;
+      const description = block.querySelector(this.config.videoDescriptionSelector)?.textContent?.trim() || null;
+      if (!author && !description) return;
+      const video = this.findVideoFor(block);
+      if (!video) {
+        this.logger.log(`Video credits found, but no "${this.config.videoSelector}" near them.`);
+        return;
+      }
+      this.videoCredits.push({
+        video,
+        author,
+        description
+      });
+      this.logger.log(`Extracted video credits - Author: "${author ?? "N/A"}", Description: "${description ?? "N/A"}"`);
+    });
+  }
+
+  // The closest video to the credits block: same code block first, then
+  // walking up its ancestors.
+  findVideoFor(block) {
+    let parent = block.parentElement;
+    while (parent) {
+      const video = parent.querySelector(this.config.videoSelector);
+      if (video) return video;
+      parent = parent.parentElement;
     }
+    return null;
+  }
+  addFooterCredits(text, className) {
+    const footerCredits = document.createElement("p");
+    footerCredits.className = className;
+    footerCredits.textContent = text;
+    const insertPoint = document.querySelector(".footer-main-copy");
+    insertPoint?.appendChild(footerCredits);
+  }
+  displayCredits() {
+    const imageCredits = this.author || this.description ? {
+      author: this.author,
+      description: this.description
+    } : null;
+    if (!imageCredits && !this.videoCredits.length) return;
+    if (this.author) {
+      this.addFooterCredits(`Photo © ${this.author}`, "footer-image-credits");
+    }
+    this.videoCredits.forEach(({
+      author
+    }) => {
+      if (!author) return;
+      this.addFooterCredits(`Video © ${author}`, "footer-image-credits footer-video-credits");
+    });
     const fab = document.createElement("div");
     fab.className = "image-credits-fab";
     const hoverCard = document.createElement("div");
     hoverCard.className = "image-credits-hover-card";
     hoverCard.innerHTML = `
     <div class="image-credits-hover-card-content">
-      <h5 class="image-credits-author">${this.author ? `&copy; ${this.author}` : ""}</h5>
-      <p class="image-credits-description">${this.description ? `${this.description}` : ""}</p>
+      <h5 class="image-credits-author"></h5>
+      <p class="image-credits-description"></p>
     </div>
     `;
+    const authorEl = hoverCard.querySelector(".image-credits-author");
+    const descriptionEl = hoverCard.querySelector(".image-credits-description");
+    const renderCard = (credits, isVideo) => {
+      authorEl.textContent = credits.author ? `© ${credits.author}` : "";
+      descriptionEl.textContent = credits.description ?? "";
+      hoverCard.classList.toggle("image-credits-hover-card--video", isVideo);
+    };
+    if (imageCredits) renderCard(imageCredits, false);
     const pageBackground = document.querySelector(".page-backgroundImage");
     if (!pageBackground) return;
     pageBackground.appendChild(fab);
     pageBackground.appendChild(hoverCard);
     const MIN_VIEWPORT = 821;
     const HOVER_BOUNDARY = 640;
-    let isHovering = false;
-    const setHover = state => {
-      if (state === isHovering) return;
-      isHovering = state;
-      hoverCard.classList.toggle("visible", state);
+    let isInImageArea = false;
+    let hoveredVideo = null;
+    let shown = null;
+
+    // Video credits win over the background image credits while the mouse is
+    // over the video.
+    const update = () => {
+      const next = hoveredVideo ?? (isInImageArea ? imageCredits : null);
+      if (next === shown) return;
+      shown = next;
+      if (next) renderCard(next, next === hoveredVideo);
+      hoverCard.classList.toggle("visible", !!next);
     };
+    const videoAt = (x, y) => this.videoCredits.find(({
+      video
+    }) => {
+      const rect = video.getBoundingClientRect();
+      return x >= rect.left && x < rect.right && y >= rect.top && y < rect.bottom;
+    }) ?? null;
     const onMouseMove = e => {
-      setHover(e.clientX >= HOVER_BOUNDARY);
+      isInImageArea = e.clientX >= HOVER_BOUNDARY;
+      hoveredVideo = videoAt(e.clientX, e.clientY);
+      update();
     };
     const onMouseOut = e => {
-      if (e.relatedTarget === null) setHover(false);
+      if (e.relatedTarget !== null) return;
+      isInImageArea = false;
+      hoveredVideo = null;
+      update();
     };
+
+    // Mouse events inside the video iframe never reach this document, so we
+    // also listen for the mouse entering/leaving the video container itself.
+    const videoListeners = this.videoCredits.map(credits => ({
+      video: credits.video,
+      onEnter: () => {
+        hoveredVideo = credits;
+        update();
+      },
+      onLeave: e => {
+        if (hoveredVideo === credits) hoveredVideo = null;
+        isInImageArea = e.clientX >= HOVER_BOUNDARY;
+        update();
+      }
+    }));
     const mq = window.matchMedia(`(min-width: ${MIN_VIEWPORT}px)`);
     const applyViewportState = () => {
       if (mq.matches) {
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseout", onMouseOut);
+        videoListeners.forEach(({
+          video,
+          onEnter,
+          onLeave
+        }) => {
+          video.addEventListener("mouseenter", onEnter);
+          video.addEventListener("mouseleave", onLeave);
+        });
       } else {
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseout", onMouseOut);
-        setHover(false);
+        videoListeners.forEach(({
+          video,
+          onEnter,
+          onLeave
+        }) => {
+          video.removeEventListener("mouseenter", onEnter);
+          video.removeEventListener("mouseleave", onLeave);
+        });
+        isInImageArea = false;
+        hoveredVideo = null;
+        update();
       }
     };
     applyViewportState();
