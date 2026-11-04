@@ -862,24 +862,28 @@
   // Add the "symbolic-handles" class to the donation amount form block to put the frequency suffix
   // right after the amount ("$5/mo - protect our ocean"). GiftAmounts wraps the label text after
   // the amount in .donation-amount-handle, which carries the suffix instead of the label.
-  // The amount is also larger and in its own color. The label carries the amount style, and the
-  // handle goes back to the button's copy color for each state.
+  // Typography and colors follow the "Donation Amount Button" component in the NGS EN Design System
+  // (Figma): the amount and the handle share the state color (black, yellow when selected), the
+  // amount is larger and heavier, and both sit on 32px lines that are top-aligned like Figma's
+  // centered auto layout, so a one-line button is 70px tall.
   .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt {
-    // Dark gold from the brand yellow: 3.8:1 on white, 3.3:1 on the sand hover, 5.5:1 on the
-    // black selected state (WCAG AA for large text in all three)
-    --symbolic-handles__amount_color: #A67C00;
-    --symbolic-handles__amount_font-size: 30px;
-
-    // Same amount color in every state; the input[type=radio] and .en__field__item parts outrank
-    // ENgrid's hover/checked label colors
+    // The input[type=radio] and .en__field__item parts outrank ENgrid's donation button label rules
     &.en__field--radio .en__field__item input[type=radio] + .en__field__label--item {
-      color: var(--symbolic-handles__amount_color);
-      font-size: var(--symbolic-handles__amount_font-size);
+      --donation-amount__button_color_checked: var(--color_yellow);
+      padding: 17px 28px;
+      font-size: 32px;
+      // GeographWeb Black (Figma's weight 900) is registered at 700 in page-template-fonts.scss
+      font-weight: 700;
+      line-height: 32px;
+      letter-spacing: normal;
     }
 
+    // 12 x 24 dollar icon, vertically centered on the 32px amount line, 2px before the amount
     .en__field__label--item .engrid-currency-symbol::before {
       width: 12px;
-      height: 23px;
+      height: 24px;
+      margin-top: 4px;
+      vertical-align: top;
     }
 
     .en__field__label--item:has(> .donation-amount-handle)::after {
@@ -887,27 +891,22 @@
     }
 
     .donation-amount-handle {
-      color: var(--donation-amount__button_color);
-      font-size: var(--donation-amount__button_font-size);
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 32px;
+      letter-spacing: -0.24px;
+      vertical-align: top;
     }
 
-    .en__field__label--item:hover .donation-amount-handle {
-      color: var(--donation-amount__button_color_hover);
-    }
-
-    input:checked + .en__field__label--item .donation-amount-handle {
-      color: var(--donation-amount__button_color_checked);
-    }
-
-    // The frequency suffix reads as part of the amount ("$5/mo")
+    // The frequency suffix sits between the amount and the handle ("$5/mo Save wildlife")
     .donation-amount-handle::before {
-      color: var(--symbolic-handles__amount_color);
       font-family: "Grosvenor Book";
       font-size: 18px;
       font-style: italic;
       font-weight: 500;
       line-height: 18px;
-      vertical-align: top;
+      letter-spacing: normal;
+      vertical-align: baseline;
     }
   }
 

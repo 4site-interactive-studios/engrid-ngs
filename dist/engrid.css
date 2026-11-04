@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 4, 2026 @ 13:08:59 ET
+ *  Date: Wednesday, November 4, 2026 @ 15:04:28 ET
  *  By: rcw-015crmhcar95n8nr6er7guj5
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -8683,39 +8683,38 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item .engrid-currency-symbol,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item:after,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item .engrid-currency-symbol,[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.vertical-stack .en__field--donationAmt .en__field__label--item:after{
   display:inline;
 }
-[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt{
-  --symbolic-handles__amount_color:#a67c00;
-  --symbolic-handles__amount_font-size:30px;
-}
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt.en__field--radio .en__field__item input[type=radio]+.en__field__label--item{
-  color:var(--symbolic-handles__amount_color);
-  font-size:var(--symbolic-handles__amount_font-size);
+  --donation-amount__button_color_checked:var(--color_yellow);
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:normal;
+  line-height:32px;
+  padding:17px 28px;
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item .engrid-currency-symbol:before{
-  height:23px;
+  height:24px;
+  margin-top:4px;
+  vertical-align:top;
   width:12px;
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item:has(>.donation-amount-handle):after{
   content:none;
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .donation-amount-handle{
-  color:var(--donation-amount__button_color);
-  font-size:var(--donation-amount__button_font-size);
-}
-[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .en__field__label--item:hover .donation-amount-handle{
-  color:var(--donation-amount__button_color_hover);
-}
-[data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt input:checked+.en__field__label--item .donation-amount-handle{
-  color:var(--donation-amount__button_color_checked);
+  font-size:24px;
+  font-weight:500;
+  letter-spacing:-.24px;
+  line-height:32px;
+  vertical-align:top;
 }
 [data-engrid-theme=ngs] .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt .donation-amount-handle:before{
-  color:var(--symbolic-handles__amount_color);
   font-family:Grosvenor Book;
   font-size:18px;
   font-style:italic;
   font-weight:500;
+  letter-spacing:normal;
   line-height:18px;
-  vertical-align:top;
+  vertical-align:initial;
 }
 [data-engrid-theme=ngs][data-engrid-transaction-recurring-frequency=monthly] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle:before{
   content:var(--give-monthly-donation-amount-appended-label);
