@@ -862,12 +862,46 @@
   // Add the "symbolic-handles" class to the donation amount form block to put the frequency suffix
   // right after the amount ("$5/mo - protect our ocean"). GiftAmounts wraps the label text after
   // the amount in .donation-amount-handle, which carries the suffix instead of the label.
+  // The amount is also larger and in its own color. The label carries the amount style, and the
+  // handle goes back to the button's copy color for each state.
   .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt {
+    // Dark gold from the brand yellow: 3.8:1 on white, 3.3:1 on the sand hover, 5.5:1 on the
+    // black selected state (WCAG AA for large text in all three)
+    --symbolic-handles__amount_color: #A67C00;
+    --symbolic-handles__amount_font-size: 30px;
+
+    // Same amount color in every state; the input[type=radio] and .en__field__item parts outrank
+    // ENgrid's hover/checked label colors
+    &.en__field--radio .en__field__item input[type=radio] + .en__field__label--item {
+      color: var(--symbolic-handles__amount_color);
+      font-size: var(--symbolic-handles__amount_font-size);
+    }
+
+    .en__field__label--item .engrid-currency-symbol::before {
+      width: 12px;
+      height: 23px;
+    }
+
     .en__field__label--item:has(> .donation-amount-handle)::after {
       content: none;
     }
 
+    .donation-amount-handle {
+      color: var(--donation-amount__button_color);
+      font-size: var(--donation-amount__button_font-size);
+    }
+
+    .en__field__label--item:hover .donation-amount-handle {
+      color: var(--donation-amount__button_color_hover);
+    }
+
+    input:checked + .en__field__label--item .donation-amount-handle {
+      color: var(--donation-amount__button_color_checked);
+    }
+
+    // The frequency suffix reads as part of the amount ("$5/mo")
     .donation-amount-handle::before {
+      color: var(--symbolic-handles__amount_color);
       font-family: "Grosvenor Book";
       font-size: 18px;
       font-style: italic;
