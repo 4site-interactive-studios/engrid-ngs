@@ -213,10 +213,10 @@ export default class GiftAmounts {
     });
   }
 
-  // In a "symbolic-handles" donation amount block, wrap the handle (the label text after the
-  // amount) in a span, so the frequency suffix can sit right after the amount
-  // ("$5/mo - protect our ocean", "$5/mo protect our ocean"). EN re-renders the amounts when
-  // the frequency changes, so the observer wraps the new labels too.
+  // In a "symbolic-handles" donation amount block, split each amount label in two spans:
+  // the price (currency symbol and amount, "$5") and the handle (the text after it, " Save
+  // wildlife"), so the price can be styled on its own and carry the frequency suffix ("$5/mo").
+  // EN re-renders the amounts when the frequency changes, so the observer wraps the new labels too.
   private wrapSymbolicHandles(): void {
     const amountField = document.querySelector(
       ".radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt"
@@ -232,7 +232,7 @@ export default class GiftAmounts {
           ".en__field__item:not(.en__field__item--other) .en__field__label--item"
         )
         .forEach((label) => {
-          if (label.querySelector(".donation-amount-handle")) return;
+          if (label.querySelector(".donation-amount-price")) return;
           const amountAndHandleNode = Array.from(label.childNodes).find(
             (node): node is Text =>
               node.nodeType === Node.TEXT_NODE &&
@@ -242,16 +242,28 @@ export default class GiftAmounts {
 
           const amountAndHandle = amountAndHandleNode.textContent || "";
           const [amount] = amountAndHandle.match(amountPattern) as RegExpMatchArray;
-          // A label with only the amount keeps the default suffix at the end
-          if (!amountAndHandle.slice(amount.length).trim()) return;
 
-          // Split "5 - protect our ocean" in two: amountAndHandleNode keeps only the amount ("5")
-          // and handleNode gets the rest (" - protect our ocean")
-          const handleNode = amountAndHandleNode.splitText(amount.length);
-          const handleSpan = document.createElement("span");
-          handleSpan.className = "donation-amount-handle";
-          handleNode.replaceWith(handleSpan);
-          handleSpan.appendChild(handleNode);
+          // Split "5 Save wildlife" in two: amountAndHandleNode keeps only the amount ("5")
+          // and handleNode gets the rest (" Save wildlife"). A label with only the amount
+          // has no handle.
+          if (amountAndHandle.slice(amount.length).trim()) {
+            const handleNode = amountAndHandleNode.splitText(amount.length);
+            const handleSpan = document.createElement("span");
+            handleSpan.className = "donation-amount-handle";
+            handleNode.replaceWith(handleSpan);
+            handleSpan.appendChild(handleNode);
+          }
+
+          // The price is every node up to the amount: the currency symbol and the amount
+          const priceNodes: ChildNode[] = [];
+          for (let node = label.firstChild; node; node = node.nextSibling) {
+            priceNodes.push(node);
+            if (node === amountAndHandleNode) break;
+          }
+          const priceSpan = document.createElement("span");
+          priceSpan.className = "donation-amount-price";
+          priceSpan.append(...priceNodes);
+          label.prepend(priceSpan);
         });
     };
 

@@ -859,13 +859,13 @@
     }
   }
 
-  // Add the "symbolic-handles" class to the donation amount form block to put the frequency suffix
-  // right after the amount ("$5/mo - protect our ocean"). GiftAmounts wraps the label text after
-  // the amount in .donation-amount-handle, which carries the suffix instead of the label.
-  // Typography and colors follow the "Donation Amount Button" component in the NGS EN Design System
-  // (Figma): the amount and the handle share the state color (black, yellow when selected), the
-  // amount is larger and heavier, and both sit on 32px lines that are top-aligned like Figma's
-  // centered auto layout, so a one-line button is 70px tall.
+  // Add the "symbolic-handles" class to the donation amount form block to style the amount labels
+  // like the "Donation Amount Button" component in the NGS EN Design System (Figma). GiftAmounts
+  // splits each label in .donation-amount-price ("$5") and .donation-amount-handle (" Save wildlife").
+  // The price and the handle share the state color (black, yellow when selected). The price is
+  // larger and heavier, has a yellow highlight when not selected, and carries the frequency
+  // suffix ("$5/mo"). Price and handle sit on 32px lines that are top-aligned like Figma's centered
+  // auto layout, so a one-line button is 70px tall.
   .radio-to-buttons_donationAmt.symbolic-handles .en__field--donationAmt {
     // The input[type=radio] and .en__field__item parts outrank ENgrid's donation button label rules
     &.en__field--radio .en__field__item input[type=radio] + .en__field__label--item {
@@ -878,6 +878,22 @@
       letter-spacing: normal;
     }
 
+    // Highlight box: 2px 3px around the 32px price line. The negative margins keep the line at
+    // 32px, so the box overflows it by 2px on each side, centered like in Figma.
+    .donation-amount-price {
+      display: inline-block;
+      margin: -2px 0;
+      padding: 2px 3px;
+      line-height: 32px;
+      vertical-align: top;
+      background-color: var(--color_yellow);
+      transition: background-color 0.2s ease;
+    }
+
+    input:checked + .en__field__label--item .donation-amount-price {
+      background-color: transparent;
+    }
+
     // 12 x 24 dollar icon, vertically centered on the 32px amount line, 2px before the amount
     .en__field__label--item .engrid-currency-symbol::before {
       width: 12px;
@@ -886,7 +902,7 @@
       vertical-align: top;
     }
 
-    .en__field__label--item:has(> .donation-amount-handle)::after {
+    .en__field__label--item:has(> .donation-amount-price)::after {
       content: none;
     }
 
@@ -898,8 +914,8 @@
       vertical-align: top;
     }
 
-    // The frequency suffix sits between the amount and the handle ("$5/mo Save wildlife")
-    .donation-amount-handle::before {
+    // Frequency suffix inside the price ("$5/mo"), content set per frequency below
+    .donation-amount-price::after {
       font-family: "Grosvenor Book";
       font-size: 18px;
       font-style: italic;
@@ -911,7 +927,7 @@
   }
 
   @each $frequency in monthly, annual, quarterly {
-    &[data-engrid-transaction-recurring-frequency="#{$frequency}"] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-handle::before {
+    &[data-engrid-transaction-recurring-frequency="#{$frequency}"] .radio-to-buttons_donationAmt.symbolic-handles .donation-amount-price::after {
       content: var(--give-#{$frequency}-donation-amount-appended-label);
     }
   }
