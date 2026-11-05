@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 28, 2026 @ 09:29:16 ET
+ *  Date: Thursday, November 5, 2026 @ 16:35:23 ET
  *  By: pedroluan
  *  ENGrid styles: v0.28.2
  *  ENGrid scripts: v0.28.2
@@ -9690,6 +9690,21 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 }
 [data-engrid-theme=ngs][data-engrid-embedded] .osano-cm-widget,[data-engrid-theme=ngs][data-engrid-embedded] .osano-cm-window__dialog{
   display:none !important;
+}
+[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded]:not(#en__pagebuilder),[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded]:not(#en__pagebuilder){
+  --engrid__embedded_body_padding:0 32px;
+}
+[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded] #engrid>.en__component--advrow>*,[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded] form>.en__component--advrow>*,[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded] #engrid>.en__component--advrow>*,[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded] form>.en__component--advrow>*{
+  --engrid__body-headerOutside_padding:30px 32px 10px;
+}
+[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded] .body-headerOutside,[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded] .body-headerOutside{
+  padding-bottom:0;
+}
+[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded] .body-top,[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded] .body-top{
+  padding-bottom:30px;
+}
+[data-engrid-theme=ngs][data-engrid-layout=centercenter1col][data-engrid-embedded] .body-title h1,[data-engrid-theme=ngs][data-engrid-layout=centercenter2col][data-engrid-embedded] .body-title h1{
+  margin-bottom:1.5rem;
 }
 
 [data-engrid-theme=ngs][data-engrid-page-type=e-card] .en__component--ecardblock h2{
