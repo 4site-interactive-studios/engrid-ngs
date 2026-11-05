@@ -2200,6 +2200,33 @@
     }
   }
 
+  &[data-engrid-layout="centercenter1col"],
+  &[data-engrid-layout="centercenter2col"] {
+    &[data-engrid-embedded] {
+      &:not(#en__pagebuilder) {
+        --engrid__embedded_body_padding: 0 32px;
+      }
+
+      #engrid,
+      form {
+        > .en__component--advrow > * {
+          --engrid__body-headerOutside_padding: 30px 32px 10px;
+        }
+      }
+
+      .body-headerOutside {
+        padding-bottom: 0;
+      }
+
+      .body-top {
+        padding-bottom: 30px;
+      }
+
+      .body-title h1 {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
 }
 
 [data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {
