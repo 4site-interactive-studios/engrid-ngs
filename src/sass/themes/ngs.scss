@@ -804,8 +804,10 @@
       &[data-engrid-layout="centercenter2col"] {
         &:has(.body-top .en__component--formblock),
         &:has(.body-top .en__component--svblock) {
+          // Right padding tracks the parent width so the content box stays 260px wide while the 1280px container shrinks below a 1312px parent (412px = 120px left padding + 260px content + 32px width gutter).
           #footer .bg-darkgrey > .container {
-            padding: 100px 500px 0 110px;
+            max-width: 1280px;
+            padding: 100px min(900px, calc(100% - 412px)) 0 120px;
           }
         }
       }
