@@ -800,6 +800,24 @@
       }
     }
 
+    @media (min-width: 902px) {
+      &[data-engrid-layout="centercenter2col"] {
+        &:has(.body-top .en__component--formblock),
+        &:has(.body-top .en__component--svblock) {
+          #footer .bg-darkgrey > .container {
+            padding: 100px 500px 0 110px;
+          }
+        }
+      }
+
+      &[data-engrid-layout="centercenter1col"] {
+        #footer .bg-darkgrey > .container {
+          max-width: 495px;
+          padding: 100px 20px 0;
+        }
+      }
+    }
+
     @media (max-width: 901px) {
       #footer .bg-darkgrey {
         p, h6 {
