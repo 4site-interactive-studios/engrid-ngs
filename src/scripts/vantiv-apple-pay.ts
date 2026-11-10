@@ -7,8 +7,13 @@
  * @date 07-27-2026
  */
 
-import { ENGrid } from "@4site/engrid-scripts";
-import type { ApplePay, DonationAmount } from "@4site/engrid-scripts";
+// import { ENGrid } from "@4site/engrid-scripts";
+// import type { ApplePay, DonationAmount } from "@4site/engrid-scripts";
+import { ENGrid } from "../../../engrid/packages/scripts";
+import type {
+  ApplePay,
+  DonationAmount,
+} from "../../../engrid/packages/scripts";
 
 export default class VantivApplePay {
   private minimumDonationAmount = 5;

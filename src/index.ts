@@ -1,4 +1,12 @@
-import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard, ApplePay } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import {
+  Options,
+  App,
+  DonationAmount,
+  DonationFrequency,
+  IframeQueue,
+  Ecard,
+  ApplePay,
+} from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import { Options, App, DonationAmount, DonationFrequency, IframeQueue, Ecard, ApplePay } from "../../engrid/packages/scripts";// Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
@@ -43,12 +51,12 @@ const options: Options = {
       "supporter.emailAddress",
       "supporter.phoneNumber",
     ],
-    cookieName: 'ngs-remember',
+    cookieName: "ngs-remember",
   },
   onLoad: () => {
     (<any>window).DonationLightboxForm = DonationLightboxForm;
     new DonationLightboxForm(DonationAmount, DonationFrequency, App);
-    new GiftDesignationOptIns("transaction.othamt1")
+    new GiftDesignationOptIns("transaction.othamt1");
     new IframeQueue();
     new ImageCredits();
     new PremiumGifts();
