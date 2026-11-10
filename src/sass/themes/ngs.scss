@@ -800,6 +800,26 @@
       }
     }
 
+    @media (min-width: 902px) {
+      &[data-engrid-layout="centercenter2col"] {
+        &:has(.body-top .en__component--formblock),
+        &:has(.body-top .en__component--svblock) {
+          // Right padding tracks the parent width so the content box stays 260px wide while the 1280px container shrinks below a 1312px parent (412px = 120px left padding + 260px content + 32px width gutter).
+          #footer .bg-darkgrey > .container {
+            max-width: 1280px;
+            padding: 100px min(900px, calc(100% - 412px)) 0 120px;
+          }
+        }
+      }
+
+      &[data-engrid-layout="centercenter1col"] {
+        #footer .bg-darkgrey > .container {
+          max-width: 495px;
+          padding: 100px 20px 0;
+        }
+      }
+    }
+
     @media (max-width: 901px) {
       #footer .bg-darkgrey {
         p, h6 {
@@ -2200,6 +2220,33 @@
     }
   }
 
+  &[data-engrid-layout="centercenter1col"],
+  &[data-engrid-layout="centercenter2col"] {
+    &[data-engrid-embedded] {
+      &:not(#en__pagebuilder) {
+        --engrid__embedded_body_padding: 0 32px;
+      }
+
+      #engrid,
+      form {
+        > .en__component--advrow > * {
+          --engrid__body-headerOutside_padding: 30px 32px 10px;
+        }
+      }
+
+      .body-headerOutside {
+        padding-bottom: 0;
+      }
+
+      .body-top {
+        padding-bottom: 30px;
+      }
+
+      .body-title h1 {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
 }
 
 [data-engrid-theme="ngs"][data-engrid-page-type="e-card"] {

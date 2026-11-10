@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 5, 2026 @ 11:15:27 ET
+ *  Date: Tuesday, November 10, 2026 @ 14:20:49 ET
  *  By: nick
  *  ENGrid styles: v0.28.8
  *  ENGrid scripts: v0.28.8
@@ -22277,6 +22277,18 @@ class iFrame {
     let lastSent = -1;
     const throttledSend = this.debounceWithImmediate((_entries, _observer, immediate) => {
       const height = document.body.offsetHeight;
+      // A 0px body height means the page is hidden or being torn down
+      // (e.g. OptInLadder hides the page with display:none right before
+      // redirecting to the next ladder step). Reporting it would
+      // collapse the iframe on the parent mid-transition, which breaks
+      // the parent's smooth scroll to the top of the frame (the
+      // document shrinks under the in-flight scroll). The observer is
+      // for live content resizes only, so skip these; the direct sends
+      // (onLoaded, timers, error watcher) keep their existing behavior.
+      if (height === 0) {
+        this.logger.log("iFrame Event - ResizeObserver measured 0px height (page hidden or unloading), skipping send");
+        return;
+      }
       // Skip redundant sends when the settled height is unchanged
       if (height === lastSent) {
         this.logger.log(`iFrame Event - ResizeObserver settled at unchanged height ${height}px, skipping send`);
