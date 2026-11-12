@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 10, 2026 @ 14:24:52 ET
- *  By: nick
+ *  Date: Thursday, November 12, 2026 @ 05:56:45 ET
+ *  By: pedroluan
  *  ENGrid styles: v0.28.8
  *  ENGrid scripts: v0.28.8
  *
@@ -8796,7 +8796,7 @@ Object.defineProperty(exports, "SignalList", ({ enumerable: true, get: function 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformSimpleEventList = void 0;
-const SimpleEventDispatcher_1 = __webpack_require__(7225);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 /**
  * Similar to EventList, but instead of TArgs, a map of event names ang argument types is provided with TArgsMap.
  */
@@ -8836,7 +8836,7 @@ exports.NonUniformSimpleEventList = NonUniformSimpleEventList;
 
 /***/ },
 
-/***/ 7225
+/***/ 9606
 (__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -8935,7 +8935,7 @@ exports.SimpleEventHandlingBase = SimpleEventHandlingBase;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SimpleEventList = void 0;
 const ste_core_1 = __webpack_require__(4604);
-const SimpleEventDispatcher_1 = __webpack_require__(7225);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 /**
  * Storage class for multiple simple events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -8966,7 +8966,7 @@ exports.SimpleEventList = SimpleEventList;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformSimpleEventList = exports.SimpleEventList = exports.SimpleEventHandlingBase = exports.SimpleEventDispatcher = void 0;
-const SimpleEventDispatcher_1 = __webpack_require__(7225);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 Object.defineProperty(exports, "SimpleEventDispatcher", ({ enumerable: true, get: function () { return SimpleEventDispatcher_1.SimpleEventDispatcher; } }));
 const SimpleEventHandlingBase_1 = __webpack_require__(4763);
 Object.defineProperty(exports, "SimpleEventHandlingBase", ({ enumerable: true, get: function () { return SimpleEventHandlingBase_1.SimpleEventHandlingBase; } }));
@@ -37864,6 +37864,20 @@ class ImageCredits {
     mq.addEventListener("change", applyViewportState);
   }
 }
+;// ./src/scripts/click-to-expand-mobile-only.ts
+/**
+ * "click-to-expand mobile-only": collapsed with "Learn More" below 800px,
+ * full text on desktop (visuals in ngs.scss). ENgrid marks the collapsed text
+ * aria-hidden, so this un-hides it for screen readers while it's visible.
+ */
+class ClickToExpandMobileOnly {
+  constructor() {
+    const desktop = window.matchMedia("(min-width: 800px)");
+    const sync = () => document.querySelectorAll(".click-to-expand.mobile-only:not(.expanded)").forEach(block => block.querySelector(".click-to-expand-text-wrapper")?.setAttribute("aria-hidden", String(!desktop.matches)));
+    sync();
+    desktop.addEventListener("change", sync);
+  }
+}
 ;// ./src/scripts/premium-gifts.ts
 
 /**
@@ -42084,18 +42098,6 @@ class iframe_iFrame {
     let lastSent = -1;
     const throttledSend = this.debounceWithImmediate((_entries, _observer, immediate) => {
       const height = document.body.offsetHeight;
-      // A 0px body height means the page is hidden or being torn down
-      // (e.g. OptInLadder hides the page with display:none right before
-      // redirecting to the next ladder step). Reporting it would
-      // collapse the iframe on the parent mid-transition, which breaks
-      // the parent's smooth scroll to the top of the frame (the
-      // document shrinks under the in-flight scroll). The observer is
-      // for live content resizes only, so skip these; the direct sends
-      // (onLoaded, timers, error watcher) keep their existing behavior.
-      if (height === 0) {
-        this.logger.log("iFrame Event - ResizeObserver measured 0px height (page hidden or unloading), skipping send");
-        return;
-      }
       // Skip redundant sends when the settled height is unchanged
       if (height === lastSent) {
         this.logger.log(`iFrame Event - ResizeObserver settled at unchanged height ${height}px, skipping send`);
@@ -47312,7 +47314,13 @@ class remember_me_RememberMe {
     }
   }
   setFieldValue(field, value, overwrite = false) {
-    value = decodeURIComponent(value || "");
+    // No remembered value for this field: leave it alone. Turning undefined
+    // into "" here used to select the empty "Please select" option on
+    // <select> fields, wiping values EN pre-filled (e.g. supporter.region on
+    // a chained after-action donation page) for every visitor with no
+    // RememberMe data.
+    if (!field || value === undefined || value === null) return;
+    value = decodeURIComponent(value);
     if (field && value !== undefined) {
       if ("type" in field) {
         switch (field.type) {
@@ -47405,7 +47413,12 @@ class remember_me_RememberMe {
             this.setFieldValue(field, this.fieldData[this.fieldNames[i]], overwrite);
           }
         } else if (field.tagName === "SELECT") {
-          this.setFieldValue(field, this.fieldData[this.fieldNames[i]], true);
+          // A select always has a value (its first option), so a remembered
+          // value needs overwrite=true to win over the default. A remembered
+          // empty value must not wipe a pre-filled select, though, unless we
+          // are clearing (clearFields() calls writeFields(true)).
+          const rememberedValue = this.fieldData[this.fieldNames[i]];
+          this.setFieldValue(field, rememberedValue, overwrite || rememberedValue !== "");
         }
       }
     }
@@ -54947,6 +54960,7 @@ class VantivApplePay {
 
 
 
+
 const options = {
   applePay: true,
   UseBodyBannerImageAsBackground: true,
@@ -54975,6 +54989,7 @@ const options = {
     new GiftDesignationOptIns("transaction.othamt1");
     new IframeQueue();
     new ImageCredits();
+    new ClickToExpandMobileOnly();
     new PremiumGifts();
     new GiftAmounts();
     new Ecard();

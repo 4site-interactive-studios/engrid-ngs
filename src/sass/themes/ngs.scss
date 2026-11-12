@@ -2423,3 +2423,28 @@
     z-index: 3;
   }
 }
+
+// CLICK TO EXPAND + MOBILE ONLY
+// Add "mobile-only" next to "click-to-expand" on a copy block
+// to keep the "Learn More" collapse on mobile and tablet but show the full
+// text on desktop (800px and up, matching the desktop breakpoint above).
+// ARIA state is synced by src/scripts/click-to-expand-mobile-only.ts.
+// Scoped to :not(.expanded) so it outranks the collapsed-state rules above
+// regardless of source order; the expanded state already shows everything.
+body[data-engrid-theme="ngs"]:not(#en__pagebuilder)
+  .click-to-expand.mobile-only:not(.expanded) {
+  @media (min-width: 800px) {
+    max-height: none;
+    overflow: visible;
+    cursor: auto;
+
+    .click-to-expand-text-wrapper {
+      max-height: none;
+      mask-image: none;
+    }
+
+    .click-to-expand-cta {
+      display: none;
+    }
+  }
+}

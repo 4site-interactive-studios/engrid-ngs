@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 10, 2026 @ 14:24:52 ET
- *  By: nick
+ *  Date: Thursday, November 12, 2026 @ 05:56:45 ET
+ *  By: pedroluan
  *  ENGrid styles: v0.28.8
  *  ENGrid scripts: v0.28.8
  *
@@ -9991,6 +9991,21 @@ body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand:not(.expanded
 }
 [data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-footer,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-footerSpacer,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-header,[data-engrid-theme=ngs][data-engrid-page-type=e-card][data-ecard-preview=visible]:not(#en__pagebuilder):not(.freeze) .content-preFooter{
   z-index:3;
+}
+
+@media (min-width:800px){
+  body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand.mobile-only:not(.expanded){
+    cursor:auto;
+    max-height:none;
+    overflow:visible;
+  }
+  body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand.mobile-only:not(.expanded) .click-to-expand-text-wrapper{
+    mask-image:none;
+    max-height:none;
+  }
+  body[data-engrid-theme=ngs]:not(#en__pagebuilder) .click-to-expand.mobile-only:not(.expanded) .click-to-expand-cta{
+    display:none;
+  }
 }
 
 [data-engrid-subtheme=multistep]{
