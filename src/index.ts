@@ -15,6 +15,7 @@ import DonationLightboxForm from "./scripts/donation-lightbox-form";
 import GiftAmounts from "./scripts/gift-amounts";
 import GiftDesignationOptIns from "./scripts/gift-designation-opt-ins";
 import ImageCredits from "./scripts/image-credits";
+import ClickToExpandMobileOnly from "./scripts/click-to-expand-mobile-only";
 import PremiumGifts from "./scripts/premium-gifts";
 import VantivApplePay from "./scripts/vantiv-apple-pay";
 
@@ -59,6 +60,7 @@ const options: Options = {
     new GiftDesignationOptIns("transaction.othamt1");
     new IframeQueue();
     new ImageCredits();
+    new ClickToExpandMobileOnly();
     new PremiumGifts();
     new GiftAmounts();
     new Ecard();

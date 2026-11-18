@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 10, 2026 @ 14:32:32 ET
- *  By: nick
+ *  Date: Wednesday, November 18, 2026 @ 12:58:04 ET
+ *  By: pedroluan
  *  ENGrid styles: v0.28.8
  *  ENGrid scripts: v0.28.8
  *
@@ -30322,6 +30322,20 @@ class ImageCredits {
     mq.addEventListener("change", applyViewportState);
   }
 }
+;// ./src/scripts/click-to-expand-mobile-only.ts
+/**
+ * "click-to-expand mobile-only": collapsed with "Learn More" below 800px,
+ * full text on desktop (visuals in ngs.scss). ENgrid marks the collapsed text
+ * aria-hidden, so this un-hides it for screen readers while it's visible.
+ */
+class ClickToExpandMobileOnly {
+  constructor() {
+    const desktop = window.matchMedia("(min-width: 800px)");
+    const sync = () => document.querySelectorAll(".click-to-expand.mobile-only:not(.expanded)").forEach(block => block.querySelector(".click-to-expand-text-wrapper")?.setAttribute("aria-hidden", String(!desktop.matches)));
+    sync();
+    desktop.addEventListener("change", sync);
+  }
+}
 ;// ./src/scripts/premium-gifts.ts
 
 /**
@@ -30541,6 +30555,7 @@ class VantivApplePay {
 
 
 
+
 const options = {
   applePay: true,
   UseBodyBannerImageAsBackground: true,
@@ -30569,6 +30584,7 @@ const options = {
     new GiftDesignationOptIns("transaction.othamt1");
     new IframeQueue();
     new ImageCredits();
+    new ClickToExpandMobileOnly();
     new PremiumGifts();
     new GiftAmounts();
     new Ecard();
